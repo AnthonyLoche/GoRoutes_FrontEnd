@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import BlankLayout from '@/layouts/BlankLayout.vue';
-import { HomeView, LoginView, DashboardView, RegisterView} from '@/views';
+import { HomeView, LoginView, DashboardView, RegisterView, ProfileResponsibleView} from '@/views';
 import { useAuthStore } from '@/stores';
 
 const routes = [
@@ -26,6 +26,7 @@ const routes = [
       { path: '', component: LoginView },
       { path: 'login', component: LoginView },
       { path: 'register', component: RegisterView },
+      { path: 'profile/responsible', component: ProfileResponsibleView },
     ],
   },
 ];

@@ -1,11 +1,11 @@
-import HeaderMain from "./global/Header/HeaderMain.vue";
-import AsideMain from "./global/AsideAdmin/AsideMain.vue";
-import LoadingComp from "./global/LoadingComp.vue";
-import LoginComp from "./auth/login/LoginComp.vue";
-import InputComp from "./global/InputComp.vue";
-import ButtonComp from "./global/ButtonComp.vue";
-import LogoComp from "./global/LogoComp.vue";
-import RegisterComp from "./auth/register/RegisterComp.vue";
-import ButtonCompBorded from "./global/ButtonCompBorded.vue";
-
-export { HeaderMain, AsideMain, LoadingComp, LoginComp, InputComp, ButtonComp, LogoComp, RegisterComp, ButtonCompBorded};
+export { default as HeaderMain } from "./global/Header/HeaderMain.vue";
+export { default as AsideMain } from "./global/AsideAdmin/AsideMain.vue";
+export { default as LoadingComp } from "./global/LoadingComp.vue";
+export { default as LoginComp } from "./auth/login/LoginComp.vue";
+export { default as InputComp } from "./global/InputComp.vue";
+export { default as ButtonComp } from "./global/ButtonComp.vue";
+export { default as LogoComp } from "./global/LogoComp.vue";
+export { default as RegisterComp } from "./auth/register/RegisterComp.vue";
+export { default as ButtonCompBorded } from "./global/ButtonCompBorded.vue";
+export { default as AsideCompProfile } from "./global/AsideAdmin/AsideCompProfile.vue";
+export { default as ProfileDataComp } from "./auth/profile-responsible/ProfileDataComp.vue";
