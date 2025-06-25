@@ -1,5 +1,5 @@
 import api from "@/plugins/axios";
-
+import { showSuccessToast, showErrorToast } from '@/utils/toast'
 
 class AuthService {
   async login(username, password) {
@@ -26,8 +26,11 @@ class AuthService {
   async registerPassenger(data) {
     try {
       const response = await api.post(`/authentication/passengers/`, data);
+      showSuccessToast('Cadastro realizado com sucesso!')
       return response
     } catch (error) {
+      console.error(error)
+      showErrorToast(error)
       return error
     }
   }

@@ -23,7 +23,6 @@ export const useAuthStore = defineStore("auth", () => {
       state.value.isLogged = true;
       state.value.user = response.data.user;
 
-      // Redirecionar para o dashboard após login bem-sucedido
       router.push('/default/dashboard');
     } catch (error) {
       state.error = true;

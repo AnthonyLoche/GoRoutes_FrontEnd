@@ -1,8 +1,8 @@
 <script setup>
 import AccountCircle from "vue-material-design-icons/AccountCircle.vue"
 import DataComp from "./DataComp.vue";
-import AddressComp from "./AddressComp.vue";
-import Map from "vue-material-design-icons/Map.vue";
+import DependantsComp from "./DependantsComp.vue";
+import AccountChild from "vue-material-design-icons/AccountChild.vue";
 </script>
 
 <template>
@@ -13,10 +13,10 @@ import Map from "vue-material-design-icons/Map.vue";
     </div>
     <DataComp />
     <div class="title">
-        <Map />
-        <h2>Dados de Endereço</h2>
+        <AccountChild />
+        <h2>Dependentes:</h2>
     </div>
-    <AddressComp />
+    <DependantsComp />
   </section>
 </template>
 

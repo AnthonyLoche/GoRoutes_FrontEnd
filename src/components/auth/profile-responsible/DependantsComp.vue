@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import ModalAdressAdd from './ModalAdressAdd.vue'
+import ModalAddDependent from './ModalAddDependent.vue'
 
 const dialog = ref(false)
 
@@ -22,14 +22,14 @@ function abrirFormularioEndereco() {
     >
       <div class="alert-content">
         <span>
-          Você não possui um endereço cadastrado. Por favor, cadastre um endereço para continuar.
+          Você não possui um dependende cadastrado. Por favor, cadastre um dependente para continuar.
         </span>
         <v-btn size="small" color="warning" class="ml-2" @click="abrirFormularioEndereco">
           Cadastrar agora
         </v-btn>
       </div>
     </v-alert>
-    <ModalAdressAdd v-model="dialog" />
+    <ModalAddDependent v-model="dialog" />
   </section>
 </template>
 
