@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
 import { AuthService } from '@/services'
 import { useRouter } from 'vue-router'
+import { showSuccessToast } from '@/utils/toast'
 
 export const useAuthStore = defineStore('auth', () => {
   const router = useRouter()
@@ -9,7 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
     user: {},
     isLogged: false,
     error: false,
-    //type: '',
+    type: '',
     token: '',
     message: '',
   })
@@ -36,6 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
         router.push('/blank/profile/passenger')
         state.value.user.type = 'passenger'
       }
+      showSuccessToast('Login realizado com sucesso!')
     } catch (error) {
       state.error = true
       state.message = error.message || 'Erro ao fazer login'
@@ -47,6 +49,18 @@ export const useAuthStore = defineStore('auth', () => {
       const response = await AuthService.registerResponsible(data)
       return response
     } catch (error) {
+      return error
+    }
+  }
+
+  async function updatePicture(data) {
+    try {
+      const response = await AuthService.updatePicture(data)
+      state.value.user.picture_file = response.data.picture
+      showSuccessToast('Foto atualizada com sucesso!')
+      return response
+    } catch (error) {
+      state.error = true
       return error
     }
   }
@@ -65,5 +79,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     register,
+    updatePicture,
   }
 })

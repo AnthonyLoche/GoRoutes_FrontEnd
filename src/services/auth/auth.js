@@ -1,4 +1,4 @@
-import api from "@/plugins/axios";
+import api from '@/plugins/axios'
 import { showSuccessToast, showErrorToast } from '@/utils/toast'
 
 class AuthService {
@@ -7,7 +7,7 @@ class AuthService {
       const response = await api.post(`/authentication/token/`, {
         username,
         password,
-      });
+      })
       return response
     } catch (error) {
       return error
@@ -16,7 +16,7 @@ class AuthService {
 
   async registerDriver(data) {
     try {
-      const response = await api.post(`/authentication/drivers/`, data);
+      const response = await api.post(`/authentication/drivers/`, data)
       return response
     } catch (error) {
       return error
@@ -25,7 +25,7 @@ class AuthService {
 
   async registerPassenger(data) {
     try {
-      const response = await api.post(`/authentication/passengers/`, data);
+      const response = await api.post(`/authentication/passengers/`, data)
       showSuccessToast('Cadastro realizado com sucesso!')
       return response
     } catch (error) {
@@ -37,12 +37,22 @@ class AuthService {
 
   async registerResponsible(data) {
     try {
-      const response = await api.post(`/authentication/responsibles/`, data);
+      const response = await api.post(`/authentication/responsibles/`, data)
       return response
     } catch (error) {
       return error
     }
   }
+
+  async updatePicture(data) {
+    try {
+      const response = await api.post(`/authentication/update-picture/`, data)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
 }
 
-export default new AuthService();
+export default new AuthService()

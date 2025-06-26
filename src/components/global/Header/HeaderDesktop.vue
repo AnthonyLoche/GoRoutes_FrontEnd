@@ -32,7 +32,8 @@ defineProps({
                 </button>
 
                 <div class="profile-container" @mouseenter="showMenu = true" @mouseleave="showMenu = false">
-                    <button class="profile-btn" :style="{ backgroundImage: `url(https://vignette.wikia.nocookie.net/monstros-sa/images/3/38/Mike1.png/revision/latest?cb=20130601113702&path-prefix=pt-br)` }"></button>
+                    <button class="profile-btn"
+                        :style="{ backgroundImage: `url(${authStore.state.user.picture_file ? authStore.state.user.picture_file : 'https://vignette.wikia.nocookie.net/monstros-sa/images/3/38/Mike1.png/revision/latest?cb=20130601113702&path-prefix=pt-br'})` }"></button>
 
                     <Transition name="fade">
                         <div v-if="showMenu" class="dropdown-menu">
@@ -167,11 +168,13 @@ button:hover {
     background: #f3f4f6;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
     opacity: 0;
     transform: translateY(-10px);
 }

@@ -16,7 +16,6 @@ const login = reactive({
 const handleLogin = () => {
   authStore.login(login.username, login.password);
 };
-
 </script>
 <template>
     <div class="container">
@@ -40,6 +39,7 @@ const handleLogin = () => {
                     subtext="Esqueci minha senha"
                     style="color: #353DCCE5 !important;"
                     padding-props="1.3rem"
+                    @keyup.enter="handleLogin"
                 />
                 <div v-if="authStore.state.error" class="error-message">
                     {{ authStore.state.message }}
