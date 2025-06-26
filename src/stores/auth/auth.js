@@ -1,57 +1,69 @@
-import { defineStore } from "pinia";
-import { useStorage } from "@vueuse/core";
-import { AuthService } from "@/services";
-import { useRouter } from "vue-router";
+import { defineStore } from 'pinia'
+import { useStorage } from '@vueuse/core'
+import { AuthService } from '@/services'
+import { useRouter } from 'vue-router'
 
-export const useAuthStore = defineStore("auth", () => {
-  const router = useRouter();
-  const state = useStorage("auth", {
+export const useAuthStore = defineStore('auth', () => {
+  const router = useRouter()
+  const state = useStorage('auth', {
     user: {},
     isLogged: false,
     error: false,
     //type: '',
     token: '',
-    message: ''
+    message: '',
   })
 
   async function login(username, password) {
     try {
-      const response = await AuthService.login(username, password);
+      const response = await AuthService.login(username, password)
       console.log(response)
 
-      state.value.token = response.data.access;
-      state.value.isLogged = true;
-      state.value.user = response.data.user;
+      state.value.token = response.data.access
+      state.value.isLogged = true
+      state.value.user = response.data.user
 
-      router.push('/default/dashboard');
+      if (state.value.user.driver_data) {
+        router.push('/blank/profile/driver')
+        state.value.user.type = 'driver'
+      } else if (state.value.user.responsible_data) {
+        router.push('/blank/profile/responsible')
+        state.value.user.type = 'responsible'
+      } else if (state.value.user.passenger_data && state.value.user.passenger_data.is_student) {
+        router.push('/blank/profile/student')
+        state.value.user.type = 'student'
+      } else if (state.value.user.passenger_data) {
+        router.push('/blank/profile/passenger')
+        state.value.user.type = 'passenger'
+      }
     } catch (error) {
-      state.error = true;
-      state.message = error.message || "Erro ao fazer login";
+      state.error = true
+      state.message = error.message || 'Erro ao fazer login'
     }
   }
 
   async function register(data) {
     try {
-      const response = await AuthService.registerResponsible(data);
-      return response;
+      const response = await AuthService.registerResponsible(data)
+      return response
     } catch (error) {
-      return error;
+      return error
     }
   }
 
   async function logout() {
-    state.token = '';
-    state.isLogged = false;
-    state.user = {};
-    state.error = false;
-    state.message = '';
-    router.push('/blank/login');
+    state.token = ''
+    state.isLogged = false
+    state.user = {}
+    state.error = false
+    state.message = ''
+    router.push('/blank/login')
   }
 
   return {
     state,
     login,
     logout,
-    register
+    register,
   }
-});
+})

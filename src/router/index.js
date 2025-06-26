@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import BlankLayout from '@/layouts/BlankLayout.vue';
-import { HomeView, LoginView, DashboardView, RegisterView, ProfileResponsibleView} from '@/views';
+import { HomeView, LoginView, DashboardView, RegisterView, ProfileResponsibleView, ProfileDriverView} from '@/views';
 import { useAuthStore } from '@/stores';
 
 const routes = [
@@ -27,6 +27,7 @@ const routes = [
       { path: 'login', component: LoginView },
       { path: 'register', component: RegisterView },
       { path: 'profile/responsible', component: ProfileResponsibleView },
+      { path: 'profile/driver', component: ProfileDriverView },
     ],
   },
 ];

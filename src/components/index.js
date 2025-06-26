@@ -9,3 +9,4 @@ export { default as RegisterComp } from "./auth/register/RegisterComp.vue";
 export { default as ButtonCompBorded } from "./global/ButtonCompBorded.vue";
 export { default as AsideCompProfile } from "./global/AsideAdmin/AsideCompProfile.vue";
 export { default as ProfileDataComp } from "./auth/profile-responsible/ProfileDataComp.vue";
+export { default as ProfileDataDriver } from "./auth/driver-responsible/ProfileDataDriver.vue";
