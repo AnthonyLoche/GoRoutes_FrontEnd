@@ -17,7 +17,6 @@ const routes = [
       { path: '', component: HomeView },
       { path: 'home', component: HomeView },
       { path: 'dashboard', component: DashboardView },
-      { path: 'passager', component: PassagerView },
     ],
   },
   {
@@ -27,6 +26,7 @@ const routes = [
       { path: '', component: LoginView },
       { path: 'login', component: LoginView },
       { path: 'register', component: RegisterView },
+      { path: 'passager', component: PassagerView },
     ],
   },
 ];
