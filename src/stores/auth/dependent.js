@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { AuthService } from '@/services'
+import { useAuthStore } from '@/stores/auth/auth'
 
 export const useDependentStore = defineStore('Dependent', () => {
+  const authStore = useAuthStore()
   const state = reactive({
     cpf: '',
     is_student: true,
@@ -28,7 +30,7 @@ export const useDependentStore = defineStore('Dependent', () => {
     student_data: {
       grade: '',
       registration: '',
-      responsible: 1,
+      responsible: authStore.state.user.responsible_data.id,
     },
   })
 
@@ -40,9 +42,19 @@ export const useDependentStore = defineStore('Dependent', () => {
       return error
     }
   }
+  const responsibleByStudentFilter = async (id) => {
+    try {
+      const response = await AuthService.responsibleByStudentFilter(id)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
 
   return {
     state,
     registerDependent,
+    responsibleByStudentFilter,
   }
 })

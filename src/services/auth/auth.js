@@ -53,6 +53,15 @@ class AuthService {
       return error
     }
   }
+  async responsibleByStudentFilter(id){
+    try {
+      const response = await api.get(`/authentication/users/?responsible_id=${id}`)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
 }
 
 export default new AuthService()

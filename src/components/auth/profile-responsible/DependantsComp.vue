@@ -1,16 +1,30 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import ModalAddDependent from './ModalAddDependent.vue'
+import HaveDependantsComp from './HaveDependantsComp.vue'
+import { useDependentStore } from '@/stores'
+import { useAuthStore } from '@/stores/auth/auth'
 
+const authStore = useAuthStore()
+const dependentStore = useDependentStore()
 const dialog = ref(false)
 
 function abrirFormularioEndereco() {
   dialog.value = true
 }
+const dependents = ref([])
+onMounted(async () => {
+  const response = await dependentStore.responsibleByStudentFilter(authStore.state.user.responsible_data.id)
+  dependents.value = response.data
+})
 </script>
 
 <template>
   <section>
+    <div v-if="dependents.length > 0">
+    <HaveDependantsComp :dependents="dependents" />
+    </div>
+     <div v-if="dependents.length == 0">
     <v-alert
       type="warning"
       variant="tonal"
@@ -30,6 +44,7 @@ function abrirFormularioEndereco() {
       </div>
     </v-alert>
     <ModalAddDependent v-model="dialog" />
+    </div>
   </section>
 </template>
 
