@@ -1,92 +1,109 @@
 <script setup>
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores'
+import { Cropper } from 'vue-advanced-cropper'
+import 'vue-advanced-cropper/dist/style.css'
 import Image from 'vue-material-design-icons/Image.vue'
 
 const emit = defineEmits(['update:modelValue'])
-const props = defineProps({ modelValue: Boolean })
+const props = defineProps({ modelValue: Boolean, user_id: Number })
 
 const file = ref(null)
+const imageSrc = ref(null)
+const cropperRef = ref(null)
 const authStore = useAuthStore()
 
 function handleFileChange(e) {
-    const selected = e.target.files[0]
-    if (selected) {
-        file.value = selected
+  const selected = e.target.files[0]
+  if (selected) {
+    const reader = new FileReader()
+    reader.onload = () => {
+      imageSrc.value = reader.result
     }
+    reader.readAsDataURL(selected)
+    file.value = selected
+  }
 }
 
 async function uploadPhoto() {
-    if (!file.value) return
+  if (!cropperRef.value) return
 
+  const canvas = cropperRef.value.getResult().canvas
+  if (!canvas) return
+
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'))
+
+  const formData = new FormData()
+  formData.append('user_id', props.user_id)
+  formData.append('picture', blob)
+
+  try {
     const reader = new FileReader()
-    reader.onload = () => {
-        authStore.state.user.photo = reader.result
-    }
-    reader.readAsDataURL(file.value)
+    reader.readAsDataURL(blob)
 
-    const formData = new FormData()
-    formData.append('user_id', authStore.state.user.id)
-    formData.append('picture', file.value)
-
-    try {
-        const response = await authStore.updatePicture(formData)
-        console.log(response)
-        emit('update:modelValue', false)
-    } catch (error) {
-        console.error('Erro ao enviar imagem:', error)
-    }
+    const response = await authStore.updatePicture(formData, authStore.state.user.id)
+    console.log(response)
+    emit('update:modelValue', false)
+  } catch (error) {
+    console.error('Erro ao enviar imagem:', error)
+  }
 }
 </script>
 
 <template>
-    <v-dialog v-model="props.modelValue" max-width="500">
-        <v-card>
-            <div class="title">
-                <div class="text">
-                    <Image />
-                    <h2>Alterar Foto de Perfil</h2>
-                </div>
-          
-                <v-btn icon variant="text" @click="emit('update:modelValue', false)">
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
-            </div>
-            <v-card-text>
-                <v-file-input
-                    label="Selecione uma nova imagem"
-                    accept="image/*"
-                    @change="handleFileChange"
-                    show-size
-                />
-            </v-card-text>
-            <v-card-actions>
-                <v-spacer />
-                <v-btn color="primary" @click="uploadPhoto" :disabled="!file">Enviar</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
-</template>
+  <v-dialog v-model="props.modelValue" max-width="600">
+    <v-card>
+      <div class="title">
+        <div class="text">
+          <Image />
+          <h2>Alterar Foto de Perfil</h2>
+        </div>
+        <v-btn icon variant="text" @click="emit('update:modelValue', false)">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </div>
+      <v-card-text>
+        <v-file-input
+          label="Selecione uma nova imagem"
+          accept="image/*"
+          @change="handleFileChange"
+          show-size
+        />
 
+        <div v-if="imageSrc" class="cropper-wrapper">
+          <Cropper
+            ref="cropperRef"
+            :src="imageSrc"
+            :stencil-props="{ aspectRatio: 1 }"
+            :autoZoom="true"
+            :resizeImage="true"
+          />
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="primary" @click="uploadPhoto" :disabled="!file">Enviar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
 
 <style scoped>
 .title {
-    border-bottom: 2px solid var(--primary-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: .5rem;
+  border-bottom: 2px solid var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
 }
-
-span{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-
-.text{
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.cropper-wrapper {
+  margin-top: 1rem;
+  max-height: 400px;
+  overflow: hidden;
 }
 </style>

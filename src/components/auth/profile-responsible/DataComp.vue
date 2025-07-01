@@ -87,7 +87,7 @@ function toggleEdit() {
 
     <!-- Modais -->
     <ShowPhoto v-model="viewPhotoDialog" :src="authStore.state.user.picture_file" />
-    <UploadPhoto v-model="changePhotoDialog" />
+    <UploadPhoto v-model="changePhotoDialog" :user_id="authStore.state.user.id" />
   </section>
 </template>
 

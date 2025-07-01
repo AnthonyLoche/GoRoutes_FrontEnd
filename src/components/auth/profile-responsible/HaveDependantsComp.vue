@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import { useAuthStore } from '@/stores'
 import PhotoComp from '../profiles-images/PhotoComp.vue'
 import ShowPhoto from '../profiles-images/ShowPhoto.vue'
 import UploadPhoto from '../profiles-images/UploadPhoto.vue'
@@ -12,7 +11,6 @@ const props = defineProps({
     default: () => []
   }
 })
-const authStore = useAuthStore()
 const isEditing = ref(false)
 const viewPhotoDialog = ref(false)
 const changePhotoDialog = ref(false)
@@ -96,7 +94,8 @@ function toggleEdit() {
 
     <!-- Modais -->
     <ShowPhoto v-model="viewPhotoDialog" :src="dependent.picture_file" />
-    <UploadPhoto v-model="changePhotoDialog" /></v-carousel-item>
+    <UploadPhoto v-model="changePhotoDialog" :user_id="dependent.id" />
+  </v-carousel-item>
 
       
     </v-carousel>

@@ -53,14 +53,25 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  async function updatePicture(data) {
+  async function updatePicture(data, idRefresh) {
     try {
       const response = await AuthService.updatePicture(data)
-      state.value.user.picture_file = response.data.picture
+      refreshDataUser(idRefresh)
       showSuccessToast('Foto atualizada com sucesso!')
       return response
     } catch (error) {
       state.error = true
+      return error
+    }
+  }
+
+  async function refreshDataUser(id) {
+    try {
+      const response = await AuthService.refreshDataUser(id)
+      state.value.user = response.data
+      return response
+    } catch (error) {
+      console.error(error)
       return error
     }
   }
@@ -80,5 +91,6 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     register,
     updatePicture,
+    refreshDataUser,
   }
 })

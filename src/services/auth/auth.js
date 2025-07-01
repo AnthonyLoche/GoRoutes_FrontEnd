@@ -62,6 +62,17 @@ class AuthService {
       return error
     }
   }
+
+  async refreshDataUser(id){
+    try {
+      const response = await api.get(`/authentication/users/${id}/`)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+
 }
 
 export default new AuthService()
