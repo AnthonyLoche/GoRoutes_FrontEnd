@@ -114,42 +114,4 @@ button:hover {
     background-color: #e5e7eb;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-
-.dropdown-menu {
-    position: absolute;
-    top: 2.5rem;
-    right: 0;
-    background: white;
-    border: 1px solid #E5E7EB;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 150px;
-    z-index: 10;
-    overflow: hidden;
-}
-
-.dropdown-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.dropdown-menu li {
-    padding: 10px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.dropdown-menu li:hover {
-    background: #f3f4f6;
-}
-
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-}
-
-.fade-enter-from, .fade-leave-to {
-    opacity: 0;
-    transform: translateY(-10px);
-}
 </style>

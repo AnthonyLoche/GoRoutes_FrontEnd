@@ -232,7 +232,7 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
 }
 
 .toggle-btn {
-  position: fixed;
+  position: absolute;
   top: 15px;
   left: 15px;
   z-index: 999;

@@ -20,7 +20,7 @@ import { ref } from 'vue'
 const props = defineProps({
   modelValue: { type: String, default: '' },
   placeholderText: { type: String, default: 'Nome Completo' },
-  label: { type: String, default: 'Nome Completo' }
+  label: { type: String, default: 'Nome Completo' },
 })
 
 const nomeCompletoLocal = ref(props.modelValue)
@@ -30,7 +30,8 @@ const defaultPlaceholder = props.placeholderText
 
 <style scoped>
 .conteudo {
-  width: 600px;
+  width: 20rem;
+  padding: 20px;
   margin: 0 auto;
   padding-top: 40px;
   font-family: Arial;
@@ -43,33 +44,48 @@ const defaultPlaceholder = props.placeholderText
 .input-nome {
   width: 100%;
   position: relative;
-  font-size: 16px;
-  color: #0000;
+  font-size: 0.9rem;
+  color: #000;
   border-radius: 10px;
   border: 1px solid #2d1c5b;
   padding: 10px 10px 10px 0px;
   box-sizing: content-box;
   z-index: 2;
+  padding: 0.7rem 1rem;
 }
-.input-nome::placeholder{
-    margin-left: 20px;
+.input-nome::placeholder {
+  margin-left: 20px;
 }
 
 .label-nome {
-  width: 105px;
-  height: 20px;
+  width: fit-content;
+  height: 1rem;
   padding: 5px;
-  font-size: 1rem;
+  font-size: 0.7rem;
   position: absolute;
-  color: #353DCC;
+  color: #353dcc;
   background-color: white;
-  top: 5px;
+  top: 3px;
   bottom: 0;
   left: 30px;
   right: 0;
   transition: 0.3s;
 }
 
+.input-nome + .label-nome {
+  margin-top: 0px;
+  top: -30%;
+  z-index: 2;
+  transition: 0.2s;
+}
+
+.input-nome {
+  border-bottom-width: 2px;
+  outline: none;
+}
+
+/*
+Se quiser ter o :focus com ação no label 
 .input-nome:focus + .label-nome {
   margin-top: 0px;
   top: -30%;
@@ -81,4 +97,5 @@ const defaultPlaceholder = props.placeholderText
   border-bottom-width: 2px;
   outline: none;
 }
+*/
 </style>
