@@ -11,6 +11,7 @@ import { md3 } from 'vuetify/blueprints'
 import '@mdi/font/css/materialdesignicons.css'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 import { createVuetify } from 'vuetify'
+import  VueGoogleMaps from '@fawmi/vue-google-maps'
 
 const vuetify = createVuetify({
     blueprint: md3,
@@ -63,5 +64,12 @@ app.use(createPinia())
 app.use(router)
 app.use(ToastPlugin)
 app.use(vuetify)
+
+app.use(VueGoogleMaps, {
+    load: {
+        key: import.meta.env.VITE_GOOGLE_API_KEY,
+        libraries: 'places,geometry', // necessary for places input
+    },
+})
 
 app.mount('#app')

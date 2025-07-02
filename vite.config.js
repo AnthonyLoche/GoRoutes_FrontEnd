@@ -13,6 +13,9 @@ export default defineConfig({
     tailwindcss(),
     vuetify({ autoImport: true })
   ],
+  optimizeDeps: {
+    include: ['fast-deep-equal']
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
