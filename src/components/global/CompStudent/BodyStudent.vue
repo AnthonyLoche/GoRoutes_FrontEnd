@@ -1,64 +1,66 @@
 <script setup>
-// import AsideComp from './AsideComp.vue'
-// import NavBar from './NavBar.vue'
+import AsideComp from './AsideComp.vue'
+import NavBar from './NavBar.vue'
 import InputFlutuante from './InputFlutuante.vue'
+import LineTitle from './LineTitle.vue'
+
+import userIcon from '../../../assets/images/UserIconCircle.png'
 </script>
 <template>
   <div>
     <NavBar />
-    <AsideComp />
-    <div class="body">
-      <div class="dadosPessoais">
-        <div class="header">
-          <div class="inline">
-            <img src="../../../assets/images/UserIconCircle.png" alt="" />
-            <h2>Dados Pessoais</h2>
+    <div class="container">
+      <AsideComp />
+      <div class="body">
+        <div class="dadosPessoais">
+          <div class="lineTitle">
+            
+          <LineTitle titulo="Dados Pessoais" :imgSrc="userIcon"/>
           </div>
-          <hr />
-        </div>
-        <div class="table1">
-          <section class="image">
-            <div class="square"><img src="../../../assets/images/UserIcon.png" alt="" /></div>
-          </section>
-          <section class="name">
+          <div class="table1">
+            <section class="image">
+              <div class="square">
+                <img src="../../../assets/images/UserIcon.png" alt="" />
+              </div>
+            </section>
+            <section class="name">
+              <InputFlutuante label="Nome" v-model="nomeCompleto" style="width: 104%" />
+              <InputFlutuante
+                v-model="gmail"
+                placeholderText="Digite seu gmail completo"
+                label="Gmail"
+                style="width: 104%"
+              />
+            </section>
+          </div>
+          <div class="table2">
             <InputFlutuante />
-            <InputFlutuante
-              v-model="gmail"
-              placeholderText="Digite seu gmail completo"
-              label="Gmail"
-            />
-          </section>
-        </div>
-        <div class="table2">
-          <InputFlutuante/>
-          <InputFlutuante/>
-          <InputFlutuante/>
-          <InputFlutuante/> 
+            <InputFlutuante />
+            <InputFlutuante />
+            <InputFlutuante />
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <style scoped>
-.body{
-  width: 100%;
-}
-.header {
-  width: 100%;
-}
-.header h2 {
-  font-family: 'Homenaje', sans-serif;
-  font-weight: 400;
-  font-size: 1.2rem;
-}
-.inline {
+.container {
   display: flex;
-  align-items: center;
+}
+.body {
+  width: 100vw;
+}
+.lineTitle{
+  width: 90%;
 }
 .table1 {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  column-gap: 3rem;
+  margin-top: 30px;
 }
-.table2{
+.table2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 3rem;
@@ -68,6 +70,7 @@ import InputFlutuante from './InputFlutuante.vue'
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 30px;
 }
 
 .square {
