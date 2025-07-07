@@ -2,9 +2,11 @@ import { defineStore } from 'pinia'
 import { reactive } from 'vue'
 import { AuthService } from '@/services'
 import { useAuthStore } from '@/stores/auth/auth'
+import { useAddressStore } from '@/stores/address'
 
 export const useDependentStore = defineStore('Dependent', () => {
   const authStore = useAuthStore()
+  const addressStore = useAddressStore()
   const state = reactive({
     cpf: '',
     is_student: true,
@@ -18,12 +20,12 @@ export const useDependentStore = defineStore('Dependent', () => {
     },
     addresses: [
       {
-        street: '',
-        city: '',
-        state: 'SC',
-        neighborhood: '',
-        number: null,
-        cep: null,
+        street: addressStore.state.logradouro,
+        city: addressStore.state.localidade,
+        state: addressStore.state.uf,
+        neighborhood: addressStore.state.bairro,
+        number: addressStore.state.number,
+        cep: addressStore.state.cep,
         is_main: true,
       },
     ],
