@@ -15,9 +15,9 @@ export const useAuthStore = defineStore('auth', () => {
     message: '',
   })
 
-  async function login(username, password) {
+  async function login(email, password) {
     try {
-      const response = await AuthService.login(username, password)
+      const response = await AuthService.login(email, password)
       console.log(response)
 
       state.value.token = response.data.access

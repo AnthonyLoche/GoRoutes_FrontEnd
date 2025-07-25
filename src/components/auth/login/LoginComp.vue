@@ -9,12 +9,12 @@ import { reactive } from "vue";
 const authStore = useAuthStore();
 
 const login = reactive({
-    username: "",
+    email: "",
     password: ""
 });
 
 const handleLogin = () => {
-  authStore.login(login.username, login.password);
+  authStore.login(login.email, login.password);
 };
 </script>
 <template>
@@ -23,10 +23,10 @@ const handleLogin = () => {
             <LogoComp :variant="2" />
             <div class="form-container">
                 <InputComp
-                    label="Nome de usuário"
+                    label="Email"
                     type="text"
-                    placeholder="Enter your username"
-                    v-model="login.username"
+                    placeholder="Enter your email"
+                    v-model="login.email"
                     :haveSubtext="false"
                     padding-props="1.3rem"
                 />

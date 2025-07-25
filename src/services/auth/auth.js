@@ -2,10 +2,10 @@ import api from '@/plugins/axios'
 import { showSuccessToast, showErrorToast } from '@/utils/toast'
 
 class AuthService {
-  async login(username, password) {
+  async login(email, password) {
     try {
       const response = await api.post(`/authentication/token/`, {
-        username,
+        email,
         password,
       })
       return response
