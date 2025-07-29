@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fawmi/vue-google-maps": "^0.9.79",
+    "@googlemaps/polyline-codec": "^1.0.28",
     "@mdi/font": "^7.4.47",
     "@tailwindcss/vite": "^4.1.0",
     "@vueuse/core": "^13.3.0",

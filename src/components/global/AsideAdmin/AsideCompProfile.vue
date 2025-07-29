@@ -34,7 +34,6 @@
 <script setup>
 import { ref, markRaw } from 'vue';
 
-import CarIcon from "vue-material-design-icons/Car.vue";
 import Account from 'vue-material-design-icons/Account.vue';
 
 const isSidebarVisible = ref(true);
@@ -46,16 +45,6 @@ const menuItems = ref([
     active: false,
     subItems: []
   },  
-{
-    name: 'Veículos',
-    icon: markRaw(CarIcon),
-    expanded: false,
-    active: false,
-    subItems: [
-      { name: '> Vans e Micros', active: false },
-      { name: '> Rastrear Veiculo', active: false },
-    ]
-  }
 ]);
 
 const toggleSidebar = () => {

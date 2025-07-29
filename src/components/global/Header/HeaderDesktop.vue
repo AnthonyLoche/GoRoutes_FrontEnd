@@ -3,6 +3,8 @@ import { ref, defineProps } from "vue";
 import { useAuthStore } from "@/stores/auth/auth";
 import Bell from "vue-material-design-icons/Bell.vue";
 import MessageProcessingOutline from "vue-material-design-icons/MessageProcessingOutline.vue";
+import Account from "vue-material-design-icons/Account.vue";
+import Logout from "vue-material-design-icons/Logout.vue";
 
 const showMenu = ref(false);
 const authStore = useAuthStore();
@@ -38,9 +40,14 @@ defineProps({
                     <Transition name="fade">
                         <div v-if="showMenu" class="dropdown-menu">
                             <ul>
-                                <li>Perfil</li>
-                                <li>Configurações</li>
-                                <li @click="authStore.logout">Sair</li>
+                                <router-link :to="`/blank/profile/${authStore.state.user.type}`">
+                                    <Account />
+                                    Profile
+                                </router-link>
+                                <li @click="authStore.logout" class="logout">
+                                    <Logout />
+                                    Logout
+                                </li>
                             </ul>
                         </div>
                     </Transition>
@@ -162,6 +169,33 @@ button:hover {
     padding: 10px;
     cursor: pointer;
     transition: background 0.3s;
+    display: flex;
+    gap: 10px;
+}
+
+.dropdown-menu li.logout {
+    color: red;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    gap: 10px;
+}
+
+a:hover {
+    background: #f3f4f6;
+}
+
+span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .dropdown-menu li:hover {

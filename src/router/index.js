@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import BlankLayout from '@/layouts/BlankLayout.vue';
-import { HomeView, LoginView, DashboardView, RegisterView, ProfileResponsibleView, ProfileDriverView, TestView} from '@/views';
+import { HomeView, LoginView, DashboardView, RegisterView, ProfileResponsibleView, ProfileDriverView, TestView, DriverAdminView} from '@/views';
 import { useAuthStore } from '@/stores';
 
 const routes = [
@@ -16,7 +16,8 @@ const routes = [
     children: [
       { path: '', component: HomeView },
       { path: 'home', component: HomeView },
-      { path: 'dashboard', component: DashboardView },
+      { path: 'admin/dashboard', component: DashboardView },
+      { path: 'admin/drivers', component: DriverAdminView },  
     ],
   },
   {

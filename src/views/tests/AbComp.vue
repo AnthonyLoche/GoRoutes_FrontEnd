@@ -162,3 +162,4 @@ onMounted(async () => {
     />
   </GMapMap>
 </template>
+template>

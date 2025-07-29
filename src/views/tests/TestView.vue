@@ -1,6 +1,8 @@
 <script setup>
 import { HeaderMain, AsideCompProfile } from '@/components'
 import AbComp from './AbComp.vue';
+import PolylineComp from './PolylineComp.vue';
+import MarkerPolyline from './MarkerPolyline.vue';
 </script>
 
 <template>
@@ -13,7 +15,7 @@ import AbComp from './AbComp.vue';
         <AsideCompProfile />
       </div>
       <div class="view">
-        <AbComp />
+        <MarkerPolyline />
       </div>
     </div>
   </div>

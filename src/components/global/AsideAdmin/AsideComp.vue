@@ -16,14 +16,15 @@
         </div>
         <Transition name="accordion">
           <div class="submenu" v-if="category.expanded && category.subItems.length > 0">
-            <a href="#"
+            <router-link
+               :to="subItem.route"
                class="submenu-item"
                :class="{ active: subItem.active }"
                v-for="(subItem, subIndex) in category.subItems"
                :key="subIndex"
-               @click.prevent="activateSubItem(index, subIndex)">
+               @click="activateSubItem(index, subIndex)">
               <span>{{ subItem.name }}</span>
-            </a>
+            </router-link>
           </div>
         </Transition>
       </div>
@@ -47,8 +48,8 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Vans e Micros', active: false },
-      { name: '> Rastrear Veiculo', active: false },
+      { name: '> Vans e Micros', active: false, route: '/admin/vehicles' },
+      { name: '> Rastrear Veiculo', active: false, route: '/admin/track-vehicle' },
     ]
   },
   {
@@ -57,8 +58,8 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Alunos', active: false },
-      { name: '> Pais', active: false },
+      { name: '> Alunos', active: false, route: '/admin/students' },
+      { name: '> Pais', active: false, route: '/admin/parents' },
     ]
   },
   {
@@ -67,8 +68,8 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Motoristas', active: false },
-      { name: '> Rastrear Motorista', active: false },
+      { name: '> Motoristas', active: false, route: 'drivers' },
+      { name: '> Rastrear Motorista', active: false, route: '/admin/track-driver' },
     ]
   },
   {
@@ -77,9 +78,9 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Ver Rotas', active: false },
-      { name: '> Criar Rota', active: false },
-      { name: '> Consultar Rota', active: false }
+      { name: '> Ver Rotas', active: false, route: '/admin/routes' },
+      { name: '> Criar Rota', active: false, route: '/admin/create-route' },
+      { name: '> Consultar Rota', active: false, route: '/admin/search-route' }
     ]
   },
   {
@@ -215,6 +216,21 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
   color: #5050ff;
   font-weight: 500;
   border-right: 2px solid #5050ff;
+}
+
+/* Estilos específicos para router-link */
+.submenu-item.router-link-active {
+  background-color: #e0e0ff;
+  color: #5050ff;
+  font-weight: 500;
+  border-right: 2px solid #5050ff;
+}
+
+.submenu-item.router-link-exact-active {
+  background-color: #d0d0ff;
+  color: #4040ff;
+  font-weight: 600;
+  border-right: 3px solid #4040ff;
 }
 
 .arrow {
