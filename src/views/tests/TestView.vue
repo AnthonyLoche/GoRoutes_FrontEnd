@@ -15,7 +15,8 @@ import MarkerPolyline from './MarkerPolyline.vue';
         <AsideCompProfile />
       </div>
       <div class="view">
-        <MarkerPolyline />
+        <!-- <AbComp /> -->
+        <PolylineComp />
       </div>
     </div>
   </div>

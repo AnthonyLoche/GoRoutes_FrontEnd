@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { decode } from "@googlemaps/polyline-codec"; // Biblioteca para decodificar o polyline
 
 const encodedPolyline =
-  "|sf_DrndiHfGWJQPa@n@KtEOnG_@bPw@bc@gBlG]LBNEJe@WUE?UQmEeZe@_DEs@p@F~BRn@D?c@BsB@aDBiDB{Bd@mFkBMcAIJsAVuD^oG^aEj@uBnAwBhN_MtO_NxEsDrBgB{AyCmB{D[oADcEUaAoBkCvAmApAiAfBeBwBuC{AyBa@a@e@]iDmBFMf@w@fBaBhDeDZFdA|Aj@|@KSeBgCQSdAiApAhBqAiBrAoA~A}AnAqA^WcA{AW_@m@}@v@k@v@m@i@y@i@{@{AoBxAmA~DgDpB_BiKcPhKbPqB~A`G`JvFpIvDzFjBaB~DkDxOuN`@m@?g@o@mAkCiDgBmCO}ADqBXoARy@dA}@lAcAnB{AhB]rBHf@GjBGfBXrOzCzAl@vD|D`CjC~@fAhF|FbK|KpA~A`AkB{@kC|C{F|JyEnF_CuBcGtBbGdKyE~Bu@xFoC|BeAp@~BtBvFMT|@zClAlDm@zF[`CO|@oB`BnBaBN?p@tCj@lB{E|DgLtJkHnGyAtAf@j@`CjCbFnFxM~NvJ`KjAnAnAdC`@lL|ApPVpAf@J|Ek@nCwArAeBdHmLLeAQ{@sA{Fs@eAcAyAz@w@`CiBjA_@~WmBtADjBrAf@hAZt@z@LtBExE~DbBxAiBdBhBeBzA~AdEvDiE`EhEaEdJ}ImAgB~A_BaCeD`CdDbElFvAmArDaD~ByCGgBL{@n@cAx@y@`A{@l@e@Xv@v@rBjAzCv@|AfA}@fD_DtE{ElBiB~@iBb@y@\\m@^i@LLLLTcAJg@jA}GxBaQjGme@nB}Lp@yArBaCzFyFlBW|CQnFU~AG@}AEgEk@wAkCcFo@eBc@cEVeBn@sAvAkHf@{Dl@gElB{DjBwB~EeEz@aC|@}G~BaC`HiGzI_IjTsRhKgJlChAxBfB|@`BfAfBTMtAa@nCe@pBF`BWv@c@hBcCz@_Cv@qPjA_ElBcClA{@rBm@xBWhHMnDe@fE}ClBq@vAGnCt@~N`L`CbBtCd@nC_@bBoAxF_K~CkG|B}Br@WpJw@~CgAhBaBvAiCfAiDpAmCrEeCvEaA`G`@jAFvBMlBs@`BaBjAaBhCoDjEwGnC_DtHwDrBa@nFDtIPxBShBkAr@uAXoCDsBZkBjAcBbIkD~GqCzCqA`AeA`@kA?{B_@cFRuAxAyBfB{AlGiFhCuC|@oBzAsAhDKtJhB`JxB~DlAxJpBrFvBdADv@OjB{AnLmMj@e@Su@eEqJiBsDmC_EcMwPoQuUqBkBwDcCe\\aTuZsQwKoHeGuF"; // (use o full polyline aqui)
+  "|sf_DrndiHfGWJQ`Am@dNo@bPw@bc@gBzGYZk@WU[QmEeZe@_DEs@p@F~BRn@D?c@BsB@aDBiDB{Bd@mFkBMcAIJsAVuD^oG^aEj@uBnAwBhN_MnVsSrBgB{AyCmB{D[oADcEUaAoBkCvAmApAiAfBeBwBuC{AyBa@a@gEyCxH_IZFdA|Aj@|@qB{Cr@}ApAhBqAiBrAoA~A}AnAqA^WcA{AW_@m@}@v@k@v@m@i@y@i@{@{AoBxAmA~DgDxNrTyNsTpB_BiKcPiBwCaA_BtAgAlEmDhFaEpB{A^n@f@x@nCmBvQyOrIqH|DiDIsAUgDWgDm@kICu@@ADC@Kp@wCvI}XDuHIga@tB_GbK_VbP}_@~BuFRcBO}@iAOmBJiQt@wG\\wG\\CgACgAq@Bp@CBfABfAvG]vG]xGYvGY@~A@`B@xBBzEeOd^iLfXg@zACnDJl^Y~GaK`\\I@?ThBtU~Dti@TdCQh@aGrB_@dANNnCeBlIYjUtEzIdJpPbRxC`Dh@p@^w@Z}@]eAW{@z@}Az@}ARg@Z_@pEqB|E}BvB_Az@a@gA_Dm@cBl@bBfA~Cx@_@`EiBbEmBnIoDlB}@X`At@|BpAbEjAtEx@hC[xCq@fG}BnB|BoBt@fDh@hBe@^kJ~HwHpG_IfH`GvGfKfLxL~LvFnG`AzBJfDpAbSp@pFzAHpF_AvAaA|FcJxB}D@{@aA}EqBwDSeAbByAvAaAtSkB|EYzAVtBdCHj@x@^hBI`DvBlCzBl@h@{AtAzAuAl@n@`B|Ar@l@rAsAhCeCfE_En@o@{B_D|EvG`BtBj@e@lAcAxAqArDeE?}@XaCdAsAbCwBvBxF`A|BZl@z@s@z@w@bB}AdCmCdFkFlC{EZZZ{AdA}FvD{Y`Iik@rByDzBsB|C_DbAs@lCIhH_@v@CbAE@sA?eBQmCqCmF}AkECqErByGrB}NxAkDvAcBhFmElAsBfAkIpA}AjMcLrQaPlQcPlCgBtEtClD~EtEkAjECvCwB`BeDVwDVuIdAwE|DwE`Bo@nKk@tEa@|A{@xEwC`D?zDxBxGfFhF|DrCt@pCUtAs@pDyFpCiFdAsBfDoE^ShHq@|FoA|AoAfDuHjCsElIsCdCCzHd@pBc@tB{AnD_FxFmIrFuFrH}CfUFtBaA|@uAf@sFn@qDx@aA~E{BdFqBfJmEn@uAYmIbAgEbPyNdC}DpCa@|KhBnKjCrLtCnHdCbCN~ByAdJ_KzAaBXcAiCqGmCoFuIgMiToY{GcIkUiOy\\sSkQmKwLgK";
 
 const routePath = ref([]);
 
@@ -19,7 +19,7 @@ onMounted(() => {
     :center="routePath[0]"
     :zoom="13"
     map-type-id="roadmap"
-    style="width: 100%; height: 500px"
+    style="width: 100%; height: 800px"
   >
     <GMapPolyline
       :path="routePath"
