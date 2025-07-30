@@ -48,7 +48,7 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Vans e Micros', active: false, route: 'vehicles' },
+      { name: '> Vans e Micros', active: false, route: '/default/admin/vehicles' },
       { name: '> Rastrear Veiculo', active: false, route: '/admin/track-vehicle' },
     ]
   },
@@ -70,8 +70,8 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Motoristas', active: false, route: 'drivers' },
-      { name: '> Rastrear Motorista', active: false, route: '/admin/track-driver' },
+      { name: '> Motoristas', active: false, route: '/default/admin/drivers' },
+      { name: '> Rastrear Motorista', active: false, route: '/default/admin/track-driver' },
     ]
   },
   {

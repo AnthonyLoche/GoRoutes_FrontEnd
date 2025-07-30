@@ -5,6 +5,7 @@ import { reactive } from "vue";
 export const useVehiclesStore = defineStore("vehicles", () => {
     const state = reactive({
         vehicles: [],
+        selectedVehicle: null,
         loading: false,
         error: null,
     })
@@ -14,6 +15,18 @@ export const useVehiclesStore = defineStore("vehicles", () => {
         try {
             const response = await VehiclesService.getVehicles();
             state.vehicles = response.data;
+        } catch (error) {
+            state.error = error;
+        } finally {
+            state.loading = false;
+        }
+    }
+
+    const getVehicle = async (id) => {
+        state.loading = true;
+        try {
+            const response = await VehiclesService.getVehicle(id);
+            state.selectedVehicle = response.data
         } catch (error) {
             state.error = error;
         } finally {
@@ -53,6 +66,7 @@ export const useVehiclesStore = defineStore("vehicles", () => {
         state,
         getVehicles,
         createVehicle,
+        getVehicle,
         deleteVehicle,
     }
 });

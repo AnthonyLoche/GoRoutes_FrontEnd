@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores'
-import PhotoComp from '../profiles-images/PhotoComp.vue'
-import ShowPhoto from '../profiles-images/ShowPhoto.vue'
-import UploadPhoto from '../profiles-images/UploadPhoto.vue'
+import PhotoComp from '@/components/global/profiles-images/PhotoComp.vue'
+import ShowPhoto from '@/components/global/profiles-images/ShowPhoto.vue'
+import UploadPhoto from '@/components/global/profiles-images/UploadPhoto.vue'
 
 const authStore = useAuthStore()
 const isEditing = ref(false)

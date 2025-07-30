@@ -1,36 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import BlankLayout from '@/layouts/BlankLayout.vue';
-import { HomeView, LoginView, DashboardView, RegisterView, ProfileResponsibleView, ProfileDriverView, TestView, DriverAdminView, VehiclesAdminView} from '@/views';
+import { Views } from '@/views';
 import { useAuthStore } from '@/stores';
 
 const routes = [
   {
     path: '/',
-    component: HomeView
+    component: Views.HomeView,
   },
   {
     path: '/default',
     component: DefaultLayout,
     meta: { requiresAuth: true },
     children: [
-      { path: '', component: HomeView },
-      { path: 'home', component: HomeView },
-      { path: 'admin/dashboard', component: DashboardView },
-      { path: 'admin/drivers', component: DriverAdminView },
-      { path: 'admin/vehicles', component: VehiclesAdminView },
+      { path: '', component: Views.HomeView },
+      { path: 'home', component: Views.HomeView },
+      { path: 'admin/dashboard', component: Views.DashboardView },
+      { path: 'admin/drivers', component: Views.DriverAdminView },
+      { path: 'admin/vehicles', component: Views.VehiclesAdminView },
+      { path: 'admin/vehicles/:id', component: Views.VehicleAdminRetrieveView },
+      { path: 'admin/drivers/:id', component: Views.DriverAdminRetrieveView },
     ],
   },
   {
     path: '/blank',
     component: BlankLayout,
     children: [
-      { path: '', component: LoginView },
-      { path: 'login', component: LoginView },
-      { path: 'register', component: RegisterView },
-      { path: 'profile/responsible', component: ProfileResponsibleView },
-      { path: 'profile/driver', component: ProfileDriverView },
-      { path: 'test', component: TestView },
+      { path: '', component: Views.LoginView },
+      { path: 'login', component: Views.LoginView },
+      { path: 'register', component: Views.RegisterView },
+      { path: 'profile/responsible', component: Views.ProfileResponsibleView },
+      { path: 'profile/driver', component: Views.ProfileDriverView },
+      { path: 'test', component: Views.TestView },
     ],
   },
 ];

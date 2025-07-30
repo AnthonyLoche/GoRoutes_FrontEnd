@@ -53,7 +53,7 @@
           v-if="item.Foto"
           :src="item.Foto"
           alt="Foto do veículo"
-          style="width: 100px; height: 95px; border-radius: 50%; margin-top: 10px;"
+          style="width: 50px; height: 50px; border-radius: 50%; margin-top: 10px;"
         />
         <span v-else>N/A</span>
       </template>
@@ -135,6 +135,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useVehiclesStore } from '@/stores'
 import AddVehicleModal from './AddVehicleModal.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const vehiclesStore = useVehiclesStore()
 const search = ref('')
@@ -180,7 +182,11 @@ const pageCount = computed(() => Math.ceil(totalItems.value / itemsPerPage.value
 const startIndex = computed(() => (page.value - 1) * itemsPerPage.value + 1)
 const endIndex = computed(() => Math.min(page.value * itemsPerPage.value, totalItems.value))
 
-const editItem = (item) => console.log('Edit item:', item)
+const editItem = (item) => {
+  console.log('Edit item:', item)
+  vehiclesStore.state.selectedVehicle = item
+  router.push(`/default/admin/vehicles/${item.id}`)
+}
 const deleteItem = (item) => {
   if (confirm('Are you sure you want to delete this item?')) {
     vehiclesStore.deleteVehicle(item.id)

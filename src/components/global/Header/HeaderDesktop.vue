@@ -40,7 +40,7 @@ defineProps({
                     <Transition name="fade">
                         <div v-if="showMenu" class="dropdown-menu">
                             <ul>
-                                <router-link :to="`/blank/profile/${authStore.state.user.type}`">
+                                <router-link :to="`/blank/profile/${authStore.state.type}`">
                                     <Account />
                                     Profile
                                 </router-link>

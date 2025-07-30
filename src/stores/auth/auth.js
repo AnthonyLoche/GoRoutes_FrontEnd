@@ -27,16 +27,16 @@ export const useAuthStore = defineStore('auth', () => {
 
       if (state.value.user.driver_data) {
         router.push('/blank/profile/driver')
-        state.value.user.type = 'driver'
+        state.value.type = 'driver'
       } else if (state.value.user.responsible_data) {
         router.push('/blank/profile/responsible')
-        state.value.user.type = 'responsible'
+        state.value.type = 'responsible'
       } else if (state.value.user.passenger_data && state.value.user.passenger_data.is_student) {
         router.push('/blank/profile/student')
-        state.value.user.type = 'student'
+        state.value.type = 'student'
       } else if (state.value.user.passenger_data) {
         router.push('/blank/profile/passenger')
-        state.value.user.type = 'passenger'
+        state.value.type = 'passenger'
       }
       showSuccessToast('Login realizado com sucesso!')
     } catch (error) {

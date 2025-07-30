@@ -13,6 +13,17 @@ class VehiclesService {
         }
     }
 
+    async getVehicle(id) {
+        try {
+            const response = await api.get(`/goroutes/vehicles/${id}/`);
+            return response;
+        } catch (error) {
+            console.error(error);
+            showErrorToast("Falha ao recuperar o veículo.");
+            return error;
+        }
+    }
+
     async createVehicle(data) {
         try {
             const response = await api.post(`/goroutes/vehicles/`, data);
