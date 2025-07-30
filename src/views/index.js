@@ -5,4 +5,5 @@ export { default as ProfileResponsibleView } from './auth/ProfileResponsibleView
 export { default as HomeView } from './global/HomeView.vue'
 export { default as ProfileDriverView } from './auth/ProfileDriverView.vue'
 export { default as TestView } from './tests/TestView.vue'
-export {default as DriverAdminView } from './admin/DriversAdminView.vue'
+export {default as DriverAdminView } from './admin/drivers/DriversAdminView.vue'
+export { default as VehiclesAdminView } from './admin/vehicles/VehiclesAdminView.vue'

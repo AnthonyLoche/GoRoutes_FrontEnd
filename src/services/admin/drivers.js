@@ -1,4 +1,5 @@
 import api from "@/plugins/axios";
+import { showSuccessToast, showErrorToast } from '@/utils/toast'
 
 class DriversService {
     async getDrivers() {
@@ -14,9 +15,11 @@ class DriversService {
     async createDriver(data) {
         try {
             const response = await api.post(`/authentication/drivers/`, data);
+            showSuccessToast('Motorista criado com sucesso!');
             return response;
         } catch (error) {
             console.error(error);
+            showErrorToast('Erro ao criar motorista');
             return error;
         }
     }
@@ -24,9 +27,11 @@ class DriversService {
     async deleteDriver(id) {
         try {
             const response = await api.delete(`/authentication/drivers/${id}/`);
+            showSuccessToast('Motorista deletado com sucesso!');
             return response;
         } catch (error) {
             console.error(error);
+            showErrorToast('Erro ao deletar motorista');
             return error;
         }
     }

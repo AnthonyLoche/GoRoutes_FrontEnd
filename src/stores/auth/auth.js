@@ -23,6 +23,7 @@ export const useAuthStore = defineStore('auth', () => {
       state.value.token = response.data.access
       state.value.isLogged = true
       state.value.user = response.data.user
+      state.value.type = response.data.user.type
 
       if (state.value.user.driver_data) {
         router.push('/blank/profile/driver')

@@ -12,3 +12,5 @@ export { default as ProfileDataComp } from "./auth/profile-responsible/ProfileDa
 export { default as ProfileDataDriver } from "./auth/driver-responsible/ProfileDataDriver.vue";
 export { default as CardAdminDriver } from "./admin/drivers/CardAdmin.vue";
 export { default as TableDrivers } from "./admin/drivers/TableDrivers.vue";
+export { default as TableVehicles } from "./admin/vehicles/TableVehicles.vue";
+export { default as CardVehicleAdmin } from "./admin/vehicles/CardVehicleAdmin.vue";

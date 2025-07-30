@@ -48,7 +48,7 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Vans e Micros', active: false, route: '/admin/vehicles' },
+      { name: '> Vans e Micros', active: false, route: 'vehicles' },
       { name: '> Rastrear Veiculo', active: false, route: '/admin/track-vehicle' },
     ]
   },
@@ -58,8 +58,10 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Alunos', active: false, route: '/admin/students' },
-      { name: '> Pais', active: false, route: '/admin/parents' },
+      { name: '> Passageiros', active: false, route: '/admin/students' },
+      { name: '> Responsáveis', active: false, route: '/admin/parents' },
+      { name: '> Pagamentos', active: false, route: '/admin/companies' },
+      { name: '> Contratos', active: false, route: '/admin/companies' }
     ]
   },
   {

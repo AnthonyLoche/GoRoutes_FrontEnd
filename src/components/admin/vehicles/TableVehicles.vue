@@ -1,7 +1,6 @@
 <!-- eslint-disable vue/valid-v-slot -->
 <template>
   <div class="pa-4">
-    <!-- Header com filtros e ações -->
     <div class="d-flex align-center mb-4">
       <div class="d-flex align-center">
         <span class="text-h6 mr-4">Filtros :</span>
@@ -34,12 +33,11 @@
           color="primary"
           @click="showAddDialog = true"
         >
-          Adicionar Motorista
+          Adicionar Veículo
         </v-btn>
       </div>
     </div>
 
-    <!-- Tabela -->
     <v-data-table
       v-model:items-per-page="itemsPerPage"
       v-model:page="page"
@@ -50,7 +48,50 @@
       :loading="loading"
       loading-text="Loading... Please wait"
     >
-      
+      <template #item.Foto="{ item }">
+        <img
+          v-if="item.Foto"
+          :src="item.Foto"
+          alt="Foto do veículo"
+          style="width: 100px; height: 95px; border-radius: 50%; margin-top: 10px;"
+        />
+        <span v-else>N/A</span>
+      </template>
+
+      <template #item.Status="{ item }">
+        <div class="d-flex align-center">
+          <v-icon
+            v-if="item.Status === 'disponível'"
+            color="success"
+            class="mr-2"
+          >
+            mdi-check-circle
+          </v-icon>
+          <v-icon
+            v-else-if="item.Status === 'manutenção'"
+            color="warning"
+            class="mr-2"
+          >
+            mdi-wrench
+          </v-icon>
+          <v-icon
+            v-else-if="item.Status === 'em rota'"
+            color="info"
+            class="mr-2"
+          >
+            mdi-truck
+          </v-icon>
+          <v-icon
+            v-else
+            color="error"
+            class="mr-2"
+          >
+            mdi-block-helper
+          </v-icon>
+            {{ item.Status.charAt(0).toUpperCase() + item.Status.slice(1) }}
+        </div>
+      </template>
+
       <template #item.actions="{ item }">
         <div class="d-flex justify-center align-center">
           <v-menu>
@@ -62,10 +103,6 @@
                 <v-list-item-icon><v-icon>mdi-pencil</v-icon></v-list-item-icon>
                 <v-list-item-title>Editar</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="uploadFile">
-                <v-list-item-icon><v-icon>mdi-radar</v-icon></v-list-item-icon>
-                <v-list-item-title>Rastrear</v-list-item-title>
-              </v-list-item>
               <v-list-item @click="deleteItem(item.raw)">
                 <v-list-item-icon><v-icon class="text-error">mdi-delete</v-icon></v-list-item-icon>
                 <v-list-item-title class="text-error">Deletar</v-list-item-title>
@@ -75,7 +112,6 @@
         </div>
       </template>
 
-      <!-- Rodapé -->
       <template #bottom>
         <div class="d-flex align-center justify-space-between pa-4">
           <div class="text-body-2 text-medium-emphasis">
@@ -91,87 +127,51 @@
       </template>
     </v-data-table>
 
-    <!-- Aside de filtros com transição -->
-    <transition name="v-slide-x-reverse-transition">
-      <FilterAside
-        v-if="showFiltersAside"
-        :filters="filters"
-        :carrier-options="carrierOptions"
-        :port-options="portOptions"
-        @close="showFiltersAside = false"
-      />
-    </transition>
-
-    <!-- Modal de Adicionar Motorista -->
-    <AddDriverModal v-model="showAddDialog" />
+    <AddVehicleModal v-model="showAddDialog" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useDriversStore } from '@/stores'
-import FilterAside from './AsideFilters.vue'
-import AddDriverModal from './AddDriverModal.vue'
+import { useVehiclesStore } from '@/stores'
+import AddVehicleModal from './AddVehicleModal.vue'
 
-const driversStore = useDriversStore()
+const vehiclesStore = useVehiclesStore()
 const search = ref('')
-const showFiltersAside = ref(false)
 const showAddDialog = ref(false)
 const loading = ref(false)
 const page = ref(1)
 const itemsPerPage = ref(10)
 
-const filters = ref({
-  carrier: null,
-  orgPort: null,
-  destPort: null,
-  transitTime: null
-})
-
-const carrierOptions = ['Maersk', 'MSC', 'COSCO', 'CMA CGM', 'Evergreen']
-const portOptions = ['Dhaka', 'Mumbai', 'Chennai', 'Kolkata', 'Singapore']
-
 const headers = [
+  { title: "Foto", key: "Foto", sortable: false, align: "center" },
   { title: 'ID', key: 'ID', sortable: true },
-  { title: 'Nome', key: 'Nome', sortable: true },
-  { title: 'CNH', key: 'CNH', sortable: true },
-  { title: 'CPF', key: 'CPF', sortable: true },
-  { title: 'Username', key: 'Username', sortable: true },
-  { title: 'Email', key: 'Email', sortable: true },
-  { title: 'Telefone', key: 'Telefone', sortable: true },
-  { title: 'Endereço', key: 'Endereço', sortable: true },
+  { title: 'Placa', key: 'Placa', sortable: true },
+  { title: 'Modelo', key: 'Modelo', sortable: true },
+  { title: 'Assentos', key: 'Assentos', sortable: true },
+  { title: 'Status', key: 'Status', sortable: true },
   { title: 'Ações', key: 'actions', sortable: false, align: 'center' }
 ]
 
-// Dados da tabela
 const items = computed(() => {
-  return driversStore.state.drivers
-    .filter(driver => driver.driver_data)
-    .map(driver => {
-      const address = driver.driver_data.adresses?.[0]
-      return {
-        ID: driver.id,
-        Nome: driver.name,
-        CNH: driver.driver_data.cnh,
-        CPF: driver.driver_data.cpf,
-        Username: driver.username,
-        Email: driver.email,
-        Telefone: driver.telephone,
-        Endereço: address
-          ? `${address.street}, ${address.number} - ${address.city}/${address.state}`
-          : 'N/A',
-        raw: driver
-      }
-    })
+  return vehiclesStore.state.vehicles.map(vehicle => ({
+    ID: vehicle.id,
+    Placa: vehicle.plate,
+    Modelo: vehicle.model,
+    Assentos: vehicle.seats,
+    Status: vehicle.status,
+    Foto: vehicle.picture,  
+    raw: vehicle
+  }))
 })
 
 // Filtro por texto
 const filteredItems = computed(() => {
   const term = search.value.toLowerCase()
   return items.value.filter(item =>
-    item.Nome?.toLowerCase().includes(term) ||
-    item.Email?.toLowerCase().includes(term) ||
-    item.Username?.toLowerCase().includes(term)
+    item.Placa?.toLowerCase().includes(term) ||
+    item.Modelo?.toLowerCase().includes(term) ||
+    item.Status?.toLowerCase().includes(term)
   )
 })
 
@@ -180,14 +180,13 @@ const pageCount = computed(() => Math.ceil(totalItems.value / itemsPerPage.value
 const startIndex = computed(() => (page.value - 1) * itemsPerPage.value + 1)
 const endIndex = computed(() => Math.min(page.value * itemsPerPage.value, totalItems.value))
 
-// Ações
 const editItem = (item) => console.log('Edit item:', item)
 const deleteItem = (item) => {
   if (confirm('Are you sure you want to delete this item?')) {
-    driversStore.deleteDriver(item?.driver_data?.id)
+    vehiclesStore.deleteVehicle(item.id)
       .then(() => {
-        console.log('Item deleted:', item?.driver_data?.id)
-        driversStore.getDrivers() 
+        console.log('Item deleted:', item.id)
+        vehiclesStore.getVehicles()
       })
       .catch(error => {
         console.error('Error deleting item:', error)
@@ -195,10 +194,9 @@ const deleteItem = (item) => {
   }
 }
 
-// On mount
 onMounted(async () => {
   loading.value = true
-  await driversStore.getDrivers()
+  await vehiclesStore.getVehicles()
   loading.value = false
 })
 </script>
@@ -206,9 +204,6 @@ onMounted(async () => {
 <style scoped>
 .v-data-table {
   border-radius: 8px;
-}
-.v-chip {
-  font-weight: 500;
 }
 .text-error {
   color: rgb(var(--v-theme-error)) !important;

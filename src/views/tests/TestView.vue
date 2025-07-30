@@ -1,8 +1,10 @@
 <script setup>
 import { HeaderMain, AsideCompProfile } from '@/components'
-import AbComp from './AbComp.vue';
 import PolylineComp from './PolylineComp.vue';
+// eslint-disable-next-line no-unused-vars
 import MarkerPolyline from './MarkerPolyline.vue';
+// eslint-disable-next-line no-unused-vars
+import AbComp from './AbComp.vue';
 </script>
 
 <template>
