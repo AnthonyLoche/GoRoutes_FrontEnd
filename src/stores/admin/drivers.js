@@ -5,6 +5,7 @@ import { reactive } from "vue";
 export const useDriversStore = defineStore("drivers", () => {
     const state = reactive({
         drivers: [],
+        selectedDriver: null,
         loading: false,
         error: null,
     })
@@ -16,6 +17,21 @@ export const useDriversStore = defineStore("drivers", () => {
             state.drivers = response.data;
         } catch (error) {
             state.error = error;
+        } finally {
+            state.loading = false;
+        }
+    }
+
+    const getDriver = async (id) => {
+        state.loading = true;
+        try{
+            const response  = await DriversService.getDriver(id);
+            state.selectedDriver = response.data;
+            return response;
+        }
+        catch (error) {
+            state.error = error;
+            console.error(error);
         } finally {
             state.loading = false;
         }
@@ -52,6 +68,7 @@ export const useDriversStore = defineStore("drivers", () => {
     return {
         state,
         getDrivers,
+        getDriver,
         createDriver,
         deleteDriver,
     }

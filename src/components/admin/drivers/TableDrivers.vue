@@ -62,7 +62,7 @@
                 <v-list-item-icon><v-icon>mdi-pencil</v-icon></v-list-item-icon>
                 <v-list-item-title>Editar</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="uploadFile">
+              <v-list-item @click="track(item.raw)">
                 <v-list-item-icon><v-icon>mdi-radar</v-icon></v-list-item-icon>
                 <v-list-item-title>Rastrear</v-list-item-title>
               </v-list-item>
@@ -112,6 +112,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useDriversStore } from '@/stores'
 import FilterAside from './AsideFilters.vue'
 import AddDriverModal from './AddDriverModal.vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const driversStore = useDriversStore()
 const search = ref('')
@@ -181,7 +183,18 @@ const startIndex = computed(() => (page.value - 1) * itemsPerPage.value + 1)
 const endIndex = computed(() => Math.min(page.value * itemsPerPage.value, totalItems.value))
 
 // Ações
-const editItem = (item) => console.log('Edit item:', item)
+const editItem = (item) => {
+  console.log('Edit item:', item)
+  driversStore.state.selectedDriver = item
+  router.push(`/default/admin/drivers/${item.id}`)
+}
+
+const track = (item) => {
+  console.log('Track item:', item)
+  driversStore.state.selectedDriver = item
+  router.push(`/default/admin/drivers/${item.id}/track`)
+}
+
 const deleteItem = (item) => {
   if (confirm('Are you sure you want to delete this item?')) {
     driversStore.deleteDriver(item?.driver_data?.id)

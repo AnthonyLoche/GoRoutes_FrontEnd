@@ -12,6 +12,16 @@ class DriversService {
         }
     }
 
+    async getDriver(id) {
+        try {
+            const response = await api.get(`/authentication/users/${id}/`);
+            return response;
+        } catch (error) {
+            console.error(error);
+            return error;
+        }
+    }
+
     async createDriver(data) {
         try {
             const response = await api.post(`/authentication/drivers/`, data);

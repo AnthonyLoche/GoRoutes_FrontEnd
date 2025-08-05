@@ -21,6 +21,7 @@ const routes = [
       { path: 'admin/vehicles', component: Views.VehiclesAdminView },
       { path: 'admin/vehicles/:id', component: Views.VehicleAdminRetrieveView },
       { path: 'admin/drivers/:id', component: Views.DriverAdminRetrieveView },
+      { path: 'admin/drivers/:id/track', component: Views.DriverAdminTrackView },
     ],
   },
   {
@@ -33,6 +34,7 @@ const routes = [
       { path: 'profile/responsible', component: Views.ProfileResponsibleView },
       { path: 'profile/driver', component: Views.ProfileDriverView },
       { path: 'test', component: Views.TestView },
+      { path: 'websocket', component: Views.WebSocketView },
     ],
   },
 ];
