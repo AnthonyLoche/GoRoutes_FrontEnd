@@ -14,15 +14,17 @@
           <span>{{ category.name }}</span>
           <span v-if="category.subItems.length > 0" class="arrow" :class="{ rotated: category.expanded }">▼</span>
         </div>
+
         <Transition name="accordion">
           <div class="submenu" v-if="category.expanded && category.subItems.length > 0">
             <router-link
-               :to="subItem.route"
-               class="submenu-item"
-               :class="{ active: subItem.active }"
-               v-for="(subItem, subIndex) in category.subItems"
-               :key="subIndex"
-               @click="activateSubItem(index, subIndex)">
+              v-for="(subItem, subIndex) in category.subItems"
+              :key="subIndex"
+              :to="subItem.route"
+              class="submenu-item"
+              :class="{ active: subItem.active }"
+              @click="activateSubItem(index, subIndex)">
+              <component :is="subItem.icon" class="submenu-icon" />
               <span>{{ subItem.name }}</span>
             </router-link>
           </div>
@@ -33,14 +35,19 @@
 </template>
 
 <script setup>
-import { ref, markRaw } from 'vue';
+import { ref, markRaw } from 'vue'
 
-import CarIcon from "vue-material-design-icons/Car.vue";
-import AccountIcon from "vue-material-design-icons/Account.vue";
-import MapMarkerPathIcon from "vue-material-design-icons/MapMarkerPath.vue";
-import CogIcon from "vue-material-design-icons/Cog.vue";
+import CarIcon from 'vue-material-design-icons/Car.vue'
+import AccountIcon from 'vue-material-design-icons/Account.vue'
+import MapMarkerPathIcon from 'vue-material-design-icons/MapMarkerPath.vue'
+import CogIcon from 'vue-material-design-icons/Cog.vue'
+import UserIcon from 'vue-material-design-icons/AccountCircle.vue'
+// import CreditCardIcon from 'vue-material-design-icons/CreditCard.vue'
+// import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
+import RouteIcon from 'vue-material-design-icons/MapMarker.vue'
 
-const isSidebarVisible = ref(true);
+const isSidebarVisible = ref(true)
+
 const menuItems = ref([
   {
     name: 'Veículos',
@@ -48,8 +55,7 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Vans e Micros', active: false, route: '/default/admin/vehicles' },
-      { name: '> Rastrear Veiculo', active: false, route: '/admin/track-vehicle' },
+      { name: 'Vans e Micros', active: false, route: '/default/admin/vehicles', icon: markRaw(CarIcon) }
     ]
   },
   {
@@ -58,10 +64,10 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Passageiros', active: false, route: '/admin/students' },
-      { name: '> Responsáveis', active: false, route: '/admin/parents' },
-      { name: '> Pagamentos', active: false, route: '/admin/companies' },
-      { name: '> Contratos', active: false, route: '/admin/companies' }
+      { name: 'Passageiros', active: false, route: '/default/admin/passengers', icon: markRaw(UserIcon) },
+      { name: 'Responsáveis', active: false, route: '/default/admin/responsibles', icon: markRaw(UserIcon) },
+      // { name: 'Pagamentos', active: false, route: '/default/admin/payments', icon: markRaw(CreditCardIcon) },
+      // { name: 'Contratos', active: false, route: '/default/admin/contracts', icon: markRaw(FileDocumentIcon) }
     ]
   },
   {
@@ -70,8 +76,8 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Motoristas', active: false, route: '/default/admin/drivers' },
-      { name: '> Rastrear Motorista', active: false, route: '/default/admin/track-driver' },
+      { name: 'Motoristas', active: false, route: '/default/admin/drivers', icon: markRaw(UserIcon) },
+      { name: 'Rastrear Motorista', active: false, route: '/default/admin/drivers/track-driver', icon: markRaw(MapMarkerPathIcon) }
     ]
   },
   {
@@ -80,9 +86,9 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Ver Rotas', active: false, route: '/admin/routes' },
-      { name: '> Criar Rota', active: false, route: '/admin/create-route' },
-      { name: '> Consultar Rota', active: false, route: '/admin/search-route' }
+      { name: 'Ver Rotas', active: false, route: '/admin/routes', icon: markRaw(RouteIcon) },
+      { name: 'Criar Rota', active: false, route: '/admin/create-route', icon: markRaw(RouteIcon) },
+      { name: 'Consultar Rota', active: false, route: '/admin/search-route', icon: markRaw(RouteIcon) }
     ]
   },
   {
@@ -92,48 +98,41 @@ const menuItems = ref([
     active: false,
     subItems: []
   }
-]);
+])
 
 const toggleSidebar = () => {
-  isSidebarVisible.value = !isSidebarVisible.value;
-};
+  isSidebarVisible.value = !isSidebarVisible.value
+}
 
 const toggleCategory = (index) => {
-  menuItems.value[index].expanded = !menuItems.value[index].expanded;
+  menuItems.value[index].expanded = !menuItems.value[index].expanded
 
-  // Close other categories when opening a new one
   menuItems.value.forEach((category, i) => {
     if (i !== index) {
-      category.expanded = false;
+      category.expanded = false
     }
-  });
-
-  // Mark category as active
-  menuItems.value.forEach((category, i) => {
-    category.active = i === index;
-  });
-};
+    category.active = i === index
+  })
+}
 
 const activateCategory = (index) => {
   menuItems.value.forEach((category, i) => {
-    category.active = i === index;
-  });
-};
+    category.active = i === index
+  })
+}
 
 const activateSubItem = (categoryIndex, subItemIndex) => {
-  menuItems.value.forEach(category => {
-    category.subItems.forEach(subItem => {
-      subItem.active = false;
-    });
-  });
+  menuItems.value.forEach((category) => {
+    category.subItems.forEach((subItem) => {
+      subItem.active = false
+    })
+  })
 
-  // Activate selected subitem
-  menuItems.value[categoryIndex].subItems[subItemIndex].active = true;
-};
+  menuItems.value[categoryIndex].subItems[subItemIndex].active = true
+}
 </script>
 
 <style scoped>
-/* Estilos permanecem os mesmos */
 * {
   margin: 0;
   padding: 0;
@@ -149,16 +148,6 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
   overflow-y: auto;
   height: 100vh;
   border-right: 2px solid #E5E7EB;
-}
-
-.sidebar-collapsed {
-  width: 60px;
-}
-
-.sidebar-header {
-  padding: 15px;
-  text-align: center;
-  border-bottom: 1px solid #e0e0fe;
 }
 
 .menu-category {
@@ -220,19 +209,11 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
   border-right: 2px solid #5050ff;
 }
 
-/* Estilos específicos para router-link */
-.submenu-item.router-link-active {
-  background-color: #e0e0ff;
+.submenu-icon {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
   color: #5050ff;
-  font-weight: 500;
-  border-right: 2px solid #5050ff;
-}
-
-.submenu-item.router-link-exact-active {
-  background-color: #d0d0ff;
-  color: #4040ff;
-  font-weight: 600;
-  border-right: 3px solid #4040ff;
 }
 
 .arrow {
@@ -242,11 +223,6 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
 
 .arrow.rotated {
   transform: rotate(180deg);
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
 }
 
 .toggle-btn {
@@ -295,5 +271,11 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
 .accordion-leave-from {
   max-height: 200px;
   opacity: 1;
+}
+
+span{
+  display: flex;
+  align-items: center;
+ justify-content: center;
 }
 </style>

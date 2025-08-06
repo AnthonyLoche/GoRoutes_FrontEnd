@@ -22,6 +22,9 @@ const routes = [
       { path: 'admin/vehicles/:id', component: Views.VehicleAdminRetrieveView },
       { path: 'admin/drivers/:id', component: Views.DriverAdminRetrieveView },
       { path: 'admin/drivers/:id/track', component: Views.DriverAdminTrackView },
+      { path: 'admin/drivers/track-driver', component: Views.DriverAdminTrackByIdView },
+      { path: 'admin/passengers', component: Views.PassengersAdminView },
+      { path: 'admin/responsibles', component: Views.ResponsiblesAdminView },
     ],
   },
   {
