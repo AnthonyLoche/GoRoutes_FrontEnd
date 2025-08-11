@@ -24,6 +24,7 @@ const routes = [
       { path: 'admin/drivers/:id/track', component: Views.DriverAdminTrackView },
       { path: 'admin/drivers/track-driver', component: Views.DriverAdminTrackByIdView },
       { path: 'admin/passengers', component: Views.PassengersAdminView },
+      { path: 'admin/passengers/:id', component: Views.PassengerAdminRetrieveView },
       { path: 'admin/responsibles', component: Views.ResponsiblesAdminView },
     ],
   },
