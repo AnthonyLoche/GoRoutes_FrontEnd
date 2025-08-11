@@ -1,4 +1,5 @@
 <script setup>
+import TableResponsible from '@/components/admin/clients/TableResponsible.vue';
 import CardAccountDetails from 'vue-material-design-icons/CardAccountDetails.vue';
 </script>
 
@@ -7,6 +8,7 @@ import CardAccountDetails from 'vue-material-design-icons/CardAccountDetails.vue
         <h2 class="title-drivers">
             <CardAccountDetails />
             Dashboard de Responsáveis:</h2>
+            <TableResponsible/>
     </main>
 </template>
 
