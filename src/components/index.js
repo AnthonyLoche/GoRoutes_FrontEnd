@@ -15,4 +15,6 @@ export { default as TableDrivers } from "./admin/drivers/TableDrivers.vue";
 export { default as TableVehicles } from "./admin/vehicles/TableVehicles.vue";
 export { default as CardVehicleAdmin } from "./admin/vehicles/CardVehicleAdmin.vue";
 export { default as VehicleRetrieveDataComp } from "./admin/vehicles/VehicleRetrieveDataComp.vue";
-export { default as TableResponsible } from "./admin/clients/TableResponsible.vue"
+export { default as TableResponsible } from "./admin/responsibles/TableResponsible.vue"
+export { default as CardResponsibleAdmin } from "./admin/responsibles/CardResponsibleAdmin.vue"
+export { default as ResponsibleRetriveDataComp } from "./admin/responsibles/ResponsibleRetriveDataComp.vue"
