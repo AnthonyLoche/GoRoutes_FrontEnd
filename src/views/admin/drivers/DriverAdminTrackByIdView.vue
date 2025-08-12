@@ -12,9 +12,6 @@ onMounted(async() => {
 
 <template>
     <main>
-        <div class="header">
-            <h2>Rastreamento do Motorista</h2>
-        </div>
         <div class="contain">
             <AsideToTrackDriver />
             <TrackDriverMapById />
@@ -24,7 +21,7 @@ onMounted(async() => {
 
 <style scoped>
 main{
-    margin: 10px auto;
+    margin:  auto;
     width: 100%;
     display: flex;
     flex-direction: column;

@@ -121,7 +121,7 @@ const defaultCenter = { lat: -26.3, lng: -48.8 };
       :center="driverMarkers[0]?.position || defaultCenter"
       :zoom="12"
       map-type-id="roadmap"
-      style="width: 100%; height: 800px"
+      style="width: 100%; height: 90vh"
     >
       <GMapMarker
         v-for="(marker, idx) in driverMarkers"
@@ -174,7 +174,7 @@ const defaultCenter = { lat: -26.3, lng: -48.8 };
 <style scoped>
 .map-container {
   width: 100%;
-  height: 800px;
+  height: 90vh;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
