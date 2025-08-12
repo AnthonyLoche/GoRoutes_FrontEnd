@@ -29,15 +29,15 @@ function toggleEdit() {
                 
 
                     <v-text-field
-                        v-model="passengersStore.state.selectedPassenger.plate"
-                        label="Placa"
+                        v-model="passengersStore.state.selectedPassenger.name"
+                        label="Nome"
                         variant="outlined"
                         :readonly="true"
                     />
 
                     <v-text-field
-                        v-model="passengersStore.state.selectedPassenger.model"
-                        label="Modelo"
+                        v-model="passengersStore.state.selectedPassenger.passenger_data.cpf"
+                        label="CPF"
                         variant="outlined"
                         :readonly="!isEditing"
                     />
@@ -45,16 +45,16 @@ function toggleEdit() {
              
                     <v-text-field
                         class="full"
-                        v-model="passengersStore.state.selectedPassenger.seats"
-                        label="Capacidade"
+                        v-model="passengersStore.state.selectedPassenger.passenger_data.student_data.registration"
+                        label="Matrícula"
                         variant="outlined"
                         :readonly="!isEditing"
                     />
 
                     <v-text-field
                         class="full"
-                        v-model="passengersStore.state.selectedPassenger.status"
-                        label="Status"
+                        v-model="passengersStore.state.selectedPassenger.passenger_data.student_data.grade"
+                        label="Turma"
                         variant="outlined"
                         :readonly="!isEditing"
                     />
