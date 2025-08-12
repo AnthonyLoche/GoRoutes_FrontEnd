@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 
-const motoristaId = 1
+const user_id = 4
 const STATUS_KEY = 'motorista_status'
 
 const status = ref(localStorage.getItem(STATUS_KEY) || 'parado')
 const carPosition = ref(null)
 let socket = null
 let watchId = null
+let webscocketurl = import.meta.env.VITE_WEBSOCKET_URL
 
 const dragging = ref(false)
 const startX = ref(0)
@@ -15,7 +16,8 @@ const sliderX = ref(0)
 const threshold = 120
 
 function initWebSocket() {
-  socket = new WebSocket(`ws://localhost:8000/ws/localizacao/${motoristaId}/`)
+  // socket = new WebSocket(`ws://localhost:8000/ws/localizacao/${user_id}/`)
+socket = new WebSocket(`${webscocketurl}/localizacao/${user_id}/`)
 
   socket.onopen = () => {
     console.log('WebSocket conectado')
@@ -27,7 +29,7 @@ function initWebSocket() {
     carPosition.value = {
       lat: data.latitude,
       lng: data.longitude,
-      user_id: 22
+      user_id: 4
     }
   }
 
@@ -43,7 +45,7 @@ function sendCurrentLocation() {
       const data = {
         latitude: pos.coords.latitude,
         longitude: pos.coords.longitude,
-        user_id: 22
+        user_id: 4
       }
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify(data))
@@ -64,7 +66,7 @@ function startSendingLocation() {
       const data = {
         latitude: pos.coords.latitude,
         longitude: pos.coords.longitude,
-        user_id: 22
+        user_id: 4
       }
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.send(JSON.stringify(data))

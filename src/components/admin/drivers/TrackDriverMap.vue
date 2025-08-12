@@ -1,0 +1,240 @@
+<script setup>
+import { ref, onMounted } from "vue";
+import { useGoRoutesStore } from "@/stores";
+import router from "@/router";
+
+const goRoutesStore = useGoRoutesStore();
+
+const driverMarkers = ref([]);
+const selectedMarkerIndex = ref(null);
+const infoWindowKey = ref(0); // Key para forçar re-render
+
+// Função para criar ícone circular
+const createCircularIcon = (imageUrl) => {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  const size = 50;
+  
+  canvas.width = size;
+  canvas.height = size;
+  
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
+    img.onload = () => {
+      // Desenhar círculo de fundo
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#3b82f6';
+      ctx.stroke();
+      
+      // Recortar área circular para a imagem
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, (size / 2) - 2, 0, 2 * Math.PI);
+      ctx.clip();
+      
+      // Desenhar imagem redimensionada e centralizada
+      ctx.drawImage(img, 0, 0, size, size);
+      ctx.restore();
+      
+      resolve(canvas.toDataURL());
+    };
+    
+    img.onerror = () => {
+      // Em caso de erro, usar ícone padrão
+      resolve("https://cdn-icons-png.flaticon.com/512/744/744465.png");
+    };
+    
+    img.src = imageUrl;
+  });
+};
+
+onMounted(async () => {
+  try {
+    await goRoutesStore.getActiveRoutes();
+    
+    const drivers = goRoutesStore.state.transiDrivers
+      .filter(d => d.my_location && d.my_location.latitude && d.my_location.longitude);
+    
+    const markersWithIcons = await Promise.all(
+      drivers.map(async (d) => {
+        const hasPhoto = d.icon_driver && d.icon_driver.length > 0;
+        let iconUrl;
+        
+        if (hasPhoto) {
+          iconUrl = await createCircularIcon(d.icon_driver);
+        } else {
+          iconUrl = "https://cdn-icons-png.flaticon.com/512/744/744465.png";
+        }
+        
+        return {
+          position: {
+            lat: parseFloat(d.my_location.latitude),
+            lng: parseFloat(d.my_location.longitude),
+          },
+          driverName: d.driver_name,
+          email: d.email,
+          id_driver: d.driver_id,
+          icon: {
+            url: iconUrl,
+            scaledSize: { width: 50, height: 50 },
+            anchor: { x: 25, y: 25 },
+          },
+        };
+      })
+    );
+    
+    driverMarkers.value = markersWithIcons;
+  } catch (error) {
+    console.error('Erro ao carregar rotas ativas:', error);
+  }
+});
+
+// Função para lidar com o clique no marcador
+const handleMarkerClick = (index, item) => {
+  selectedMarkerIndex.value = index;
+  infoWindowKey.value++;
+
+  goRoutesStore.state.selectedDriverToTrack = item;
+};
+
+// Função para fechar o InfoWindow
+const closeInfoWindow = () => {
+  selectedMarkerIndex.value = null;
+  goRoutesStore.state.selectedDriverToTrack = null;
+};
+
+// Funções para as ações dos botões
+const handleAction1 = (id) => {
+  router.push(`/default/admin/drivers/${id}`);
+};
+
+const handleAction2 = (driverName) => {
+  alert(`Ação 2 executada no motorista: ${driverName}`);
+  // Adicione aqui a lógica específica da Ação 2
+};
+
+// Posição padrão do mapa (Joinville, SC)
+const defaultCenter = { lat: -26.3, lng: -48.8 };
+</script>
+
+<template>
+  <div class="map-container">
+    <GMapMap
+      :center="driverMarkers[0]?.position || defaultCenter"
+      :zoom="12"
+      map-type-id="roadmap"
+      style="width: 100%; height: 100vh"
+    >
+      <GMapMarker
+        v-for="(marker, idx) in driverMarkers"
+        :key="`marker-${idx}`"
+        :position="marker.position"
+        :icon="marker.icon"
+        :title="marker.driverName"
+        @click="handleMarkerClick(idx, marker)"
+      />
+
+      <GMapInfoWindow
+        v-if="selectedMarkerIndex !== null && driverMarkers[selectedMarkerIndex]"
+        :key="`info-${infoWindowKey}`"
+        :position="driverMarkers[selectedMarkerIndex].position"
+        @closeclick="closeInfoWindow"
+        :options="{ 
+          disableAutoPan: false,
+          pixelOffset: { width: 0, height: -5 }
+        }"
+      >
+        <div class="info-window-content" :key="`content-${selectedMarkerIndex}-${infoWindowKey}`">
+          <h3>{{ driverMarkers[selectedMarkerIndex].driverName }}</h3>
+          <p><strong>Email:</strong> {{ driverMarkers[selectedMarkerIndex].email }}</p>
+          <div class="action-buttons">
+            <button 
+              class="action-btn primary"
+              @click="handleAction1(driverMarkers[selectedMarkerIndex].id_driver)"
+            >
+              Perfil
+            </button>
+            <button 
+              class="action-btn secondary"
+              @click="handleAction2(driverMarkers[selectedMarkerIndex].driverName)"
+            >
+              Mensagem
+            </button>
+            <button
+              class="action-btn secondary"
+              @click="handleAction3(driverMarkers[selectedMarkerIndex].driverName)"
+            >
+              Acessar Rota
+            </button>
+          </div>
+        </div>
+      </GMapInfoWindow>
+    </GMapMap>
+  </div>
+</template>
+
+<style scoped>
+.map-container {
+  width: 100%;
+  height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.info-window-content {
+  min-width: 200px;
+  padding: 8px;
+}
+
+.info-window-content h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.info-window-content p {
+  margin: 4px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.action-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.action-btn.primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background-color: #2563eb;
+}
+
+.action-btn.secondary {
+  background-color: #6b7280;
+  color: white;
+}
+
+.action-btn.secondary:hover {
+  background-color: #4b5563;
+}
+</style>

@@ -191,8 +191,8 @@ const editItem = (item) => {
 
 const track = (item) => {
   console.log('Track item:', item)
-  driversStore.state.selectedDriver = item
-  router.push(`/default/admin/drivers/${item.id}/track`)
+  driversStore.state.selectedDriver = item.driver_data
+  router.push(`/default/admin/drivers/${item.driver_data.id}/track`)
 }
 
 const deleteItem = (item) => {
