@@ -99,4 +99,36 @@ p.logo-subtext {
   font-family: "IBM Plex Sans", sans-serif;
   margin-bottom: 0.5rem;
 }
+
+@media screen and (max-width: 1024px) {
+  .logo-container {
+    justify-content: center;
+    text-align: center;
+    width: 90%;
+    
+  }
+
+  .logo-container h1 {
+    font-size: 2.5rem;
+  }
+
+  .logo {
+    width: 60%;
+  }
+
+  .logo-text {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  h3.logo-subtext {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  p.logo-subtext {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+}
 </style>

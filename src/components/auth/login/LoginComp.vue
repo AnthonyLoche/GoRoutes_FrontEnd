@@ -4,7 +4,7 @@ import captionComp from "@/components/auth/login/CaptionComp.vue";
 import { InputComp, ButtonComp, LogoComp } from "@/components";
 import { useAuthStore } from "@/stores";
 
-import { reactive } from "vue";
+import { reactive, onMounted, onUnmounted } from "vue";
 
 const authStore = useAuthStore();
 
@@ -13,9 +13,25 @@ const login = reactive({
     password: ""
 });
 
+const isScreenLarge = reactive({
+    value: window.innerWidth > 1024
+});
+
 const handleLogin = () => {
   authStore.login(login.email, login.password);
 };
+
+const updateScreenSize = () => {
+  isScreenLarge.value = window.innerWidth > 1024;
+};
+
+onMounted(() => {
+  window.addEventListener("resize", updateScreenSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateScreenSize);
+});
 </script>
 <template>
     <div class="container">
@@ -53,7 +69,9 @@ const handleLogin = () => {
             <div></div>
         </div>
     </div>
-    <BgImage :variant="1" />
+    <div class="back" v-if="isScreenLarge.value">
+        <BgImage :variant="1" />
+    </div>
 </template>
 <style scoped>
 .container {
@@ -107,15 +125,18 @@ const handleLogin = () => {
     width: 100%;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     .container {
         flex-direction: column;
         height: auto;
+        padding: 1rem;
+        height: 50vh;
     }
 
     .login-container {
         width: 100%;
         padding: 2rem 0;
+        margin-top: 15%;
     }
 
     .aside {
@@ -125,6 +146,10 @@ const handleLogin = () => {
     .form-container {
         width: 100%;
         padding: 0 1rem 1rem 1rem;
+    }
+
+    back{
+        display: none;
     }
 }
 </style>
