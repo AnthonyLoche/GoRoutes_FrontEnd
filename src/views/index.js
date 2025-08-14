@@ -15,6 +15,7 @@ import PassengersAdminView from './admin/passengers/PassengersAdminView.vue'
 import ResponsiblesAdminView from './admin/responsibles/ResponsiblesAdminView.vue'
 import DriverAdminTrackView from './admin/drivers/DriverAdminTrackView.vue'
 import PassengerAdminRetrieveView from './admin/passengers/PassengerAdminRetrieveView.vue'
+import DriverRouteIsActive from './admin/drivers/DriverRouteIsActive.vue'
 class Views {
   static HomeView = HomeView
   static LoginView = LoginView
@@ -33,6 +34,7 @@ class Views {
   static ResponsiblesAdminView = ResponsiblesAdminView
   static DriverAdminTrackView = DriverAdminTrackView
   static PassengerAdminRetrieveView = PassengerAdminRetrieveView
+  static DriverRouteIsActive = DriverRouteIsActive
 }
 
 export { Views }

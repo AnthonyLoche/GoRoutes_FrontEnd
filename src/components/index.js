@@ -21,3 +21,6 @@ export {default as PassengerRetrieveDataComp} from "./admin/passengers/Passenger
 export { default as TrackDriverMap } from "./admin/drivers/TrackDriverMap.vue";
 export { default as AsideToTrackDriver } from "./admin/drivers/AsideToTrackDriver.vue";
 export { default as TrackDriverMapById} from "./admin/drivers/TrackDriverMapById.vue";
+export { default as CaptionRouteActive } from "./admin/route/CaptionRouteAtive.vue";
+export { default as HeaderRouteActive } from "./admin/route/HeaderRouteActive.vue";
+export { default as MapRouteActive } from "./admin/route/MapRouteActive.vue";

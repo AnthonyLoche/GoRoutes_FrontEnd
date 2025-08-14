@@ -39,6 +39,7 @@ const routes = [
       { path: 'profile/driver', component: Views.ProfileDriverView },
       { path: 'test', component: Views.TestView },
       { path: 'websocket', component: Views.WebSocketView },
+      { path: 'admin/drivers/route-active', component: Views.DriverRouteIsActive }
     ],
   },
 ];

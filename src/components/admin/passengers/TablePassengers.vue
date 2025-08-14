@@ -12,7 +12,7 @@ const showFiltersAside = ref(false)
 const showAddDialog = ref(false)
 const loading = ref(false)
 const page = ref(1)
-const itemsPerPage = ref(10)
+const itemsPerPage = ref(6)
 
 const filters = ref({
   carrier: null,

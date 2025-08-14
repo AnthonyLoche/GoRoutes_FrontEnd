@@ -1,7 +1,7 @@
 <script setup>
 import BgImage from "@/components/auth/BgImage.vue";
 import captionComp from "@/components/auth/login/CaptionComp.vue";
-import { InputComp, ButtonComp, LogoComp } from "@/components";
+import { InputComp, LogoComp } from "@/components";
 import { useAuthStore } from "@/stores";
 
 import { reactive, onMounted, onUnmounted } from "vue";
@@ -33,6 +33,7 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateScreenSize);
 });
 </script>
+
 <template>
     <div class="container">
         <div class="login-container">
@@ -60,7 +61,9 @@ onUnmounted(() => {
                 <div v-if="authStore.state.error" class="error-message">
                     {{ authStore.state.message }}
                 </div>
-                <ButtonComp name="LOGIN" @click="handleLogin" padding=".5rem" />
+                <v-btn color="primary" @click="handleLogin" class="mt-3">
+                    LOGIN
+                </v-btn>
                 <captionComp pCaption="Ainda não é nosso cliente?" txtLink="Cadastre-se" link="/blank/register" />
             </div>
         </div>
@@ -73,6 +76,7 @@ onUnmounted(() => {
         <BgImage :variant="1" />
     </div>
 </template>
+
 <style scoped>
 .container {
     display: flex;
@@ -93,7 +97,7 @@ onUnmounted(() => {
     align-items: center;
 }
 
-.aside>div {
+.aside > div {
     width: 100%;
     min-height: 40vh;
     border-radius: 20px;
@@ -125,12 +129,12 @@ onUnmounted(() => {
     width: 100%;
 }
 
+/* MOBILE */
 @media screen and (max-width: 1024px) {
     .container {
         flex-direction: column;
         height: auto;
         padding: 1rem;
-        height: 50vh;
     }
 
     .login-container {
@@ -148,8 +152,20 @@ onUnmounted(() => {
         padding: 0 1rem 1rem 1rem;
     }
 
-    back{
-        display: none;
+    .back {
+        display: none; /* corrige o fundo */
     }
+}
+
+/* Ajustes para botão funcionar no mobile */
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* evita que div bloqueie touch */
+}
+
+.button-wrapper button {
+    pointer-events: auto; /* botão continua clicável */
+    touch-action: manipulation; /* força touch funcionar */
 }
 </style>
