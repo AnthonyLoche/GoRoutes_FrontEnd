@@ -5,7 +5,7 @@ import { reactive } from "vue";
 export const useResponsiblesStore = defineStore("responsibles", () => {
     const state = reactive({
         responsibles: [],
-        selectedDriver: null,
+        selectedResponsible: null,
         loading: false,
         error: null,
     })

@@ -101,7 +101,7 @@ const deleteItem = (item) => {
 // On mount
 onMounted(async () => {
   loading.value = true
-  await ResponsiblesStore.getResponsible()
+  await ResponsiblesStore.getResponsibles()
   loading.value = false
 })
 </script>
