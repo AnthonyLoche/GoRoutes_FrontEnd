@@ -19,6 +19,7 @@ const isScreenLarge = reactive({
 
 const handleLogin = () => {
   authStore.login(login.email, login.password);
+  alert("Login function called with email: " + login.email);
 };
 
 const updateScreenSize = () => {

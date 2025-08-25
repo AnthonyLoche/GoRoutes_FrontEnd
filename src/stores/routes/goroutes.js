@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { GoRoutesService } from "@/services";
 import { reactive } from "vue";
+import { useAuthStore } from "../auth/auth";
 
 export const useGoRoutesStore = defineStore("goroutes", () => {
        const state = reactive({
@@ -9,9 +10,11 @@ export const useGoRoutesStore = defineStore("goroutes", () => {
         activeRoutes: [],
         transiDrivers: [],
         selectedDriverToTrack: null,
+        myActiveRoute: null,
         loading: false,
         error: null,
     })
+    const authStore = useAuthStore();
 
     const getRoutes = async () => {
         state.loading = true;
@@ -67,11 +70,25 @@ export const useGoRoutesStore = defineStore("goroutes", () => {
         }
     }
 
+    const getRouteByDriverId = async () => {
+        state.loading = true;
+        const driverId = authStore.state.user.driver_data?.id;
+        try {
+            const response = await GoRoutesService.getRouteByDriverId(3);
+            state.myActiveRoute = response;
+        } catch (error) {
+            state.error = error;
+        } finally {
+            state.loading = false;
+        }
+    }
+
     return {
         state,
         getRoutes,
         getActiveRoutes,
-        getRouteById
+        getRouteById,
+        getRouteByDriverId
     }
 
 })

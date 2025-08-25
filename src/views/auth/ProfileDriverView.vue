@@ -1,5 +1,5 @@
 <script setup>
-import { HeaderMain, AsideCompProfile , ProfileDataDriver} from '@/components'
+import { HeaderMain, AsideDriverComp , ProfileDataDriver} from '@/components'
 </script>
 
 <template>
@@ -10,7 +10,7 @@ import { HeaderMain, AsideCompProfile , ProfileDataDriver} from '@/components'
         </div>
         <div class="grid">
             <div class="aside">
-                <AsideCompProfile />
+                <AsideDriverComp />
             </div>
             <div class="view">
                 <ProfileDataDriver />

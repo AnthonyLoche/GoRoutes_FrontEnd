@@ -30,6 +30,16 @@ class GoRoutesService {
             throw error;
         }
     }
+
+    async getRouteByDriverId(driverId) {
+        try {
+            const response = await api.get(`/goroutes/filter-my-active-route/${driverId}/`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching route for driver ID ${driverId}:`, error);
+            throw error;
+        }
+    }
 }
 
 export default new GoRoutesService();
