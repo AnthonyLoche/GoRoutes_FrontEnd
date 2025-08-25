@@ -1,12 +1,48 @@
 <script setup>
+import { TableResponsible, CardResponsibleAdmin } from '@/components';
+import PersonIcon from 'vue-material-design-icons/Account.vue';
+import PersonCheckIcon from 'vue-material-design-icons/AccountCheck.vue';
+import PersonWalkingIcon from 'vue-material-design-icons/Walk.vue';
+import PersonOffIcon from 'vue-material-design-icons/AccountOff.vue';
 import CardAccountDetails from 'vue-material-design-icons/CardAccountDetails.vue';
+
+const cards = [
+    {
+        icon: PersonIcon,
+        text: 'Total de Responsáveis',
+        subText: 'Número total de responsáveis cadastrados',
+        number: '50',
+    },
+    {
+        icon: PersonCheckIcon,
+        text: 'Responsáveis Ativos',
+        subText: 'Responsáveis atualmente ativos',
+        number: '40',
+    },
+    {
+        icon: PersonWalkingIcon,
+        text: 'Responsáveis em Rota',
+        subText: 'Responsáveis atualmente em rota',
+        number: '30',
+    },
+    {
+        icon: PersonOffIcon,
+        text: 'Responsáveis Inativos',
+        subText: 'Responsáveis que não estão ativos',
+        number: '10',
+    },
+];
 </script>
 
 <template>
-    <main>
+     <main>
         <h2 class="title-drivers">
             <CardAccountDetails />
-            Dashboard de Responsáveis:</h2>
+            Dashboard Responsáveis:</h2>
+        <div class="cards">
+            <CardResponsibleAdmin v-for="item in cards" :key="item.text" :icon="item.icon" :text="item.text" :subText="item.subText" :number="item.number" />
+        </div>
+        <TableResponsible />
     </main>
 </template>
 
@@ -14,6 +50,13 @@ import CardAccountDetails from 'vue-material-design-icons/CardAccountDetails.vue
 main {
     width: 90%;
     margin: 0 auto;
+}
+
+.cards {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
 }
 
 .title-drivers {
