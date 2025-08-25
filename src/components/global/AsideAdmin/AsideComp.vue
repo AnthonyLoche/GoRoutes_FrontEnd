@@ -146,7 +146,7 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
   overflow-y: auto;
-  height: 100vh;
+  height: 90vh;
   border-right: 2px solid #E5E7EB;
 }
 

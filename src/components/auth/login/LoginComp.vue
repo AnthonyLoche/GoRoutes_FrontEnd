@@ -1,10 +1,10 @@
 <script setup>
 import BgImage from "@/components/auth/BgImage.vue";
 import captionComp from "@/components/auth/login/CaptionComp.vue";
-import { InputComp, ButtonComp, LogoComp } from "@/components";
+import { InputComp, LogoComp } from "@/components";
 import { useAuthStore } from "@/stores";
 
-import { reactive } from "vue";
+import { reactive, onMounted, onUnmounted } from "vue";
 
 const authStore = useAuthStore();
 
@@ -13,10 +13,28 @@ const login = reactive({
     password: ""
 });
 
+const isScreenLarge = reactive({
+    value: window.innerWidth > 1024
+});
+
 const handleLogin = () => {
   authStore.login(login.email, login.password);
+  alert("Login function called with email: " + login.email);
 };
+
+const updateScreenSize = () => {
+  isScreenLarge.value = window.innerWidth > 1024;
+};
+
+onMounted(() => {
+  window.addEventListener("resize", updateScreenSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateScreenSize);
+});
 </script>
+
 <template>
     <div class="container">
         <div class="login-container">
@@ -44,7 +62,9 @@ const handleLogin = () => {
                 <div v-if="authStore.state.error" class="error-message">
                     {{ authStore.state.message }}
                 </div>
-                <ButtonComp name="LOGIN" @click="handleLogin" padding=".5rem" />
+                <v-btn color="primary" @click="handleLogin" class="mt-3">
+                    LOGIN
+                </v-btn>
                 <captionComp pCaption="Ainda não é nosso cliente?" txtLink="Cadastre-se" link="/blank/register" />
             </div>
         </div>
@@ -53,8 +73,11 @@ const handleLogin = () => {
             <div></div>
         </div>
     </div>
-    <BgImage :variant="1" />
+    <div class="back" v-if="isScreenLarge.value">
+        <BgImage :variant="1" />
+    </div>
 </template>
+
 <style scoped>
 .container {
     display: flex;
@@ -75,7 +98,7 @@ const handleLogin = () => {
     align-items: center;
 }
 
-.aside>div {
+.aside > div {
     width: 100%;
     min-height: 40vh;
     border-radius: 20px;
@@ -107,15 +130,18 @@ const handleLogin = () => {
     width: 100%;
 }
 
-@media screen and (max-width: 768px) {
+/* MOBILE */
+@media screen and (max-width: 1024px) {
     .container {
         flex-direction: column;
         height: auto;
+        padding: 1rem;
     }
 
     .login-container {
         width: 100%;
         padding: 2rem 0;
+        margin-top: 15%;
     }
 
     .aside {
@@ -126,5 +152,21 @@ const handleLogin = () => {
         width: 100%;
         padding: 0 1rem 1rem 1rem;
     }
+
+    .back {
+        display: none; /* corrige o fundo */
+    }
+}
+
+/* Ajustes para botão funcionar no mobile */
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    pointer-events: none; /* evita que div bloqueie touch */
+}
+
+.button-wrapper button {
+    pointer-events: auto; /* botão continua clicável */
+    touch-action: manipulation; /* força touch funcionar */
 }
 </style>

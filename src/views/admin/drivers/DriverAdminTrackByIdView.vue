@@ -1,26 +1,39 @@
 <script setup>
-import router from '@/router';
-import { useDriversStore } from '@/stores'; 
 import { onMounted } from 'vue';
-const driversStore = useDriversStore();
+import { useGoRoutesStore } from '@/stores'; 
+import { TrackDriverMapById, AsideToTrackDriver } from '@/components';
 
+const goRoutesStore = useGoRoutesStore();
 
 onMounted(async() => {
-    await driversStore.getDriver(router.currentRoute.value.params.id);
+    await goRoutesStore.getActiveRoutes()
 });
 </script>
 
 <template>
     <main>
-        <div>
-            <h1>Rastreamento de {{ driversStore.state.selectedDriver?.name }}</h1>
+        <div class="contain">
+            <AsideToTrackDriver />
+            <TrackDriverMapById />
         </div>
     </main>
 </template>
 
 <style scoped>
 main{
-    margin: 20px auto;
-    width: 90%;
+    margin:  auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+}
+
+.contain {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    width: 100%;
 }
 </style>

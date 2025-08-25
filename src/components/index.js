@@ -18,3 +18,13 @@ export { default as VehicleRetrieveDataComp } from "./admin/vehicles/VehicleRetr
 export { default as TableResponsible } from "./admin/responsibles/TableResponsible.vue"
 export { default as CardResponsibleAdmin } from "./admin/responsibles/CardResponsibleAdmin.vue"
 export { default as ResponsibleRetriveDataComp } from "./admin/responsibles/ResponsibleRetriveDataComp.vue"
+export {default as TablePassengers} from "./admin/passengers/TablePassengers.vue";
+export {default as CardPassengersAdmin} from "./admin/passengers/CardPassengersAdmin.vue";
+export {default as PassengerRetrieveDataComp} from "./admin/passengers/PassengerRetrieveDataComp.vue";
+export { default as TrackDriverMap } from "./admin/drivers/TrackDriverMap.vue";
+export { default as AsideToTrackDriver } from "./admin/drivers/AsideToTrackDriver.vue";
+export { default as TrackDriverMapById} from "./admin/drivers/TrackDriverMapById.vue";
+export { default as CaptionRouteActive } from "./admin/route/CaptionRouteAtive.vue";
+export { default as HeaderRouteActive } from "./admin/route/HeaderRouteActive.vue";
+export { default as MapRouteActive } from "./admin/route/MapRouteActive.vue";
+export { default as AsideDriverComp} from "./global/AsideAdmin/AsideDriverComp.vue";

@@ -21,9 +21,10 @@ const routes = [
       { path: 'admin/vehicles', component: Views.VehiclesAdminView },
       { path: 'admin/vehicles/:id', component: Views.VehicleAdminRetrieveView },
       { path: 'admin/drivers/:id', component: Views.DriverAdminRetrieveView },
-      { path: 'admin/drivers/:id/track', component: Views.DriverAdminTrackView },
-      { path: 'admin/drivers/track-driver', component: Views.DriverAdminTrackByIdView },
+      { path: 'admin/drivers/:id/track', component: Views.DriverAdminTrackByIdView },
+      { path: 'admin/drivers/track-driver', component: Views.DriverAdminTrackView },
       { path: 'admin/passengers', component: Views.PassengersAdminView },
+      { path: 'admin/passengers/:id', component: Views.PassengerAdminRetrieveView },
       { path: 'admin/responsibles', component: Views.ResponsiblesAdminView },
     ],
   },
@@ -38,6 +39,7 @@ const routes = [
       { path: 'profile/driver', component: Views.ProfileDriverView },
       { path: 'test', component: Views.TestView },
       { path: 'websocket', component: Views.WebSocketView },
+      { path: 'admin/drivers/route-active', component: Views.DriverRouteIsActive }
     ],
   },
 ];
