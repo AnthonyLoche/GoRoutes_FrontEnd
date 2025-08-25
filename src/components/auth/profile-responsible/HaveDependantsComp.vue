@@ -23,7 +23,7 @@ function toggleEdit() {
 </script>
 <template>
   <section>
-    <v-carousel hide-delimiters show-arrows="hover" height="350">
+    <v-carousel hide-delimiters show-arrows="false" height="350" class="a">
       <v-carousel-item v-for="dependent in props.dependents" :key="dependent.id"><div class="photo">
       <PhotoComp
         :src="dependent.picture_file"
@@ -99,7 +99,7 @@ function toggleEdit() {
 
       
     </v-carousel>
-    <v-btn rounded="sm" @click="dialog = !dialog" >Adicionar dependente</v-btn>
+    <v-btn rounded="sm" @click="dialog = !dialog" class="b" >Adicionar dependente</v-btn>
     <ModalAddDependent :model-value="dialog" />
 
   </section>
@@ -139,5 +139,24 @@ function toggleEdit() {
 
 .full {
   grid-column: span 2;
+}
+@media (max-width: 1024px) {
+  .photo {
+    flex-direction: column;
+    align-items: center;
+  }
+  .form-wrapper {
+    width: 100%;
+  }
+}  .form-grid {
+    display: flex;
+    flex-direction: column;
+}
+.a{
+  height: auto !important;
+  show-arrows: false !important;
+}
+.b{
+  margin: 0 0 0 20%;
 }
 </style>

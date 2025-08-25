@@ -45,6 +45,10 @@ import { HeaderMain, AsideMain } from '@/components'
 @media screen and (max-width: 1024px) {
     .grid {
         display: flex;
+        flex-direction: column;
+    }
+    .main-default{
+        display: block;
     }
 
 

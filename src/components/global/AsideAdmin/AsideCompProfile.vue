@@ -1,7 +1,6 @@
 <template>
-  <div>
+  <div v-if="!isMobile">
     <button class="toggle-btn" @click="toggleSidebar">☰</button>
-
     <div class="sidebar" :class="{ show: isSidebarVisible }">
       <div class="menu-category" v-for="(category, index) in menuItems" :key="index">
         <div
@@ -32,20 +31,34 @@
 </template>
 
 <script setup>
-import { ref, markRaw } from 'vue';
-
+import { ref, markRaw, onMounted, onUnmounted } from 'vue';
 import Account from 'vue-material-design-icons/Account.vue';
 
 const isSidebarVisible = ref(true);
 const menuItems = ref([
- {
+  {
     name: 'Meu Perfil',
     icon: markRaw(Account),
     expanded: false,
     active: false,
     subItems: []
-  },  
+  },
 ]);
+
+const isMobile = ref(false);
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
+};
+
+onMounted(() => {
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile);
+});
 
 const toggleSidebar = () => {
   isSidebarVisible.value = !isSidebarVisible.value;
@@ -53,13 +66,9 @@ const toggleSidebar = () => {
 
 const toggleCategory = (index) => {
   menuItems.value[index].expanded = !menuItems.value[index].expanded;
-
   menuItems.value.forEach((category, i) => {
-    if (i !== index) {
-      category.expanded = false;
-    }
+    if (i !== index) category.expanded = false;
   });
-
   menuItems.value.forEach((category, i) => {
     category.active = i === index;
   });
@@ -77,7 +86,6 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
       subItem.active = false;
     });
   });
-
   menuItems.value[categoryIndex].subItems[subItemIndex].active = true;
 };
 </script>
@@ -213,7 +221,6 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
     display: block;
   }
 }
-
 .accordion-enter-active,
 .accordion-leave-active {
   transition: all 0.3s ease;

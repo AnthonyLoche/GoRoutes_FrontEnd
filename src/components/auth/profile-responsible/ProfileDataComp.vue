@@ -33,4 +33,12 @@ span{
     align-items: center;
     justify-content: center;
 }
+@media (max-width: 1024px) {
+  section{
+    width: 100%;
+  }
+  .title h2{
+        font-size: 1.2rem;
+    }
+}
 </style>

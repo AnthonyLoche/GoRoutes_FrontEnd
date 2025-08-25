@@ -126,4 +126,20 @@ function toggleEdit() {
 .full {
   grid-column: span 2;
 }
+@media (max-width: 1024px) {
+  .photo {
+    flex-direction: column;
+    align-items: center;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: .5rem
+  }
+  .full {
+    grid-column: span 1;
+  }
+  .edit-button {
+    justify-content: space-around;
+  }
+}
 </style>

@@ -54,6 +54,14 @@ import { HeaderMain, AsideCompProfile , ProfileDataComp} from '@/components'
     .grid {
         display: flex;
     }
+    .main-default{
+        display: flex;
+        flex-direction: column;
+        height: auto;
+    }
+    .view{
+        height: auto;
+    }
 
 
 }
