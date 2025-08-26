@@ -4,8 +4,23 @@ import { AuthService } from '@/services'
 import { useRouter } from 'vue-router'
 import { showSuccessToast } from '@/utils/toast'
 
+// Função para verificar se localStorage está disponível
+function isLocalStorageAvailable() {
+  try {
+    const test = '__storage_test__';
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const router = useRouter()
+
+  // Usa sessionStorage como fallback se localStorage não estiver disponível
+  const storage = isLocalStorageAvailable() ? localStorage : sessionStorage
   const state = useStorage('auth', {
     user: {},
     isLogged: false,
@@ -18,30 +33,64 @@ export const useAuthStore = defineStore('auth', () => {
   async function login(email, password) {
     try {
       const response = await AuthService.login(email, password)
-      console.log(response)
+      console.log('Login response:', response)
 
-      state.value.token = response.data.access
-      state.value.isLogged = true
-      state.value.user = response.data.user
-      state.value.type = response.data.user.type
+      // Primeiro, busca os dados completos do usuário
+      const userDataResponse = await AuthService.refreshDataUser(response.data.user.id)
+      console.log('User data response:', userDataResponse)
 
-      if (state.value.user.driver_data) {
-        router.push('/blank/profile/driver')
-        state.value.type = 'driver'
-      } else if (state.value.user.responsible_data) {
-        router.push('/blank/profile/responsible')
-        state.value.type = 'responsible'
-      } else if (state.value.user.passenger_data && state.value.user.passenger_data.is_student) {
-        router.push('/blank/profile/student')
-        state.value.type = 'student'
-      } else if (state.value.user.passenger_data) {
-        router.push('/blank/profile/passenger')
-        state.value.type = 'passenger'
+      const userData = userDataResponse.data || response.data.user
+
+      // Determina o tipo de usuário
+      let userType = ''
+      if (userData.driver_data) {
+        userType = 'driver'
+      } else if (userData.responsible_data) {
+        userType = 'responsible'
+      } else if (userData.passenger_data?.is_student) {
+        userType = 'student'
+      } else if (userData.passenger_data) {
+        userType = 'passenger'
       }
+
+      console.log('Determined user type:', userType)
+
+      // Atualiza o state com todos os dados
+      state.value = {
+        ...state.value,
+        token: response.data.access,
+        isLogged: true,
+        user: userData,
+        type: userType,
+        error: false,
+        message: ''
+      }
+
+      console.log('State after update:', state.value)
+
+      // Determina a rota baseado no tipo de usuário
+      const routes = {
+        driver: '/blank/profile/driver',
+        responsible: '/blank/profile/responsible',
+        student: '/blank/profile/student',
+        passenger: '/blank/profile/passenger'
+      }
+
+      if (routes[userType]) {
+        await router.push(routes[userType])
+      } else {
+        console.error('User type not determined:', userType)
+      }
+
       showSuccessToast('Login realizado com sucesso!')
     } catch (error) {
-      state.error = true
-      state.message = error.message || 'Erro ao fazer login'
+      console.error('Login error:', error)
+      state.value.error = true
+      state.value.message = error.response?.data?.message || error.message || 'Erro ao fazer login'
+      state.value.isLogged = false
+      state.value.token = ''
+      state.value.user = {}
+      state.value.type = ''
     }
   }
 
@@ -78,12 +127,25 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function logout() {
-    state.token = ''
-    state.isLogged = false
-    state.user = {}
-    state.error = false
-    state.message = ''
-    router.push('/blank/login')
+    // Limpa o state corretamente
+    state.value = {
+      user: {},
+      isLogged: false,
+      error: false,
+      type: '',
+      token: '',
+      message: ''
+    }
+
+    // Limpa o storage
+    if (storage) {
+      storage.removeItem('auth')
+    }
+
+    console.log('State after logout:', state.value)
+
+    // Redireciona para login
+    await router.push('/blank/login')
   }
 
   return {

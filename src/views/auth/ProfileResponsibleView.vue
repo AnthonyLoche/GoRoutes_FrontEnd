@@ -1,10 +1,32 @@
 <script setup>
-import { HeaderMain, AsideCompProfile , ProfileDataComp} from '@/components'
+import { ref, onMounted } from 'vue'
+import { HeaderMain, AsideCompProfile, ProfileDataComp, LoadingComp } from '@/components'
+
+const isLoading = ref(true)
+const hasError = ref(false)
+const errorMessage = ref('')
+
+onMounted(() => {
+  try {
+    console.log('ProfileResponsibleView montado')
+    isLoading.value = false
+  } catch (error) {
+    console.error('Erro ao montar ProfileResponsibleView:', error)
+    hasError.value = true
+    errorMessage.value = error.message
+    isLoading.value = false
+  }
+})
 </script>
 
 <template>
+    <LoadingComp v-if="isLoading" />
 
-    <div class="main-default">
+    <div v-else-if="hasError" class="error-container">
+        <p>Erro ao carregar a página: {{ errorMessage }}</p>
+    </div>
+
+    <div v-else class="main-default">
         <div class="header">
             <HeaderMain />
         </div>
@@ -13,12 +35,10 @@ import { HeaderMain, AsideCompProfile , ProfileDataComp} from '@/components'
                 <AsideCompProfile />
             </div>
             <div class="view">
-                
                 <ProfileDataComp />
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>
@@ -62,7 +82,11 @@ import { HeaderMain, AsideCompProfile , ProfileDataComp} from '@/components'
     .view{
         height: auto;
     }
+}
 
-
+.error-container {
+    padding: 2rem;
+    text-align: center;
+    color: red;
 }
 </style>

@@ -35,7 +35,10 @@ const routes = [
       { path: '', component: Views.LoginView },
       { path: 'login', component: Views.LoginView },
       { path: 'register', component: Views.RegisterView },
-      { path: 'profile/responsible', component: Views.ProfileResponsibleView },
+      {
+        path: 'profile/responsible',
+        component: Views.ProfileResponsibleView,
+      },
       { path: 'profile/driver', component: Views.ProfileDriverView },
       { path: 'test', component: Views.TestView },
       { path: 'websocket', component: Views.WebSocketView },
@@ -49,15 +52,44 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+  console.log('Router guard - Current state:', authStore.state);
 
+  // Se estiver indo para login e já estiver logado, redireciona para a página apropriada
+  if (to.path === '/blank/login' && authStore.state.isLogged) {
+    const routes = {
+      driver: '/blank/profile/driver',
+      responsible: '/blank/profile/responsible',
+      student: '/blank/profile/student',
+      passenger: '/blank/profile/passenger'
+    };
+
+    if (routes[authStore.state.type]) {
+      next(routes[authStore.state.type]);
+      return;
+    }
+  }
+
+  // Se a rota requer autenticação
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!authStore.state.isLogged) {
+      console.log('Usuário não logado, redirecionando para login');
       next('/blank/login');
-    } else {
-      next();
+      return;
     }
+
+    // Se o usuário está logado mas não tem tipo definido, tenta atualizar os dados
+    if (authStore.state.isLogged && !authStore.state.type && authStore.state.user?.id) {
+      try {
+        console.log('Atualizando dados do usuário...');
+        await authStore.refreshDataUser(authStore.state.user.id);
+      } catch (error) {
+        console.error('Erro ao atualizar dados do usuário:', error);
+      }
+    }
+
+    next();
   } else {
     next();
   }

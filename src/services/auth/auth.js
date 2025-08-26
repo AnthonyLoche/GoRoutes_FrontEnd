@@ -73,6 +73,18 @@ class AuthService {
     }
   }
 
+  async refreshToken(refresh_token) {
+    try {
+      const response = await api.post(`/authentication/token/refresh/`, {
+        refresh: refresh_token
+      })
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+
 }
 
 export default new AuthService()
