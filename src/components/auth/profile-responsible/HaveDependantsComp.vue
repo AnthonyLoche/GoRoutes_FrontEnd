@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import PhotoComp from '@/components/global/profiles-images/PhotoComp.vue'
 import ShowPhoto from '@/components/global/profiles-images/ShowPhoto.vue'
 import UploadPhoto from '@/components/global/profiles-images/UploadPhoto.vue'
@@ -11,99 +11,120 @@ const props = defineProps({
     default: () => []
   }
 })
+
 const isEditing = ref(false)
 const viewPhotoDialog = ref(false)
 const changePhotoDialog = ref(false)
-
 const dialog = ref(false)
+const isSmallScreen = ref(false)
+
 function toggleEdit() {
   isEditing.value = !isEditing.value
 }
 
+function updateScreenSize() {
+  isSmallScreen.value = window.matchMedia('(max-width: 1024px)').matches
+}
+
+onMounted(() => {
+  updateScreenSize()
+  window.addEventListener('resize', updateScreenSize)
+})
+
 </script>
+
 <template>
   <section>
-    <v-carousel hide-delimiters show-arrows="false" height="350" class="a">
-      <v-carousel-item v-for="dependent in props.dependents" :key="dependent.id"><div class="photo">
-      <PhotoComp
-        :src="dependent.picture_file"
-        @view="viewPhotoDialog = true"
-        @change="changePhotoDialog = true"
-      />
-
-      <div class="form-wrapper">
-        <div class="form-grid">
-          <v-text-field
-            v-model="dependent.name"
-            label="Nome"
-            variant="outlined"
-            :readonly="true"
+    <v-carousel
+      :hide-delimiters="true"
+      :show-arrows="!isSmallScreen"
+      height="350"
+      class="a"
+    >
+      <v-carousel-item
+        v-for="dependent in props.dependents"
+        :key="dependent.id"
+      >
+        <div class="photo">
+          <PhotoComp
+            :src="dependent.picture_file"
+            @view="viewPhotoDialog = true"
+            @change="changePhotoDialog = true"
           />
 
-          <v-text-field
-            v-model="dependent.passenger_data.cpf"
-            label="CPF"
-            variant="outlined"
-            :readonly="true"
-          />
+          <div class="form-wrapper">
+            <div class="form-grid">
+              <v-text-field
+                v-model="dependent.name"
+                label="Nome"
+                variant="outlined"
+                :readonly="true"
+              />
 
-          <v-text-field
-            v-model="dependent.passenger_data.student_data.registration"
-            label="Matrícula"
-            variant="outlined"
-            :readonly="!isEditing"
-          />
+              <v-text-field
+                v-model="dependent.passenger_data.cpf"
+                label="CPF"
+                variant="outlined"
+                :readonly="true"
+              />
 
-          <v-text-field
-            v-model="dependent.email"
-            label="Email"
-            variant="outlined"
-            :readonly="!isEditing"
-          />
+              <v-text-field
+                v-model="dependent.passenger_data.student_data.registration"
+                label="Matrícula"
+                variant="outlined"
+                :readonly="!isEditing"
+              />
 
-          <v-text-field
-            class="full"
-            v-model="dependent.telephone"
-            label="Telefone"
-            variant="outlined"
-            :readonly="!isEditing"
-          />
+              <v-text-field
+                v-model="dependent.email"
+                label="Email"
+                variant="outlined"
+                :readonly="!isEditing"
+              />
 
-          <div class="edit-button full">
-            <v-btn
-              @click="toggleEdit"
-              color="primary"
-              variant="tonal"
-              prepend-icon="mdi-pencil-outline"
-              rounded="1"
-            >
-              Editar
-            </v-btn>
-            <v-btn
-              @click="toggleEdit"
-              color="primary"
-              prepend-icon="mdi-content-save-outline"
-              rounded="1"
-            >
-              Salvar
-            </v-btn>
+              <v-text-field
+                class="full"
+                v-model="dependent.telephone"
+                label="Telefone"
+                variant="outlined"
+                :readonly="!isEditing"
+              />
+
+              <div class="edit-button full">
+                <v-btn
+                  @click="toggleEdit"
+                  color="primary"
+                  variant="tonal"
+                  prepend-icon="mdi-pencil-outline"
+                  rounded="1"
+                >
+                  Editar
+                </v-btn>
+                <v-btn
+                  @click="toggleEdit"
+                  color="primary"
+                  prepend-icon="mdi-content-save-outline"
+                  rounded="1"
+                >
+                  Salvar
+                </v-btn>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Modais -->
-    <ShowPhoto v-model="viewPhotoDialog" :src="dependent.picture_file" />
-    <UploadPhoto v-model="changePhotoDialog" :user_id="dependent.id" />
-  </v-carousel-item>
-
-      
+        <!-- Modais -->
+        <ShowPhoto v-model="viewPhotoDialog" :src="dependent.picture_file" />
+        <UploadPhoto v-model="changePhotoDialog" :user_id="dependent.id" />
+      </v-carousel-item>
     </v-carousel>
-    <v-btn rounded="sm" @click="dialog = !dialog" class="b" >Adicionar dependente</v-btn>
+    <v-btn rounded="sm" @click="dialog = !dialog" class="b">
+      Adicionar dependente
+    </v-btn>
     <ModalAddDependent :model-value="dialog" />
-
   </section>
 </template>
+
 <style scoped>
 .photo {
   width: 85%;
@@ -140,6 +161,7 @@ function toggleEdit() {
 .full {
   grid-column: span 2;
 }
+
 @media (max-width: 1024px) {
   .photo {
     flex-direction: column;
@@ -148,15 +170,17 @@ function toggleEdit() {
   .form-wrapper {
     width: 100%;
   }
-}  .form-grid {
+  .form-grid {
     display: flex;
     flex-direction: column;
+  }
 }
-.a{
+
+.a {
   height: auto !important;
-  show-arrows: false !important;
 }
-.b{
+
+.b {
   margin: 0 0 0 20%;
 }
 </style>

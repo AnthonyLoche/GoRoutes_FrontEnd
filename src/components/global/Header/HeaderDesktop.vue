@@ -1,6 +1,7 @@
 <script setup>
 import { ref, defineProps } from "vue";
 import { useAuthStore } from "@/stores/auth/auth";
+import { useRouter } from "vue-router";
 import Bell from "vue-material-design-icons/Bell.vue";
 import MessageProcessingOutline from "vue-material-design-icons/MessageProcessingOutline.vue";
 import Account from "vue-material-design-icons/Account.vue";
@@ -8,19 +9,24 @@ import Logout from "vue-material-design-icons/Logout.vue";
 
 const showMenu = ref(false);
 const authStore = useAuthStore();
+const router = useRouter();
+
 defineProps({
     profileImage: {
         type: String,
-        //required: true,
         default: "https://vignette.wikia.nocookie.net/monstros-sa/images/3/38/Mike1.png/revision/latest?cb=20130601113702&path-prefix=pt-br"
     },
 });
+
+const goToHome = () => {
+    router.push("/");
+};
 </script>
 
 <template>
     <header>
-        <div class="logo">
-            <img src="../../../assets/images/LogoRemoved.png" alt="">
+        <div class="logo" @click="goToHome">
+            <img src="../../../assets/images/LogoRemoved.png" alt="GoRoutes Logo">
             <h1>GoRoutes</h1>
         </div>
         <div class="nav">
@@ -70,6 +76,7 @@ header {
 .logo {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 img {

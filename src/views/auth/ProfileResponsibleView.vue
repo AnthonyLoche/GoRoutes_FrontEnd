@@ -81,6 +81,7 @@ onMounted(() => {
     }
     .view{
         height: auto;
+        width: 95%;
     }
 }
 
