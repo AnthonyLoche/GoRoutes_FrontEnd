@@ -1,14 +1,51 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores'
 import PhotoComp from '@/components/global/profiles-images/PhotoComp.vue'
 import ShowPhoto from '@/components/global/profiles-images/ShowPhoto.vue'
 import UploadPhoto from '@/components/global/profiles-images/UploadPhoto.vue'
+import { LoadingComp } from '@/components'
 
 const authStore = useAuthStore()
 const isEditing = ref(false)
 const viewPhotoDialog = ref(false)
 const changePhotoDialog = ref(false)
+const isLoading = ref(true)
+const hasError = ref(false)
+const errorMessage = ref('')
+
+// Dados mockados para teste
+const mockUser = {
+  name: 'Usuário Teste',
+  responsible_data: {
+    cpf: '123.456.789-00'
+  },
+  username: 'teste',
+  email: 'teste@teste.com',
+  telephone: '(11) 99999-9999',
+  picture_file: null,
+  id: 1
+}
+
+onMounted(async () => {
+  try {
+    console.log('DataComp montado')
+    console.log('Estado atual do auth store:', authStore.state)
+
+    // Se não houver dados do usuário, usa dados mockados
+    if (!authStore.state?.user?.name) {
+      console.log('Usando dados mockados')
+      authStore.state.user = mockUser
+    }
+
+    isLoading.value = false
+  } catch (error) {
+    console.error('Erro ao montar DataComp:', error)
+    hasError.value = true
+    errorMessage.value = error.message
+    isLoading.value = false
+  }
+})
 
 function toggleEdit() {
   isEditing.value = !isEditing.value
@@ -17,7 +54,13 @@ function toggleEdit() {
 
 <template>
   <section>
-    <div class="photo">
+    <LoadingComp v-if="isLoading" />
+
+    <div v-else-if="hasError" class="error-container">
+      <p>Erro ao carregar os dados: {{ errorMessage }}</p>
+    </div>
+
+    <div v-else class="photo">
       <PhotoComp
         :src="authStore.state.user.picture_file"
         @view="viewPhotoDialog = true"
@@ -141,5 +184,14 @@ function toggleEdit() {
   .edit-button {
     justify-content: space-around;
   }
+}
+
+.error-container {
+  text-align: center;
+  padding: 2rem;
+  color: var(--error-color);
+  background-color: var(--error-bg-color);
+  border-radius: 8px;
+  margin: 1rem 0;
 }
 </style>
