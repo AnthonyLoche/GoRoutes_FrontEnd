@@ -91,25 +91,6 @@
         </div>
       </div>
     </section>
-
-    <!-- Technologies Section -->
-    <section class="technologies">
-      <div class="section-header">
-        <h2>Tecnologias Utilizadas</h2>
-        <p>Stack moderno e confiável</p>
-      </div>
-      <div class="tech-stack">
-        <div class="tech-category" v-for="category in technologies" :key="category.name">
-          <h4>{{ category.name }}</h4>
-          <div class="tech-badges">
-            <span class="tech-badge" v-for="tech in category.techs" :key="tech.name" :style="{ backgroundColor: tech.color }">
-              {{ tech.name }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Team Section -->
     <section class="team">
       <div class="section-header">
@@ -712,7 +693,7 @@ body {
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 2rem;
 }
 
