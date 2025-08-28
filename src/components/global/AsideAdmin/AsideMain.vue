@@ -7,7 +7,7 @@ const Aside = shallowRef(null);
 const widthScreen = shallowRef(window.innerWidth);
 
 const updateAside = () => {
-    // Aside.value = widthScreen.value > 1024 ? AsideComp : AsideMobile;
+    Aside.value = widthScreen.value > 1024 ? AsideComp : AsideMobile;
 };
 
 onMounted(() => {
