@@ -32,7 +32,14 @@ const selectUserType = (type) => {
 <!-- <v-text-field label="Rua" variant="outlined" v-model="addressStore.state.logradouro" /> -->
 
   <div class="form-container">
-    <v-text-field label="Rua" variant="outlined" class="test-a" />
+    <InputComp
+      label="Nome de Usuário"
+      type="text"
+      placeholder="Digite seu nome de usuário"
+      v-model="data.username"
+      :haveSubtext=false
+      padding-props="1.3rem"
+    />
     <InputComp
       label="Nome Completo"
       type="text"
