@@ -5,6 +5,7 @@ import { InputComp, LogoComp } from "@/components";
 import { useAuthStore } from "@/stores";
 
 import { reactive, onMounted, onUnmounted } from "vue";
+import ButtonCompBorded from "@/components/global/ButtonCompBorded.vue";
 
 const authStore = useAuthStore();
 
@@ -19,7 +20,6 @@ const isScreenLarge = reactive({
 
 const handleLogin = () => {
   authStore.login(login.email, login.password);
-  alert("Login function called with email: " + login.email);
 };
 
 const updateScreenSize = () => {
@@ -62,9 +62,11 @@ onUnmounted(() => {
                 <div v-if="authStore.state.error" class="error-message">
                     {{ authStore.state.message }}
                 </div>
-                <v-btn color="primary" @click="handleLogin" class="mt-3">
-                    LOGIN
-                </v-btn>
+                <ButtonCompBorded
+                    name="LOGIN"
+                    padding=".5rem"
+                    @click="handleLogin"
+                />
                 <captionComp pCaption="Ainda não é nosso cliente?" txtLink="Cadastre-se" link="/blank/register" />
             </div>
         </div>

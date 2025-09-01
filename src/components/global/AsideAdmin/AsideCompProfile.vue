@@ -3,10 +3,22 @@
     <button class="toggle-btn" @click="toggleSidebar">☰</button>
     <div class="sidebar" :class="{ show: isSidebarVisible }">
       <div class="menu-category" v-for="(category, index) in menuItems" :key="index">
+        <router-link
+          v-if="!category.subItems.length"
+          :to="category.route"
+          class="menu-item"
+          :class="{ active: isActiveRoute(category.route) }"
+          @click="activateCategory(index)">
+          <div class="menu-icon">
+            <component :is="category.icon" />
+          </div>
+          <span>{{ category.name }}</span>
+        </router-link>
         <div
+          v-else
           class="menu-item"
           :class="{ active: category.active }"
-          @click="category.name === 'Configurações' ? activateCategory(index) : toggleCategory(index)">
+          @click="toggleCategory(index)">
           <div class="menu-icon">
             <component :is="category.icon" />
           </div>
@@ -15,14 +27,15 @@
         </div>
         <Transition name="accordion">
           <div class="submenu" v-if="category.expanded && category.subItems.length > 0">
-            <a href="#"
-               class="submenu-item"
-               :class="{ active: subItem.active }"
-               v-for="(subItem, subIndex) in category.subItems"
-               :key="subIndex"
-               @click.prevent="activateSubItem(index, subIndex)">
+            <router-link
+              v-for="(subItem, subIndex) in category.subItems"
+              :key="subIndex"
+              :to="subItem.route"
+              class="submenu-item"
+              :class="{ active: isActiveRoute(subItem.route) }"
+              @click.prevent="activateSubItem(index, subIndex)">
               <span>{{ subItem.name }}</span>
-            </a>
+            </router-link>
           </div>
         </Transition>
       </div>
@@ -32,17 +45,38 @@
 
 <script setup>
 import { ref, markRaw, onMounted, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router';
 import Account from 'vue-material-design-icons/Account.vue';
+import Map from "vue-material-design-icons/Map.vue"
+import AccountMultiple from "vue-material-design-icons/AccountMultiple.vue";
 
+const route = useRoute();
 const isSidebarVisible = ref(true);
 const menuItems = ref([
   {
     name: 'Meu Perfil',
     icon: markRaw(Account),
+    route: '/blank/profile/responsible',
     expanded: false,
     active: false,
     subItems: []
   },
+  {
+    name: 'Meus Dependentes',
+    icon: markRaw(AccountMultiple),
+    route: '/blank/responsible/dependents',
+    expanded: false,
+    active: false,
+    subItems: []
+  },
+  {
+    name: 'Rastrear Meus Dependentes',
+    icon: markRaw(Map),
+    route: '/blank/responsible/track-dependents',
+    expanded: false,
+    active: false,
+    subItems: []
+  }
 ]);
 
 const isMobile = ref(false);
@@ -88,9 +122,14 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
   });
   menuItems.value[categoryIndex].subItems[subItemIndex].active = true;
 };
+
+const isActiveRoute = (routePath) => {
+  return route.path === routePath;
+};
 </script>
 
 <style scoped>
+/* O estilo permanece o mesmo do código original */
 * {
   margin: 0;
   padding: 0;
@@ -104,7 +143,7 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
   overflow-y: auto;
-  height: 100vh;
+  height: 90vh;
   border-right: 2px solid #E5E7EB;
 }
 

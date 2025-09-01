@@ -33,9 +33,6 @@ const goToHome = () => {
             <div class="itens">
                 <input type="text" placeholder="Search" />
                 <button class="icon-btn">
-                    <MessageProcessingOutline />
-                </button>
-                <button class="icon-btn">
                     <Bell />
                 </button>
 

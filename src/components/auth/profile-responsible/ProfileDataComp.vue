@@ -3,9 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores';
 import AccountCircle from "vue-material-design-icons/AccountCircle.vue"
-import DataComp from "./DataComp.vue";
-import DependantsComp from "./DependantsComp.vue";
-import AccountChild from "vue-material-design-icons/AccountChild.vue";
+import DataComp from './DataComp.vue';
 import { LoadingComp } from '@/components';
 
 const router = useRouter();
@@ -50,11 +48,8 @@ onMounted(async () => {
           <h2>Dados do Perfil</h2>
       </div>
       <DataComp />
-      <div class="title">
-          <AccountChild />
-          <h2>Dependentes:</h2>
-      </div>
-      <DependantsComp />
+      <!-- <DependantsComp /> -->
+
     </div>
   </section>
 </template>
@@ -78,7 +73,10 @@ span{
   }
   .title h2{
         font-size: 1.2rem;
-    }
+      }
+      .title{
+        margin-top: 3.5rem;
+      }
 }
 
 .error-message {

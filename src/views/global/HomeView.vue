@@ -8,8 +8,8 @@
           <h1>GoRoutes</h1>
         </div>
         <div class="nav-links">
-          <a href="#" class="nav-link">Login</a>
-          <a href="#" class="btn-register">Cadastre-se</a>
+          <router-link to="/blank/login" class="nav-link">Login</router-link>
+          <router-link to="/blank/register" class="btn-register">Cadastre-se</router-link>
         </div>
       </div>
     </nav>
@@ -20,7 +20,7 @@
         <div class="hero-content">
           <h2>Bem-vindo ao GoRoutes</h2>
           <p class="tagline">A melhor solução para gerenciar rotas de transporte escolar com eficiência e segurança</p>
-          <button class="cta-button" @click="scrollToFeatures">Comece Agora</button>
+            <button class="cta-button" @click="$router.push('/blank/register')">Cadastre-se Agora</button>
         </div>
         <div class="hero-image">
           <div class="route-card-preview">
@@ -117,7 +117,7 @@
     <section class="cta-section">
       <h2>Pronto para otimizar suas rotas?</h2>
       <p>Junte-se à Sul Turismo e outras empresas que já estão revolucionando o transporte escolar</p>
-      <button class="cta-button">Criar conta gratuita</button>
+      <button class="cta-button" @click="$router.push('/blank/register')">Criar conta gratuita</button>
     </section>
 
     <!-- Footer -->
@@ -280,35 +280,6 @@ const userTypes = ref([
   }
 ])
 
-const technologies = ref([
-  {
-    name: 'Frontend',
-    techs: [
-      { name: 'Vue.js', color: '#4FC08D' }
-    ]
-  },
-  {
-    name: 'Backend',
-    techs: [
-      { name: 'Django', color: '#092E20' },
-      { name: 'Python', color: '#3776AB' }
-    ]
-  },
-  {
-    name: 'Linguagens',
-    techs: [
-      { name: 'JavaScript', color: '#F7DF1E' },
-      { name: 'Python', color: '#3776AB' }
-    ]
-  },
-  {
-    name: 'Ferramentas',
-    techs: [
-      { name: 'Git', color: '#F05032' },
-      { name: 'GitHub', color: '#181717' }
-    ]
-  }
-])
 
 const teamMembers = ref([
   {
@@ -343,10 +314,7 @@ const teamMembers = ref([
   }
 ])
 
-// Methods
-const scrollToFeatures = () => {
-  document.getElementById('features').scrollIntoView({ behavior: 'smooth' })
-}
+
 </script>
 
 <style>

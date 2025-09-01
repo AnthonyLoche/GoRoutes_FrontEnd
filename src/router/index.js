@@ -35,14 +35,13 @@ const routes = [
       { path: '', component: Views.LoginView },
       { path: 'login', component: Views.LoginView },
       { path: 'register', component: Views.RegisterView },
-      {
-        path: 'profile/responsible',
-        component: Views.ProfileResponsibleView,
-      },
+      {  path: 'profile/responsible', component: Views.ProfileResponsibleView,},
       { path: 'profile/driver', component: Views.ProfileDriverView },
       { path: 'test', component: Views.TestView },
       { path: 'websocket', component: Views.WebSocketView },
-      { path: 'admin/drivers/route-active', component: Views.DriverRouteIsActive }
+      { path: 'admin/drivers/route-active', component: Views.DriverRouteIsActive },
+      { path: 'responsible/dependents', component: Views.MyDependentsView },
+      { path: 'responsible/track-dependents', component: Views.TrackMyDependentsView },
     ],
   },
 ];

@@ -35,7 +35,7 @@ onMounted(() => {
                 <AsideCompProfile />
             </div>
             <div class="view">
-                <ProfileDataComp />
+                Meus Dependentes aqui
             </div>
         </div>
     </div>

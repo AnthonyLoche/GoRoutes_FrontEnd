@@ -18,62 +18,6 @@
         </div>
       </div>
 
-      <div v-if="isDriving" class="current-passenger-section">
-        <div class="current-passenger-header">
-          <h3>Próximo Passageiro</h3>
-          <div class="passenger-progress">
-            {{ currentPassengerIndex + 1 }} de {{ routeData.passengers.length }}
-          </div>
-        </div>
-        
-        <div class="passenger-navigation">
-          <button 
-            class="nav-button prev" 
-            @click="previousPassenger"
-            :disabled="currentPassengerIndex === 0"
-          >
-            ←
-          </button>
-          
-          <div class="current-passenger-card">
-            <div class="passenger-avatar">
-              {{ getCurrentPassenger()?.user.name.charAt(0).toUpperCase() }}
-            </div>
-            <div class="passenger-details">
-              <div class="passenger-name">{{ getCurrentPassenger()?.user.name }}</div>
-              <div class="passenger-address">{{ getCurrentPassenger()?.user.address }}</div>
-              <div class="passenger-status" :class="{ picked: getCurrentPassenger()?.pickedUp }">
-                {{ getCurrentPassenger()?.pickedUp ? '✓ Embarcado' : 'Aguardando embarque' }}
-              </div>
-            </div>
-            <div class="align-dflex">
-            <button 
-              class="pickup-button" 
-              :class="{ picked: getCurrentPassenger()?.pickedUp }"
-              @click="toggleCurrentPassenger"
-            >
-              {{ getCurrentPassenger()?.pickedUp ? '✓' : '+' }}
-            </button>
-            <button 
-              class="pickup-button" 
-              :class="{ picked: getCurrentPassenger()?.pickedUp }"
-              @click="toggleCurrentPassenger"
-            >
-              {{ getCurrentPassenger()?.pickedUp ? '✓' : '+' }}
-            </button>
-            </div>
-          </div>
-          
-          <button 
-            class="nav-button next" 
-            @click="nextPassenger"
-            :disabled="currentPassengerIndex === routeData.passengers.length - 1"
-          >
-            →
-          </button>
-        </div>
-      </div>
-
       
       <div class="driving-toggle-container">
         <div class="driving-toggle-wrapper">
@@ -818,7 +762,6 @@ const onPassengerToggle = (passenger) => {
 
 .passenger-address {
   font-size: 12px;
-  color: #6b7280;
 }
 
 .passenger-order {
