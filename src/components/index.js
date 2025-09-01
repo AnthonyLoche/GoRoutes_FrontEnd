@@ -29,3 +29,4 @@ export { default as HeaderRouteActive } from "./admin/route/HeaderRouteActive.vu
 export { default as MapRouteActive } from "./admin/route/MapRouteActive.vue";
 export { default as AsideDriverComp} from "./global/AsideAdmin/AsideDriverComp.vue";
 export { default as FooterMain} from './global/Footer/FooterMain.vue'
+export { default as DependantsComp} from './auth/profile-responsible/DependantsComp.vue'

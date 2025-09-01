@@ -1,7 +1,7 @@
 <script setup>
 import BgImage from "@/components/auth/BgImage.vue";
 import captionComp from "@/components/auth/login/CaptionComp.vue";
-import { InputComp, LogoComp } from "@/components";
+import { InputComp, LogoComp, ButtonComp } from "@/components";
 import { useAuthStore } from "@/stores";
 
 import { reactive, onMounted, onUnmounted } from "vue";
@@ -55,14 +55,13 @@ onUnmounted(() => {
                     v-model="login.password"
                     :haveSubtext="true"
                     subtext="Esqueci minha senha"
-                    style="color: #353DCCE5 !important;"
                     padding-props="1.3rem"
                     @keyup.enter="handleLogin"
                 />
                 <div v-if="authStore.state.error" class="error-message">
                     {{ authStore.state.message }}
                 </div>
-                <ButtonCompBorded
+                <ButtonComp
                     name="LOGIN"
                     padding=".5rem"
                     @click="handleLogin"

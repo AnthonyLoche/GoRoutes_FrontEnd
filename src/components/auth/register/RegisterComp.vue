@@ -148,8 +148,9 @@ const handleRegister = async () => {
             <div></div>
             <div></div>
         </div>
-
+<div class="bg">
         <BgImage :variant="2" />
+        </div>
     </div>
 </template>
 
@@ -286,6 +287,9 @@ const handleRegister = async () => {
 
     .form-container {
         min-height: 250px;
+    }
+    .bg{
+        display: none;
     }
 }
 </style>
