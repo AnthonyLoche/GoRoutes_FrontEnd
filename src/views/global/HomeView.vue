@@ -4,8 +4,8 @@
     <nav class="navbar">
       <div class="navbar-container">
         <div class="logo">
-          <span class="logo-icon">🚌</span>
-          <h1>GoRoutes</h1>
+          <img src="../../assets/images/LogoRemoved.png" width="80px" alt="">
+          <h1 style="font-family: Homenaje;">GoRoutes</h1>
         </div>
         <div class="nav-links">
           <router-link to="/blank/login" class="nav-link">Login</router-link>
@@ -1116,16 +1116,16 @@ body {
     text-align: center;
     padding: 3rem 1.5rem;
   }
-  
+
   .steps {
     flex-direction: column;
   }
-  
+
   .footer-bottom {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .hero-content, .hero-image {
     max-width: 100%;
   }
