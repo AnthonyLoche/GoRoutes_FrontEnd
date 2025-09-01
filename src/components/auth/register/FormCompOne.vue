@@ -28,15 +28,11 @@ const selectUserType = (type) => {
 </script>
 
 <template>
+
+<!-- <v-text-field label="Rua" variant="outlined" v-model="addressStore.state.logradouro" /> -->
+
   <div class="form-container">
-    <InputComp
-      label="Username"
-      type="text"
-      placeholder="Digite seu username"
-      v-model="data.username"
-      :haveSubtext=false
-      padding-props="1.3rem"
-    />
+    <v-text-field label="Rua" variant="outlined" class="test-a" />
     <InputComp
       label="Nome Completo"
       type="text"
@@ -95,6 +91,15 @@ const selectUserType = (type) => {
 </template>
 
 <style scoped>
+.test-a{
+    width: 100%;
+    /* height: 2rem; */
+    border-radius: 8px;
+    /* border: 1px solid #00000080; */
+    padding: 1rem 0.5rem;
+    color: black;
+    /* box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); */
+}
 .form-container {
   display: flex;
   flex-direction: column;

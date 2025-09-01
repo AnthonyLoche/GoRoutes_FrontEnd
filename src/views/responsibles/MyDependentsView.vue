@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { HeaderMain, AsideCompProfile, ProfileDataComp, LoadingComp, FooterMain } from '@/components'
+import { HeaderMain, AsideCompProfile, ProfileDataComp, LoadingComp, FooterMain, DependantsComp } from '@/components'
+import AccountCircle from "vue-material-design-icons/AccountCircle.vue"
+
 
 const isLoading = ref(true)
 const hasError = ref(false)
@@ -35,14 +37,25 @@ onMounted(() => {
                 <AsideCompProfile />
             </div>
             <div class="view">
-                Meus Dependentes aqui
+                <div class="title">
+          <AccountCircle />
+          <h2>Dados dos Dependentes</h2>
+      </div>
+                <DependantsComp />
             </div>
         </div>
     </div>
+    
     <FooterMain />
 </template>
 
 <style scoped>
+.title{
+    border-bottom: 2px solid var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 .main-default {
     display: grid;
     grid-template-rows: 10% 90%;
