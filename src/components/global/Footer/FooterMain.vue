@@ -3,8 +3,8 @@
     <div class="footer-content">
       <div class="footer-column">
         <div class="logo">
-          <span class="logo-icon">🚌</span>
-          <span>GoRoutes</span>
+          <img src="../../../assets/images/LogoRemoved.png" width="80px" alt="">
+          <h1 style="font-family: Homenaje;">GoRoutes</h1>
         </div>
         <p>Gerenciamento inteligente de rotas escolares desde 2025.</p>
       </div>
