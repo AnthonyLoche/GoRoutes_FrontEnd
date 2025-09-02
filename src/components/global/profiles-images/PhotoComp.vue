@@ -23,8 +23,8 @@ const isHover = ref(false)
 <style scoped>
 .profile-photo {
     position: relative;
-    width: 250px;
-    height: 250px;
+    width: 205px;
+    height: 200px;
 }
 .profile-photo img {
     width: 100%;
