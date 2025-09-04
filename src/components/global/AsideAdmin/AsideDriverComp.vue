@@ -25,15 +25,16 @@ import HomeIcon from 'vue-material-design-icons/Home.vue';
 import AccountIcon from 'vue-material-design-icons/Account.vue';
 import MapMarkerPathIcon from 'vue-material-design-icons/MapMarkerPath.vue';
 import CheckCircleIcon from 'vue-material-design-icons/CheckCircle.vue';
+import MapMarkerAccountOutline from "vue-material-design-icons/MapMarkerAccountOutline.vue";
 
 const route = useRoute();
 const isSidebarVisible = ref(true);
 const menuItems = ref([
-    { name: 'Início', icon: markRaw(HomeIcon), route: '/', color: '#4CAF50' },
-    { name: 'Perfil', icon: markRaw(AccountIcon), route: '/blank/profile/driver', color: '#607D8B' },
-    { name: 'Minha Rotas', icon: markRaw(MapMarkerPathIcon), route: '/blank/driver/my-routes', color: '#FF9800' },
-    { name: 'Rotas Feitas', icon: markRaw(CheckCircleIcon), route: '/completed-routes', color: '#2196F3' },
-    { name: 'Minha Rota de Hoje', icon: markRaw(MapMarkerPathIcon), route: '/my-route', color: '#FF9800' },
+    { name: 'Início', icon: markRaw(HomeIcon), route: '/', color: '#5050ff' },
+    { name: 'Perfil', icon: markRaw(AccountIcon), route: '/blank/profile/driver', color: '#5050ff' },
+    { name: 'Minha Rotas', icon: markRaw(MapMarkerPathIcon), route: '/blank/driver/my-routes', color: '#5050ff' },
+    // { name: 'Minha Rota de Hoje', icon: markRaw(MapMarkerAccountOutline), route: '/my-route', color: '#5050ff' },
+    { name: 'Rotas Feitas', icon: markRaw(CheckCircleIcon), route: '/completed-routes', color: '#5050ff' },
 ]);
 
 const isMobile = ref(false);

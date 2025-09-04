@@ -149,6 +149,12 @@ const routes = computed(() =>
     border-bottom: 3px solid rgb(var(--v-theme-primary));
 }
 
+span{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .header-content {
     display: flex;
     align-items: center;
@@ -226,6 +232,8 @@ const routes = computed(() =>
     border-radius: 50%;
     background-color: rgba(var(--v-theme-surface-variant), 0.3);
 }
+
+
 
 .status-icon.active {
     color: rgb(var(--v-theme-success));

@@ -18,23 +18,27 @@ function toggleEdit() {
 <template>
     <section>
         <div class="photo">
-            <PhotoComp
-                :src="authStore.state.user.picture_file"
-                @view="viewPhotoDialog = true"
-                @change="changePhotoDialog = true"
-            />
+            <PhotoComp :src="authStore.state.user.picture_file" @view="viewPhotoDialog = true"
+                @change="changePhotoDialog = true" />
 
             <div class="form-wrapper">
                 <div class="form-grid">
-                    <v-text-field v-model="authStore.state.user.name" label="Nome" variant="outlined" :readonly="true" />
-                    <v-text-field v-model="authStore.state.user.driver_data.cpf" label="CPF" variant="outlined" :readonly="true" />
-                    <v-text-field v-model="authStore.state.user.username" label="Username" variant="outlined" :readonly="!isEditing" />
-                    <v-text-field v-model="authStore.state.user.email" label="Email" variant="outlined" :readonly="!isEditing" />
-                    <v-text-field v-model="authStore.state.user.driver_data.cnh" label="CNH" variant="outlined" :readonly="true" />
-                    <v-text-field v-model="authStore.state.user.telephone" label="Telefone" variant="outlined" :readonly="!isEditing" />
+                    <v-text-field v-model="authStore.state.user.name" label="Nome" variant="outlined"
+                        :readonly="true" />
+                    <v-text-field v-model="authStore.state.user.driver_data.cpf" label="CPF" variant="outlined"
+                        :readonly="true" />
+                    <v-text-field v-model="authStore.state.user.username" label="Username" variant="outlined"
+                        :readonly="!isEditing" />
+                    <v-text-field v-model="authStore.state.user.email" label="Email" variant="outlined"
+                        :readonly="!isEditing" />
+                    <v-text-field v-model="authStore.state.user.driver_data.cnh" label="CNH" variant="outlined"
+                        :readonly="true" />
+                    <v-text-field v-model="authStore.state.user.telephone" label="Telefone" variant="outlined"
+                        :readonly="!isEditing" />
 
                     <div class="edit-button full">
-                        <v-btn @click="toggleEdit" color="primary" variant="tonal" prepend-icon="mdi-pencil-outline" rounded="1">
+                        <v-btn @click="toggleEdit" color="primary" variant="tonal" prepend-icon="mdi-pencil-outline"
+                            rounded="1">
                             Editar
                         </v-btn>
                         <v-btn @click="toggleEdit" color="primary" prepend-icon="mdi-content-save-outline" rounded="1">
@@ -46,7 +50,7 @@ function toggleEdit() {
         </div>
 
         <ShowPhoto v-model="viewPhotoDialog" :src="authStore.state.user.picture_file" />
-        <UploadPhoto v-model="changePhotoDialog" />
+        <UploadPhoto v-model="changePhotoDialog" :user_id="authStore.state.user.id" />
     </section>
 </template>
 
@@ -86,7 +90,6 @@ function toggleEdit() {
     grid-column: span 2;
 }
 
-/* Responsividade */
 @media (max-width: 1024px) {
     .photo {
         flex-direction: column;

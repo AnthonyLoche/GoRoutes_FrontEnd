@@ -7,10 +7,14 @@
           <img src="../../assets/images/LogoRemoved.png" width="80px" alt="">
           <h1 style="font-family: Homenaje;">GoRoutes</h1>
         </div>
-        <div class="nav-links">
+        <div class="nav-links" v-if="!authStore.state.token">
           <router-link to="/blank/login" class="nav-link">Login</router-link>
           <router-link to="/blank/register" class="btn-register">Cadastre-se</router-link>
         </div>
+        <div class="nav-links" v-else>
+          <NavBarHome />
+        </div>
+       
       </div>
     </nav>
 
@@ -128,7 +132,10 @@
 <script setup>
 import { ref } from 'vue'
 import FooterMain from '@/components/global/Footer/FooterMain.vue'
+import { useAuthStore } from '@/stores'
+import NavBarHome from '@/components/global/NavBarHome.vue'
 
+const authStore = useAuthStore()
 // Reactive data
 const features = ref([
   {
@@ -293,6 +300,23 @@ const teamMembers = ref([
   box-sizing: border-box;
 }
 
+button.profile {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: var(--primary);
+  padding: .5rem;
+  color: white;
+  border-radius: 20px;
+}
+
+button.profile > img {
+  height: 100%;
+  border-radius: 50%;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   color: var(--text);
@@ -303,16 +327,6 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-.navbar {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  transition: all 0.3s ease;
 }
 
 .navbar-container {
