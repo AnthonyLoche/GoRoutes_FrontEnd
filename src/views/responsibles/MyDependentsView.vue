@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { HeaderMain, AsideCompProfile, ProfileDataComp, LoadingComp, FooterMain, DependantsComp } from '@/components'
+import { HeaderMain, AsideCompProfile, LoadingComp, FooterMain, DependantsComp } from '@/components'
 import AccountCircle from "vue-material-design-icons/AccountCircle.vue"
 
 

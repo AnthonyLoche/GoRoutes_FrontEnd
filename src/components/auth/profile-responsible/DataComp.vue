@@ -32,7 +32,6 @@ onMounted(async () => {
     console.log('DataComp montado')
     console.log('Estado atual do auth store:', authStore.state)
 
-    // Se não houver dados do usuário, usa dados mockados
     if (!authStore.state?.user?.name) {
       console.log('Usando dados mockados')
       authStore.state.user = mockUser

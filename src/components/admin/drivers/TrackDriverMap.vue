@@ -14,14 +14,14 @@ const createCircularIcon = (imageUrl) => {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   const size = 50;
-  
+
   canvas.width = size;
   canvas.height = size;
-  
+
   return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    
+
     img.onload = () => {
       // Desenhar círculo de fundo
       ctx.beginPath();
@@ -31,25 +31,25 @@ const createCircularIcon = (imageUrl) => {
       ctx.lineWidth = 3;
       ctx.strokeStyle = '#3b82f6';
       ctx.stroke();
-      
+
       // Recortar área circular para a imagem
       ctx.save();
       ctx.beginPath();
       ctx.arc(size / 2, size / 2, (size / 2) - 2, 0, 2 * Math.PI);
       ctx.clip();
-      
+
       // Desenhar imagem redimensionada e centralizada
       ctx.drawImage(img, 0, 0, size, size);
       ctx.restore();
-      
+
       resolve(canvas.toDataURL());
     };
-    
+
     img.onerror = () => {
       // Em caso de erro, usar ícone padrão
       resolve("https://cdn-icons-png.flaticon.com/512/744/744465.png");
     };
-    
+
     img.src = imageUrl;
   });
 };
@@ -57,21 +57,21 @@ const createCircularIcon = (imageUrl) => {
 onMounted(async () => {
   try {
     await goRoutesStore.getActiveRoutes();
-    
+
     const drivers = goRoutesStore.state.transiDrivers
       .filter(d => d.my_location && d.my_location.latitude && d.my_location.longitude);
-    
+
     const markersWithIcons = await Promise.all(
       drivers.map(async (d) => {
         const hasPhoto = d.icon_driver && d.icon_driver.length > 0;
         let iconUrl;
-        
+
         if (hasPhoto) {
           iconUrl = await createCircularIcon(d.icon_driver);
         } else {
           iconUrl = "https://cdn-icons-png.flaticon.com/512/744/744465.png";
         }
-        
+
         return {
           position: {
             lat: parseFloat(d.my_location.latitude),
@@ -88,7 +88,7 @@ onMounted(async () => {
         };
       })
     );
-    
+
     driverMarkers.value = markersWithIcons;
   } catch (error) {
     console.error('Erro ao carregar rotas ativas:', error);
@@ -142,25 +142,25 @@ const defaultCenter = { lat: -26.3, lng: -48.8 };
 
       <GMapInfoWindow
         v-if="selectedMarkerIndex !== null && driverMarkers[selectedMarkerIndex]"
-        :key="`info-${infoWindowKey}`"
+        :key="`info-${selectedMarkerIndex}-${infoWindowKey}`"
         :position="driverMarkers[selectedMarkerIndex].position"
         @closeclick="closeInfoWindow"
-        :options="{ 
+        :options="{
           disableAutoPan: false,
           pixelOffset: { width: 0, height: -5 }
         }"
       >
-        <div class="info-window-content" :key="`content-${selectedMarkerIndex}-${infoWindowKey}`">
+        <div class="info-window-content">
           <h3>{{ driverMarkers[selectedMarkerIndex].driverName }}</h3>
           <p><strong>Email:</strong> {{ driverMarkers[selectedMarkerIndex].email }}</p>
           <div class="action-buttons">
-            <button 
+            <button
               class="action-btn primary"
               @click="handleAction1(driverMarkers[selectedMarkerIndex].id_driver)"
             >
               Perfil
             </button>
-            <button 
+            <button
               class="action-btn secondary"
               @click="handleAction2(driverMarkers[selectedMarkerIndex].driverName)"
             >

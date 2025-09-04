@@ -17,8 +17,9 @@ const closeMenu = () => {
 const menuItems = [
     { name: 'Início', icon: 'mdi-home', color: '#4CAF50' },
     { name: 'Perfil', icon: 'mdi-account', color: '#607D8B' },
-    { name: 'Minha Rota', icon: 'mdi-map-marker-path', color: '#FF9800' },
-    { name: 'Rotas Feitas', icon: 'mdi-check-circle', color: '#2196F3' }
+    { name: 'Minha Rotas', icon: 'mdi-map-marker-path', color: '#FF9800' },
+    { name: 'Rotas Feitas', icon: 'mdi-check-circle', color: '#2196F3' },
+    { name: 'Minha Rota De Hoje', icon: 'mdi-map-marker-path', color: '#FF9800' },
 ]
 
 const goToHome = () => {

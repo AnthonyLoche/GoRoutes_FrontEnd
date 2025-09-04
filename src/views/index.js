@@ -18,6 +18,7 @@ import PassengerAdminRetrieveView from './admin/passengers/PassengerAdminRetriev
 import DriverRouteIsActive from './admin/drivers/DriverRouteIsActive.vue'
 import TrackMyDependentsView from './responsibles/TrackMyDependentsView.vue'
 import MyDependentsView from './responsibles/MyDependentsView.vue'
+import DriverMyRoutesView from "./admin/drivers/DriverMyRoutesView.vue"
 class Views {
   static HomeView = HomeView
   static LoginView = LoginView
@@ -39,6 +40,7 @@ class Views {
   static DriverRouteIsActive = DriverRouteIsActive
   static TrackMyDependentsView = TrackMyDependentsView
   static MyDependentsView = MyDependentsView
+  static DriverMyRoutesView = DriverMyRoutesView
 }
 
 export { Views }

@@ -11,10 +11,12 @@ export const useGoRoutesStore = defineStore("goroutes", () => {
         transiDrivers: [],
         selectedDriverToTrack: null,
         myActiveRoute: null,
+        myDriverRoutes: [],
         loading: false,
         error: null,
     })
     const authStore = useAuthStore();
+    const driverId = authStore.state.user.driver_data?.id;
 
     const getRoutes = async () => {
         state.loading = true;
@@ -72,10 +74,21 @@ export const useGoRoutesStore = defineStore("goroutes", () => {
 
     const getRouteByDriverId = async () => {
         state.loading = true;
-        const driverId = authStore.state.user.driver_data?.id;
         try {
             const response = await GoRoutesService.getRouteByDriverId(3);
             state.myActiveRoute = response;
+        } catch (error) {
+            state.error = error;
+        } finally {
+            state.loading = false;
+        }
+    }
+
+    const filterMyDriverRoutes = async () => {
+        state.loading = true;
+        try {
+            const response = await GoRoutesService.filterMyDriverRoutes(driverId);
+            state.myDriverRoutes = response;
         } catch (error) {
             state.error = error;
         } finally {
@@ -88,7 +101,8 @@ export const useGoRoutesStore = defineStore("goroutes", () => {
         getRoutes,
         getActiveRoutes,
         getRouteById,
-        getRouteByDriverId
+        getRouteByDriverId,
+        filterMyDriverRoutes
     }
 
 })
