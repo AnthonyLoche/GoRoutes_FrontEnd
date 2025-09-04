@@ -1,4 +1,3 @@
-<!-- UserProfile.vue -->
 <script setup>
 import { ref } from 'vue'
 import { useAuthStore } from '@/stores'
@@ -31,12 +30,16 @@ function toggleEdit() {
                     <v-text-field v-model="authStore.state.user.driver_data.cpf" label="CPF" variant="outlined" :readonly="true" />
                     <v-text-field v-model="authStore.state.user.username" label="Username" variant="outlined" :readonly="!isEditing" />
                     <v-text-field v-model="authStore.state.user.email" label="Email" variant="outlined" :readonly="!isEditing" />
-                    <v-text-field v-model="authStore.state.user.telephone" label="Telefone" variant="outlined" :readonly="!isEditing" />
                     <v-text-field v-model="authStore.state.user.driver_data.cnh" label="CNH" variant="outlined" :readonly="true" />
+                    <v-text-field v-model="authStore.state.user.telephone" label="Telefone" variant="outlined" :readonly="!isEditing" />
 
                     <div class="edit-button full">
-                        <v-btn @click="toggleEdit" color="primary" variant="tonal" prepend-icon="mdi-pencil-outline" rounded="1">Editar</v-btn>
-                        <v-btn @click="toggleEdit" color="primary" prepend-icon="mdi-content-save-outline" rounded="1">Salvar</v-btn>
+                        <v-btn @click="toggleEdit" color="primary" variant="tonal" prepend-icon="mdi-pencil-outline" rounded="1">
+                            Editar
+                        </v-btn>
+                        <v-btn @click="toggleEdit" color="primary" prepend-icon="mdi-content-save-outline" rounded="1">
+                            Salvar
+                        </v-btn>
                     </div>
                 </div>
             </div>
@@ -55,6 +58,7 @@ function toggleEdit() {
     gap: 2rem;
     margin: 2rem auto;
 }
+
 .form-wrapper {
     flex: 1;
     display: flex;
@@ -62,6 +66,14 @@ function toggleEdit() {
     gap: 1rem;
     width: 100%;
 }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+}
+
 .edit-button {
     display: flex;
     align-items: end;
@@ -69,13 +81,29 @@ function toggleEdit() {
     width: 100%;
     gap: 1rem;
 }
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    width: 100%;
-}
+
 .full {
     grid-column: span 2;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .photo {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .full {
+        grid-column: span 1;
+    }
+
+    .edit-button {
+        justify-content: space-around;
+    }
 }
 </style>
