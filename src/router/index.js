@@ -41,6 +41,7 @@ const routes = [
       { path: 'websocket', component: Views.WebSocketView },
       { path: 'admin/drivers/route-active', component: Views.DriverRouteIsActive },
       { path: 'responsible/dependents', component: Views.MyDependentsView },
+      { path: 'responsible/dependent/:id', component: Views.DetailDependentView, props: true},
       { path: 'responsible/track-dependents', component: Views.TrackMyDependentsView },
       { path: 'driver/my-routes', component: Views.DriverMyRoutesView },
     ],

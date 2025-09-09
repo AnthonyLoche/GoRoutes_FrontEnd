@@ -125,7 +125,15 @@ export const useAuthStore = defineStore('auth', () => {
       return error
     }
   }
-
+  async function userById (id) {
+    try {
+      const response = await AuthService.refreshDataUser(id)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
   async function logout() {
     // Limpa o state corretamente
     state.value = {
@@ -155,5 +163,6 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     updatePicture,
     refreshDataUser,
+    userById
   }
 })

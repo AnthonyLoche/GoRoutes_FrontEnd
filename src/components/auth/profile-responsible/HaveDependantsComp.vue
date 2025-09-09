@@ -1,186 +1,120 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import PhotoComp from '@/components/global/profiles-images/PhotoComp.vue'
-import ShowPhoto from '@/components/global/profiles-images/ShowPhoto.vue'
-import UploadPhoto from '@/components/global/profiles-images/UploadPhoto.vue'
-import ModalAddDependent from './ModalAddDependent.vue'
+import AccountCircle from "vue-material-design-icons/AccountCircle.vue"
 
 const props = defineProps({
   dependents: {
     type: Array,
-    default: () => []
+    required: true
   }
 })
 
-const isEditing = ref(false)
-const viewPhotoDialog = ref(false)
-const changePhotoDialog = ref(false)
-const dialog = ref(false)
-const isSmallScreen = ref(false)
 
-function toggleEdit() {
-  isEditing.value = !isEditing.value
-}
-
-function updateScreenSize() {
-  isSmallScreen.value = window.matchMedia('(max-width: 1024px)').matches
-}
-
-onMounted(() => {
-  updateScreenSize()
-  window.addEventListener('resize', updateScreenSize)
-})
 
 </script>
 
 <template>
   <section>
-    <v-carousel
-      :hide-delimiters="true"
-      :show-arrows="!isSmallScreen"
-      height="350"
-      class="a"
-    >
-      <v-carousel-item
-        v-for="dependent in props.dependents"
-        :key="dependent.id"
-      >
-        <div class="photo">
-          <PhotoComp
-            :src="dependent.picture_file"
-            @view="viewPhotoDialog = true"
-            @change="changePhotoDialog = true"
-          />
-
-          <div class="form-wrapper">
-            <div class="form-grid">
-              <v-text-field
-                v-model="dependent.name"
-                label="Nome"
-                variant="outlined"
-                :readonly="true"
-              />
-
-              <v-text-field
-                v-model="dependent.passenger_data.cpf"
-                label="CPF"
-                variant="outlined"
-                :readonly="true"
-              />
-
-              <v-text-field
-                v-model="dependent.passenger_data.student_data.registration"
-                label="Matrícula"
-                variant="outlined"
-                :readonly="!isEditing"
-              />
-
-              <v-text-field
-                v-model="dependent.email"
-                label="Email"
-                variant="outlined"
-                :readonly="!isEditing"
-              />
-
-              <v-text-field
-                class="full"
-                v-model="dependent.telephone"
-                label="Telefone"
-                variant="outlined"
-                :readonly="!isEditing"
-              />
-
-              <div class="edit-button full">
-                <v-btn
-                  @click="toggleEdit"
-                  color="primary"
-                  variant="tonal"
-                  prepend-icon="mdi-pencil-outline"
-                  rounded="1"
-                >
-                  Editar
-                </v-btn>
-                <v-btn
-                  @click="toggleEdit"
-                  color="primary"
-                  prepend-icon="mdi-content-save-outline"
-                  rounded="1"
-                >
-                  Salvar
-                </v-btn>
-              </div>
-            </div>
+  <RouterLink v-for="dependent in props.dependents" :key="dependent.id" :to="`/blank/responsible/dependent/${dependent.id}`">
+    <div class="card">
+      <div class="wrapper" :style="`background-image: url(${dependent.picture_file || 'https://th.bing.com/th/id/R.090b69301cb8a4f034f9bf94488069ea?rik=0J%2ba5Ubmt0AOvg&pid=ImgRaw&r=0'})`">
+        <div class="content">
+          <div class="info">
+            <h3>
+              <AccountCircle />{{ dependent.name }}
+            </h3>
+            <p>
+              Clique para saber mais.
+            </p>
           </div>
         </div>
-
-        <!-- Modais -->
-        <ShowPhoto v-model="viewPhotoDialog" :src="dependent.picture_file" />
-        <UploadPhoto v-model="changePhotoDialog" :user_id="dependent.id" />
-      </v-carousel-item>
-    </v-carousel>
-    <v-btn rounded="sm" @click="dialog = !dialog" class="b">
-      Adicionar dependente
-    </v-btn>
-    <ModalAddDependent :model-value="dialog" />
+      </div>
+    </div>
+  </RouterLink>
   </section>
 </template>
 
 <style scoped>
-.photo {
-  width: 85%;
+section {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 2rem;
-  margin: 2rem auto;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: .5rem;
+  margin-top: 20px;
 }
-
-.form-wrapper {
-  flex: 1;
+span,
+h3,
+p,
+time {
+  color: white;
+}
+h3 {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
   width: 100%;
-}
-
-.edit-button {
-  display: flex;
   align-items: end;
-  justify-content: end;
+  justify-content: start;
+  gap: 0.5rem;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+p {
+  height: 70px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  margin: 0;
+}
+
+a {
+  width: 32%;
+  min-width: 300px;
+}
+.wrapper {
+  height: 20rem;
+  position: relative;
+  overflow: hidden;
+  background-position: center;
+  background-size: cover;
+}
+
+.wrapper:hover .content .info {
+  transform: translateY(0);
+}
+.content {
   width: 100%;
-  gap: 1rem;
+  height: 60vh;
+  background-color: rgba(0, 0, 0, 0.3);
 }
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+.info {
+  position: absolute;
+  bottom: 0;
   width: 100%;
+  transform: translateY(calc(70px + 1em));
+  transition: transform 0.3s;
+  padding: 1em;
+  z-index: 1;
 }
 
-.full {
-  grid-column: span 2;
+
+.card {
+  margin: 0 auto;
 }
 
-@media (max-width: 1024px) {
-  .photo {
-    flex-direction: column;
-    align-items: center;
+@media only screen and (max-width: 1300px) {
+  .wrapper {
+    width: 300px;
   }
-  .form-wrapper {
-    width: 100%;
+  a {
+    width: auto;
+    margin-bottom: 15px;
   }
-  .form-grid {
-    display: flex;
-    flex-direction: column;
+  p {
+    display: none;
   }
-}
-
-.a {
-  height: auto !important;
-}
-
-.b {
-  margin: 0 0 0 20%;
+  .info {
+    transform: translateY(0);
+  }
 }
 </style>

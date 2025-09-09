@@ -31,3 +31,4 @@ export { default as AsideDriverComp} from "./global/AsideAdmin/AsideDriverComp.v
 export { default as FooterMain} from './global/Footer/FooterMain.vue'
 export { default as DependantsComp} from './auth/profile-responsible/DependantsComp.vue'
 export  {default as MyRoutesComp} from './admin/drivers/MyRoutesComp.vue'
+export { default as DetailDependentComp} from './auth/profile-responsible/DetailDependentComp.vue'

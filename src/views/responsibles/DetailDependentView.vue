@@ -1,15 +1,20 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-import { HeaderMain, AsideCompProfile, LoadingComp, FooterMain, DependantsComp } from '@/components'
+import { ref, onMounted, computed } from 'vue'
+import { HeaderMain, AsideCompProfile, LoadingComp, FooterMain, DependantsComp, DetailDependentComp } from '@/components'
 import AccountCircle from "vue-material-design-icons/AccountCircle.vue"
+import { useAuthStore } from '@/stores'
+import route from '@/router'
 
-
+const authStore = useAuthStore()
 const isLoading = ref(true)
 const hasError = ref(false)
 const errorMessage = ref('')
+const currentDependent = ref(null)
 
-onMounted(() => {
+onMounted(async () => {
   try {
+    currentDependent.value = await authStore.userById(route.currentRoute.value.params.id)
+    console.log(currentDependent.value)
     console.log('ProfileResponsibleView montado')
     isLoading.value = false
   } catch (error) {
@@ -39,9 +44,9 @@ onMounted(() => {
             <div class="view">
                 <div class="title">
           <AccountCircle />
-          <h2>Dados dos Dependentes</h2>
+          <h2>Dados de {{ currentDependent.data.name }}</h2>
       </div>
-                <DependantsComp />
+                <DetailDependentComp :dependent="currentDependent" />
             </div>
         </div>
     </div>
