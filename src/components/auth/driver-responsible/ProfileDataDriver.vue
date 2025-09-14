@@ -1,6 +1,7 @@
 <script setup>
 import AccountCircle from "vue-material-design-icons/AccountCircle.vue"
 import DataDriverComp from "./DataDriverComp.vue";
+import DocsDriverComp from "./DocsDriverComp.vue";
 </script>
 
 <template>
@@ -10,6 +11,13 @@ import DataDriverComp from "./DataDriverComp.vue";
         <h2>Dados do Perfil</h2>
     </div>
     <DataDriverComp />
+  </section>
+  <section>
+  <div class="title">
+      <AccountCircle />
+      <h2>Meus Documentos</h2>
+  </div>
+  <DocsDriverComp />
   </section>
 </template>
 
