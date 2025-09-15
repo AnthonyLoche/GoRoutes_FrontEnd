@@ -1,11 +1,14 @@
 <template>
-    <div>
+    <div v-if="!isMobile">
         <button class="toggle-btn" @click="toggleSidebar">☰</button>
-
         <div class="sidebar" :class="{ show: isSidebarVisible }">
-            <div class="menu-item" v-for="(item, index) in menuItems" :key="index" :class="{ active: item.active }">
-                <router-link :to="item.route" class="menu-link" @click="activateItem(index)">
-                    <div class="menu-icon">
+            <div class="menu-category" v-for="(item, index) in menuItems" :key="index">
+                <router-link
+                    :to="item.route"
+                    class="menu-item"
+                    :class="{ active: isActiveRoute(item.route) }"
+                    @click="activateItem(index)">
+                    <div class="menu-icon" :style="{ color: item.color }">
                         <component :is="item.icon" />
                     </div>
                     <span>{{ item.name }}</span>
@@ -16,28 +19,52 @@
 </template>
 
 <script setup>
-import { ref, markRaw } from 'vue'
+import { ref, markRaw, onMounted, onUnmounted } from 'vue';
+import { useRoute } from 'vue-router';
+import HomeIcon from 'vue-material-design-icons/Home.vue';
+import AccountIcon from 'vue-material-design-icons/Account.vue';
+import MapMarkerPathIcon from 'vue-material-design-icons/MapMarkerPath.vue';
+import CheckCircleIcon from 'vue-material-design-icons/CheckCircle.vue';
+import MapMarkerAccountOutline from "vue-material-design-icons/MapMarkerAccountOutline.vue";
 
-import CarIcon from 'vue-material-design-icons/Car.vue'
-import CogIcon from 'vue-material-design-icons/Cog.vue'
-
-const isSidebarVisible = ref(true)
-
+const route = useRoute();
+const isSidebarVisible = ref(true);
 const menuItems = ref([
-    { name: 'Minha Conta', route: '/blank/profile/driver', icon: markRaw(CarIcon), active: false },
-    { name: 'Minha Rota', route: '/default/admin/passengers', icon: markRaw(CogIcon), active: false },
-    { name: 'Configurações', route: '/admin/settings', icon: markRaw(CogIcon), active: false }
-])
+    { name: 'Início', icon: markRaw(HomeIcon), route: '/', color: '#5050ff' },
+    { name: 'Perfil', icon: markRaw(AccountIcon), route: '/blank/profile/driver', color: '#5050ff' },
+    { name: 'Minha Rotas', icon: markRaw(MapMarkerPathIcon), route: '/blank/driver/my-routes', color: '#5050ff' },
+    // { name: 'Minha Rota de Hoje', icon: markRaw(MapMarkerAccountOutline), route: '/my-route', color: '#5050ff' },
+    { name: 'Rotas Feitas', icon: markRaw(CheckCircleIcon), route: '/completed-routes', color: '#5050ff' },
+]);
+
+const isMobile = ref(false);
+
+const checkMobile = () => {
+    isMobile.value = window.innerWidth <= 768;
+};
+
+onMounted(() => {
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', checkMobile);
+});
 
 const toggleSidebar = () => {
-    isSidebarVisible.value = !isSidebarVisible.value
-}
+    isSidebarVisible.value = !isSidebarVisible.value;
+};
 
 const activateItem = (index) => {
     menuItems.value.forEach((item, i) => {
-        item.active = i === index
-    })
-}
+        item.active = i === index;
+    });
+};
+
+const isActiveRoute = (routePath) => {
+    return route.path === routePath;
+};
 </script>
 
 <style scoped>
@@ -58,11 +85,11 @@ const activateItem = (index) => {
     border-right: 2px solid #E5E7EB;
 }
 
-.menu-item {
+.menu-category {
     margin-bottom: 5px;
 }
 
-.menu-link {
+.menu-item {
     display: flex;
     align-items: center;
     padding: 12px 15px;
@@ -72,11 +99,11 @@ const activateItem = (index) => {
     transition: background-color 0.2s;
 }
 
-.menu-link:hover {
+.menu-item:hover {
     background-color: #e8e8ff;
 }
 
-.menu-item.active .menu-link {
+.menu-item.active {
     background-color: #e0e0ff;
     color: #5050ff;
     font-weight: 500;
@@ -90,7 +117,6 @@ const activateItem = (index) => {
     width: 30px;
     height: 30px;
     margin-right: 10px;
-    color: #6464fe;
 }
 
 .toggle-btn {

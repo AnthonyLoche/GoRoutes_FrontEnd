@@ -27,7 +27,7 @@ const goToHome = () => {
     <header>
         <div class="logo" @click="goToHome">
             <img src="../../../assets/images/LogoRemoved.png" alt="GoRoutes Logo">
-            <h1>GoRoutes</h1>
+            <h1 style="font-family: 'Homenaje';">GoRoutes</h1>
         </div>
         <div class="nav">
             <div class="itens">

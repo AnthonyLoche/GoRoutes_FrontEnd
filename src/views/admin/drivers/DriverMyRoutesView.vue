@@ -1,5 +1,5 @@
 <script setup>
-import { HeaderMain, AsideDriverComp , ProfileDataDriver, FooterMain} from '@/components'
+import { HeaderMain, AsideDriverComp , FooterMain, MyRoutesComp} from '@/components'
 </script>
 
 <template>
@@ -13,7 +13,7 @@ import { HeaderMain, AsideDriverComp , ProfileDataDriver, FooterMain} from '@/co
                 <AsideDriverComp />
             </div>
             <div class="view">
-                <ProfileDataDriver />
+                <MyRoutesComp />
             </div>
         </div>
     </div>
@@ -53,6 +53,10 @@ import { HeaderMain, AsideDriverComp , ProfileDataDriver, FooterMain} from '@/co
 @media screen and (max-width: 1024px) {
     .grid {
         display: flex;
+    }
+
+    .view{
+        width:100%;
     }
 
 
