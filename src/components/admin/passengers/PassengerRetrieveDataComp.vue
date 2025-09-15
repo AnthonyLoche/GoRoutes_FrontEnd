@@ -19,7 +19,7 @@ function toggleEdit() {
     <section>
         <div class="photo">
             <PhotoComp
-                :src="passengersStore.state.selectedPassenger.picture"
+                :src="passengersStore.state.selectedPassenger.picture_file"
                 @view="viewPhotoDialog = true"
                 @change="changePhotoDialog = true"
             />
@@ -83,8 +83,8 @@ function toggleEdit() {
         </div>
 
         <!-- Modais -->
-        <ShowPhoto v-model="viewPhotoDialog" :src="passengersStore.state.selectedPassenger.picture" />
-        <UploadPhoto v-model="changePhotoDialog" :vehicle_id="passengersStore.state.selectedPassenger.id" />
+        <ShowPhoto v-model="viewPhotoDialog" :src="passengersStore.state.selectedPassenger.picture_file" />
+        <UploadPhoto v-model="changePhotoDialog" :user_id="passengersStore.state.selectedPassenger.id" />
     </section>
 </template>
 
