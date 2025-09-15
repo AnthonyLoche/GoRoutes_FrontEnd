@@ -55,6 +55,7 @@ onUnmounted(() => {
                     v-model="login.password"
                     :haveSubtext="true"
                     subtext="Esqueci minha senha"
+                    :subtext-link="'/blank/forgot-password'"
                     padding-props="1.3rem"
                     @keyup.enter="handleLogin"
                 />
