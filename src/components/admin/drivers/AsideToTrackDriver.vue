@@ -5,6 +5,26 @@ import { computed } from 'vue';
 const goRoutesStore = useGoRoutesStore();
 
 const selectedDriver = computed(() => goRoutesStore.state.selectedDriverToTrack);
+
+// Ao clicar em um motorista na lista, definimos o driver selecionado no store
+const selectDriverFromAside = (driver) => {
+  console.log('[Aside] click driver:', driver);
+  // Monta um objeto compatível com os markers do mapa
+  const markerLike = {
+    position: {
+      lat: parseFloat(driver?.my_location?.latitude),
+      lng: parseFloat(driver?.my_location?.longitude),
+    },
+    driverName: driver.driver_name || driver.name,
+    email: driver.email,
+    id_driver: driver.driver_id || driver.id,
+    icon: driver.icon_driver
+      ? { url: driver.icon_driver, scaledSize: { width: 50, height: 50 }, anchor: { x: 25, y: 25 } }
+      : undefined,
+  };
+  console.log('[Aside] setting selectedDriverToTrack:', markerLike);
+  goRoutesStore.state.selectedDriverToTrack = markerLike;
+};
 </script>
 
 <template>
@@ -18,8 +38,8 @@ const selectedDriver = computed(() => goRoutesStore.state.selectedDriverToTrack)
           <div v-else class="avatar-placeholder">
             <svg viewBox="0 0 24 24" fill="currentColor">
               <path
-                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
-                1.79-4 4 1.79 4 4 4zm0 2c-2.67 
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4
+                1.79-4 4 1.79 4 4 4zm0 2c-2.67
                 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
               />
             </svg>
@@ -104,14 +124,15 @@ const selectedDriver = computed(() => goRoutesStore.state.selectedDriverToTrack)
           v-for="driver in goRoutesStore.state.transiDrivers"
           :key="driver.id"
           class="driver-item"
+          @click="selectDriverFromAside(driver)"
         >
           <div class="driver-avatar">
             <img v-if="driver.icon_driver" :src="driver.icon_driver" :alt="driver.driver_name" />
             <div v-else class="avatar-placeholder">
               <svg viewBox="0 0 24 24" fill="currentColor">
                 <path
-                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 
-                  1.79-4 4 1.79 4 4 4zm0 2c-2.67 
+                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4
+                  1.79-4 4 1.79 4 4 4zm0 2c-2.67
                   0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
                 />
               </svg>

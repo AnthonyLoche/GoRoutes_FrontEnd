@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useGoRoutesStore } from "@/stores";
 import router from "@/router";
 
@@ -7,7 +7,7 @@ const goRoutesStore = useGoRoutesStore();
 
 const driverMarkers = ref([]);
 const selectedMarkerIndex = ref(null);
-const infoWindowKey = ref(0); // Key para forçar re-render
+const infoWindowKey = ref(0);
 
 // Função para criar ícone circular
 const createCircularIcon = (imageUrl) => {
@@ -99,14 +99,12 @@ onMounted(async () => {
 const handleMarkerClick = (index, item) => {
   selectedMarkerIndex.value = index;
   infoWindowKey.value++;
-
   goRoutesStore.state.selectedDriverToTrack = item;
 };
 
 // Função para fechar o InfoWindow
 const closeInfoWindow = () => {
   selectedMarkerIndex.value = null;
-  goRoutesStore.state.selectedDriverToTrack = null;
 };
 
 // Funções para as ações dos botões
@@ -121,6 +119,20 @@ const handleAction2 = (driverName) => {
 
 // Posição padrão do mapa (Joinville, SC)
 const defaultCenter = { lat: -26.3, lng: -48.8 };
+// Abrir InfoWindow quando a seleção no store mudar (ex.: clique na aside)
+watch(
+  () => goRoutesStore.state.selectedDriverToTrack,
+  (selected) => {
+    if (!selected) return;
+    const selectedId = selected.id_driver || selected.driver_id || selected.id;
+    const index = driverMarkers.value.findIndex(m => m.id_driver == selectedId);
+    if (index !== -1 && selectedMarkerIndex.value !== index) {
+      selectedMarkerIndex.value = index;
+      infoWindowKey.value++;
+    }
+  }
+);
+
 </script>
 
 <template>
@@ -141,8 +153,8 @@ const defaultCenter = { lat: -26.3, lng: -48.8 };
       />
 
       <GMapInfoWindow
+        :key="infoWindowKey"
         v-if="selectedMarkerIndex !== null && driverMarkers[selectedMarkerIndex]"
-        :key="`info-${selectedMarkerIndex}-${infoWindowKey}`"
         :position="driverMarkers[selectedMarkerIndex].position"
         @closeclick="closeInfoWindow"
         :options="{
