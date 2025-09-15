@@ -26,6 +26,7 @@ const routes = [
       { path: 'admin/passengers', component: Views.PassengersAdminView },
       { path: 'admin/passengers/:id', component: Views.PassengerAdminRetrieveView },
       { path: 'admin/responsibles', component: Views.ResponsiblesAdminView },
+      { path: 'admin/responsible/:id', component: Views.DataResponsibleAdminView },
     ],
   },
   {
