@@ -25,7 +25,7 @@ import HomeIcon from 'vue-material-design-icons/Home.vue';
 import AccountIcon from 'vue-material-design-icons/Account.vue';
 import MapMarkerPathIcon from 'vue-material-design-icons/MapMarkerPath.vue';
 import CheckCircleIcon from 'vue-material-design-icons/CheckCircle.vue';
-import MapMarkerAccountOutline from "vue-material-design-icons/MapMarkerAccountOutline.vue";
+// import MapMarkerAccountOutline from "vue-material-design-icons/MapMarkerAccountOutline.vue";
 import Dashboard from "vue-material-design-icons/ViewDashboard.vue";
 
 const route = useRoute();

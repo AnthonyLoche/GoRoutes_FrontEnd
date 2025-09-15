@@ -219,4 +219,26 @@ onMounted(async () => {
 .text-error {
   color: rgb(var(--v-theme-error)) !important;
 }
+
+.v-data-table :deep(thead) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.v-data-table :deep(th) {
+  font-weight: bold;
+}
+
+.v-data-table :deep(thead tr:first-child th:first-child) {
+  border-top-left-radius: 8px;
+}
+
+.v-data-table :deep(thead tr:first-child th:last-child) {
+  border-top-right-radius: 8px;
+}
+
+.v-data-table :deep(th:hover .v-data-table-header__content) {
+  color: var(--secondary-color); /* ex: amarelo */
+  transition: color 0.3s ease;
+}
 </style>

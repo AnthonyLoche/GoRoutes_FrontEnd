@@ -13,7 +13,7 @@ const isHover = ref(false)
 <template>
     <div class="profile-photo" @mouseenter="isHover = true" @mouseleave="isHover = false">
         <img :src="props.src || 'https://th.bing.com/th/id/R.090b69301cb8a4f034f9bf94488069ea?rik=0J%2ba5Ubmt0AOvg&pid=ImgRaw&r=0'" alt="Foto de perfil" />
-        <div v-if="isHover" class="overlay">
+            <div v-if="isHover" class="overlay">
             <v-btn size="small" @click="emit('view')" color="white" icon="mdi-eye" />
             <v-btn size="small" @click="emit('change')" color="white" icon="mdi-camera" />
         </div>

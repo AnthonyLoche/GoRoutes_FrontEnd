@@ -1085,6 +1085,10 @@ body {
     padding: 3rem 1.5rem;
   }
 
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
   .steps {
     flex-direction: column;
   }
