@@ -62,11 +62,23 @@ export const useVehiclesStore = defineStore("vehicles", () => {
         }
     }
 
+    const updateDocumentVehicle = async (data) => {
+        state.loading = true;
+        try {
+            const response = await VehiclesService.updateDocumentVehicle(data);
+            return response;
+        } catch (error) {
+            state.error = error;
+            console.error(error);
+        }
+    }
+
     return {
         state,
         getVehicles,
         createVehicle,
         getVehicle,
         deleteVehicle,
+        updateDocumentVehicle
     }
 });

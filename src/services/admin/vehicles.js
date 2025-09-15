@@ -47,6 +47,18 @@ class VehiclesService {
             return error;
         }
     }
+
+    async updateDocumentVehicle(data) {
+        try {
+            const response = await api.post(`/goroutes/update-document-vehicle/`, data);
+            showSuccessToast("Documento atualizado com sucesso!");
+            return response;
+        } catch (error) {
+            console.error(error); 
+            showErrorToast("Falha ao atualizar o documento.");
+            return error;
+        }
+    }
 }
 
 export default new VehiclesService();

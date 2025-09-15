@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import BlankLayout from '@/layouts/BlankLayout.vue'
 import { Views } from '@/views'
-import { useAuthStore } from '@/stores'
+// import { useAuthStore } from '@/stores'  
 
 const routes = [
   {
@@ -53,47 +53,47 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
-  console.log('Router guard - Current state:', authStore.state)
+// router.beforeEach(async (to, from, next) => {
+//   const authStore = useAuthStore()
+//   console.log('Router guard - Current state:', authStore.state)
 
-  // Se estiver indo para login e já estiver logado, redireciona para a página apropriada
-  if (to.path === '/blank/login' && authStore.state.isLogged) {
-    const routes = {
-      driver: '/blank/profile/driver',
-      responsible: '/blank/profile/responsible',
-      student: '/blank/profile/student',
-      passenger: '/blank/profile/passenger',
-    }
+//   // Se estiver indo para login e já estiver logado, redireciona para a página apropriada
+//   if (to.path === '/blank/login' && authStore.state.isLogged) {
+//     const routes = {
+//       driver: '/blank/profile/driver',
+//       responsible: '/blank/profile/responsible',
+//       student: '/blank/profile/student',
+//       passenger: '/blank/profile/passenger',
+//     }
 
-    if (routes[authStore.state.type]) {
-      next(routes[authStore.state.type])
-      return
-    }
-  }
+//     if (routes[authStore.state.type]) {
+//       next(routes[authStore.state.type])
+//       return
+//     }
+//   }
 
-  // Se a rota requer autenticação
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (!authStore.state.isLogged) {
-      console.log('Usuário não logado, redirecionando para login')
-      next('/blank/login')
-      return
-    }
+//   // Se a rota requer autenticação
+//   if (to.matched.some((record) => record.meta.requiresAuth)) {
+//     if (!authStore.state.isLogged) {
+//       console.log('Usuário não logado, redirecionando para login')
+//       next('/blank/login')
+//       return
+//     }
 
-    // Se o usuário está logado mas não tem tipo definido, tenta atualizar os dados
-    if (authStore.state.isLogged && !authStore.state.type && authStore.state.user?.id) {
-      try {
-        console.log('Atualizando dados do usuário...')
-        await authStore.refreshDataUser(authStore.state.user.id)
-      } catch (error) {
-        console.error('Erro ao atualizar dados do usuário:', error)
-      }
-    }
+//     // Se o usuário está logado mas não tem tipo definido, tenta atualizar os dados
+//     if (authStore.state.isLogged && !authStore.state.type && authStore.state.user?.id) {
+//       try {
+//         console.log('Atualizando dados do usuário...')
+//         await authStore.refreshDataUser(authStore.state.user.id)
+//       } catch (error) {
+//         console.error('Erro ao atualizar dados do usuário:', error)
+//       }
+//     }
 
-    next()
-  } else {
-    next()
-  }
-})
+//     next()
+//   } else {
+//     next()
+//   }
+// })
 
 export default router
