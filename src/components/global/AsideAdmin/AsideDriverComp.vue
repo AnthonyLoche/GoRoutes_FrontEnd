@@ -26,11 +26,13 @@ import AccountIcon from 'vue-material-design-icons/Account.vue';
 import MapMarkerPathIcon from 'vue-material-design-icons/MapMarkerPath.vue';
 import CheckCircleIcon from 'vue-material-design-icons/CheckCircle.vue';
 import MapMarkerAccountOutline from "vue-material-design-icons/MapMarkerAccountOutline.vue";
+import Dashboard from "vue-material-design-icons/ViewDashboard.vue";
 
 const route = useRoute();
 const isSidebarVisible = ref(true);
 const menuItems = ref([
     { name: 'Início', icon: markRaw(HomeIcon), route: '/', color: '#5050ff' },
+    { name: 'Dashboard', icon: markRaw(Dashboard), route: '/default/admin/dashboard', color: '#5050ff' },
     { name: 'Perfil', icon: markRaw(AccountIcon), route: '/blank/profile/driver', color: '#5050ff' },
     { name: 'Minha Rotas', icon: markRaw(MapMarkerPathIcon), route: '/blank/driver/my-routes', color: '#5050ff' },
     // { name: 'Minha Rota de Hoje', icon: markRaw(MapMarkerAccountOutline), route: '/my-route', color: '#5050ff' },

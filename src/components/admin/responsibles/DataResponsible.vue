@@ -115,7 +115,7 @@ onMounted(() => {
 
 <style scoped>
 .photo {
-  width: 85%;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;

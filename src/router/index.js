@@ -45,6 +45,7 @@ const routes = [
       { path: 'responsible/dependent/:id', component: Views.DetailDependentView, props: true},
       { path: 'responsible/track-dependents', component: Views.TrackMyDependentsView },
       { path: 'driver/my-routes', component: Views.DriverMyRoutesView },
+      { path: 'about', component: Views.AboutView },
     ],
   },
 ]
