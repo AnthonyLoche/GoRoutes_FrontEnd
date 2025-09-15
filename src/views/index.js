@@ -20,6 +20,7 @@ import TrackMyDependentsView from './responsibles/TrackMyDependentsView.vue'
 import MyDependentsView from './responsibles/MyDependentsView.vue'
 import DriverMyRoutesView from "./admin/drivers/DriverMyRoutesView.vue"
 import DetailDependentView from './responsibles/DetailDependentView.vue'
+import DataResponsibleAdminView from './admin/responsibles/DataResponsibleAdminView.vue'
 class Views {
   static HomeView = HomeView
   static LoginView = LoginView
@@ -43,6 +44,7 @@ class Views {
   static MyDependentsView = MyDependentsView
   static DriverMyRoutesView = DriverMyRoutesView
   static DetailDependentView = DetailDependentView
+  static DataResponsibleAdminView = DataResponsibleAdminView
 }
 
 export { Views }
