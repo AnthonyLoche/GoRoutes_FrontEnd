@@ -24,7 +24,7 @@ import PlusIcon from "vue-material-design-icons/Plus.vue";
     </div>
     </div>
     <div class="container-item">
-            <h2>CNH</h2>
+            <h2>TOXICOLÓGICO</h2>
         <div class="item">
         <input type="file" id="file" />
         <label for="file">
