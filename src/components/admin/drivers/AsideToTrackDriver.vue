@@ -37,17 +37,14 @@ const selectDriverFromAside = (driver) => {
           <img v-if="selectedDriver.icon?.url" :src="selectedDriver.icon.url" alt="Driver Icon" />
           <div v-else class="avatar-placeholder">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4
                 1.79-4 4 1.79 4 4 4zm0 2c-2.67
-                0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-              />
+                0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
             </svg>
           </div>
         </div>
         <div class="driver-info">
           <h2>{{ selectedDriver.driverName }}</h2>
-          <span class="driver-email">{{ selectedDriver.email }}</span>
         </div>
       </div>
 
@@ -89,20 +86,16 @@ const selectDriverFromAside = (driver) => {
         <div class="actions">
           <button class="action-btn">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03
+              <path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03
                 L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1
                 20,12A7,7 0 0,1 13,19C11.07,19
                 9.32,18.21 8.06,16.94L6.64,18.36
                 C8.27,20 10.5,21 13,21A9,9 0 0,0
-                22,12A9,9 0 0,0 13,3Z"
-              />
+                22,12A9,9 0 0,0 13,3Z" />
             </svg>
             Perfil
           </button>
-          <button class="action-btn">
-            💬 Mensagem
-          </button>
+  
           <button class="action-btn">
             📍 Rota
           </button>
@@ -120,21 +113,15 @@ const selectDriverFromAside = (driver) => {
     <div class="drivers-section">
       <h3>Motoristas em Trânsito</h3>
       <ul class="drivers-list">
-        <li
-          v-for="driver in goRoutesStore.state.transiDrivers"
-          :key="driver.id"
-          class="driver-item"
-          @click="selectDriverFromAside(driver)"
-        >
+        <li v-for="driver in goRoutesStore.state.transiDrivers" :key="driver.id" class="driver-item"
+          @click="selectDriverFromAside(driver)">
           <div class="driver-avatar">
             <img v-if="driver.icon_driver" :src="driver.icon_driver" :alt="driver.driver_name" />
             <div v-else class="avatar-placeholder">
               <svg viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4
                   1.79-4 4 1.79 4 4 4zm0 2c-2.67
-                  0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                />
+                  0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
               </svg>
             </div>
           </div>
@@ -203,9 +190,14 @@ const selectDriverFromAside = (driver) => {
   height: 24px;
 }
 
+.driver-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .driver-info h2 {
-  margin: 0 0 4px 0;
-  font-size: 18px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -332,6 +324,7 @@ const selectDriverFromAside = (driver) => {
   background: white;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 .driver-avatar {

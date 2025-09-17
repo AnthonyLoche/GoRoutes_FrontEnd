@@ -155,14 +155,11 @@
         <!-- <button class="cta-button secondary" @click="$router.push('/blank/contact')">Entre em Contato</button> -->
       </div>
     </section>
-
-    <!-- Footer -->
     <FooterMain />
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import FooterMain from '@/components/global/Footer/FooterMain.vue'
 import { useAuthStore } from '@/stores'
 import NavBarHome from '@/components/global/NavBarHome.vue'

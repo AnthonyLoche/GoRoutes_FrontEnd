@@ -4,7 +4,6 @@ import DocumentCard from "./DocumentCard.vue"
 import DocumentViewer from "./DocumentView.vue"
 import DocumentUploader from "./DocumentUpload.vue"
 
-// Props que vêm do pai (ex: página do veículo)
 const props = defineProps({
   vehicleId: {
     type: Number,
@@ -37,7 +36,7 @@ function handleView({ type, src }) {
 }
 
 // Abrir modal de upload
-function handleUpload({ type, vehicleId }) {
+function handleUpload({ type }) {
   currentDoc.value = { type, src: null }
   uploaderOpen.value = true
 }

@@ -172,12 +172,7 @@ watch(
             >
               Perfil
             </button>
-            <button
-              class="action-btn secondary"
-              @click="handleAction2(driverMarkers[selectedMarkerIndex].driverName)"
-            >
-              Mensagem
-            </button>
+          
             <button
               class="action-btn secondary"
               @click="handleAction3(driverMarkers[selectedMarkerIndex].driverName)"

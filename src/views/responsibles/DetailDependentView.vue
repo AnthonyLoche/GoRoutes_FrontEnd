@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import { HeaderMain, AsideCompProfile, LoadingComp, FooterMain, DependantsComp, DetailDependentComp } from '@/components'
+import { ref, onMounted } from 'vue'
+import { HeaderMain, AsideCompProfile, LoadingComp, FooterMain, DetailDependentComp } from '@/components'
 import AccountCircle from "vue-material-design-icons/AccountCircle.vue"
 import { useAuthStore } from '@/stores'
 import route from '@/router'

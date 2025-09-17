@@ -71,7 +71,7 @@ const changePhotoDialog = ref(false)
     <!-- Modais -->
     <ShowPhoto
       v-model="viewPhotoDialog"
-      :src="driversStore.state.selectedDriver.picture_file"
+      :src="driversStore.state.selectedDriver?.picture_file"
     />
     <UploadPhoto
       v-model="changePhotoDialog"

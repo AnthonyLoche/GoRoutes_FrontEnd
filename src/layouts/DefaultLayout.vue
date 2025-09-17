@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { HeaderMain, AsideMain } from '@/components'
+import { HeaderMain, AsideMain, FooterMain } from '@/components'
 </script>
 
 <template>
@@ -18,6 +18,7 @@ import { HeaderMain, AsideMain } from '@/components'
             </div>
         </div>
     </div>
+    <FooterMain />
 
 </template>
 
@@ -38,16 +39,17 @@ import { HeaderMain, AsideMain } from '@/components'
     grid-template-columns: 13% 87%;
 }
 
-/* .main-default div {
-    border: 1px solid #000;
-} */
+.view {
+    overflow-y: auto;
+}
 
 @media screen and (max-width: 1024px) {
     .grid {
         display: flex;
         flex-direction: column;
     }
-    .main-default{
+
+    .main-default {
         display: block;
     }
 
