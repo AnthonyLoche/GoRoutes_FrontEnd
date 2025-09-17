@@ -1,5 +1,5 @@
 <script setup>
-import CreateRouteComp from '@/components/admin/route/CreateRouteComp.vue';
+import CreateRouteComp from '@/components/admin/route/create/CreateRouteComp.vue';
 </script>
 
 <template>
