@@ -1,507 +1,732 @@
-    <template>
-        <div class="first-form-create-route f">
-
-            <div class="form-grid">
-                <div class="form-section">
-                    <div class="section-header">
-                        <h3>📋 Passageiros</h3>
-
-
-                    </div>
-
-                </div>
-
-
-
-            </div>
+<template>
+  <div class="passenger-selection-container">
+    <!-- Filtros -->
+    <div class="filters-section">
+      <div class="search-group">
+        <div class="search-input">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            v-model="searchQuery"
+            placeholder="Buscar por nome, email ou endereço..."
+          />
         </div>
-    </template>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Filtrar por:</label>
+        <select v-model="gradeFilter" class="filter-select">
+          <option value="">Todas as séries</option>
+          <option v-for="grade in availableGrades" :key="grade" :value="grade">
+            {{ grade }}
+          </option>
+        </select>
+        <select v-model="cityFilter" class="filter-select">
+          <option value="">Todas as cidades</option>
+          <option v-for="city in availableCities" :key="city" :value="city">
+            {{ city }}
+          </option>
+        </select>
+        <select v-model="studentFilter" class="filter-select">
+          <option value="">Todos os tipos</option>
+          <option value="true">Apenas estudantes</option>
+          <option value="false">Não estudantes</option>
+        </select>
+      </div>
+      <div class="action-buttons">
+        <v-btn color="error" @click="clearAllSelection" rounded="1">
+          ✗ Limpar Seleção
+        </v-btn>
+      </div>
+    </div>
+
+    <div class="passengers-grid">
+      <div 
+        v-for="passenger in filteredPassengers" 
+        :key="passenger.id"
+        class="passenger-card"
+        :class="{ 
+          selected: selectedPassengers.includes(passenger.id),
+          student: passenger.passenger_data?.is_student
+        }"
+        @click="togglePassenger(passenger.id)"
+      >
+        <!-- Avatar/Foto -->
+        <div class="passenger-avatar">
+          <img 
+            v-if="passenger.picture_file" 
+            :src="passenger.picture_file" 
+            :alt="passenger.name"
+            class="avatar-image"
+          />
+          <span v-else class="avatar-initials">
+            {{ getInitials(passenger.name) }}
+          </span>
+        </div>
+
+        <!-- Informações do Passageiro -->
+        <div class="passenger-info">
+          <div class="passenger-header">
+            <h3 class="passenger-name">{{ passenger.name }}</h3>
+                <span class="detail-icon">-</span>
+              <span class="detail-text">{{ formatPhone(passenger.telephone) }}</span>
+          </div>
+          
+          <div class="passenger-details">
+            <div class="detail-row" v-if="getMainAddress(passenger)">
+              <span class="detail-icon">📍</span>
+              <span class="detail-text">{{ getMainAddress(passenger) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="selection-checkbox">
+          <div class="checkbox" :class="{ checked: selectedPassengers.includes(passenger.id) }">
+            <span v-if="selectedPassengers.includes(passenger.id)" class="checkmark">✓</span>
+          </div>
+        </div>
+
+        <div v-if="selectedPassengers.includes(passenger.id)" class="selection-overlay"></div>
+      </div>
+    </div>
+
+    <div v-if="filteredPassengers.length === 0" class="empty-state">
+      <div class="empty-icon">🚌</div>
+      <h3>Nenhum passageiro encontrado</h3>
+      <p>Tente ajustar os filtros ou termos de busca</p>
+    </div>
+
+   
+  </div>
+</template>
 
 <script setup>
+import { ref, computed, onMounted } from "vue"
+import { usePassengersStore } from "@/stores"
 
+const passengersStore = usePassengersStore()
+
+const props = defineProps({
+  preSelected: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const selectedPassengers = ref([...props.preSelected])
+const searchQuery = ref("")
+const gradeFilter = ref("")
+const cityFilter = ref("")
+const studentFilter = ref("")
+
+const allPassengers = computed(() => passengersStore.state.passengers)
+
+const availableGrades = computed(() => {
+  const grades = new Set()
+  allPassengers.value.forEach(passenger => {
+    if (passenger.passenger_data?.student_data?.grade) {
+      grades.add(passenger.passenger_data.student_data.grade)
+    }
+  })
+  return Array.from(grades).sort()
+})
+
+const availableCities = computed(() => {
+  const cities = new Set()
+  allPassengers.value.forEach(passenger => {
+    const address = getMainAddress(passenger)
+    if (address) {
+      const city = address.split(",")[0].split(" - ").pop()
+      cities.add(city)
+    }
+  })
+  return Array.from(cities).sort()
+})
+
+const filteredPassengers = computed(() => {
+  let filtered = allPassengers.value
+
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(passenger => 
+      passenger.name.toLowerCase().includes(query) ||
+      passenger.email.toLowerCase().includes(query) ||
+      getMainAddress(passenger)?.toLowerCase().includes(query)
+    )
+  }
+
+  if (gradeFilter.value) {
+    filtered = filtered.filter(passenger => 
+      passenger.passenger_data?.student_data?.grade === gradeFilter.value
+    )
+  }
+
+  if (cityFilter.value) {
+    filtered = filtered.filter(passenger => {
+      const address = getMainAddress(passenger)
+      return address && address.includes(cityFilter.value)
+    })
+  }
+
+  if (studentFilter.value !== "") {
+    const isStudent = studentFilter.value === "true"
+    filtered = filtered.filter(passenger => 
+      passenger.passenger_data?.is_student === isStudent
+    )
+  }
+
+  return filtered
+})
+
+const togglePassenger = (passengerId) => {
+  if (selectedPassengers.value.includes(passengerId)) {
+    selectedPassengers.value = selectedPassengers.value.filter(id => id !== passengerId)
+  } else {
+    selectedPassengers.value.push(passengerId)
+  }
+}
+
+const clearAllSelection = () => {
+  selectedPassengers.value = []
+}
+
+const getInitials = (name) => {
+  return name.split(" ").map(word => word.charAt(0)).join("").substring(0, 2).toUpperCase()
+}
+
+const formatPhone = (phone) => {
+  if (!phone) return "Não informado"
+  return phone.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3")
+}
+
+const getMainAddress = (passenger) => {
+  const address = passenger.passenger_data?.address?.find(addr => addr.is_main)
+  if (!address) return null
+  return `${address.street}, ${address.number} - ${address.neighborhood}, ${address.city} - ${address.state}`
+}
+
+onMounted(() => {
+  passengersStore.getPassengers()
+
+  if (props.preSelected.length > 0) {
+    selectedPassengers.value = [...props.preSelected]
+  }
+})
 </script>
 
 <style scoped>
-.first-form-create-route f {
-    --primary: #022840;
-    --primary-dark: #011a2b;
-    --secondary: #0d4f6b;
-    --accent: #1a73e8;
-    --white: #ffffff;
-    --bg-light: #f8fafc;
-    --text: #334155;
-    --text-light: #64748b;
-    --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    --radius: 12px;
-    --success: #10b981;
-    --warning: #f59e0b;
+.passenger-selection-container {
+  --primary: #022840;
+  --primary-dark: #011a2b;
+  --secondary: #0d4f6b;
+  --accent: #1a73e8;
+  --white: #ffffff;
+  --bg-light: #f8fafc;
+  --text: #334155;
+  --text-light: #64748b;
+  --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
-.first-form-create-route f {
-    padding: 2rem;
-    min-height: 100vh;
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+.passenger-selection-container {
+  background-color: var(--bg-light);
+  min-height: 100vh;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.route-header {
-    background: white;
-    border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
+/* Header */
+.selection-header {
+  background: white;
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.route-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
+.selection-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
 }
 
 .header-content {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .header-icon {
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: var(--primary-color);
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
-.route-header h1 {
-    color: var(--primary);
-    margin: 0;
-    font-size: 1.8rem;
-    font-weight: 700;
+.selection-header h1 {
+  color: var(--primary);
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
-.route-header p {
-    color: var(--text-light);
-    margin: 0;
-    font-size: 0.9rem;
+.selection-header p {
+  color: var(--text-light);
+  margin: 0;
+  font-size: 0.9rem;
 }
 
-.save-button {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    border: none;
-    border-radius: 25px;
-    padding: 0.75rem 2rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+.selection-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.save-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
+.stat-item {
+  text-align: center;
 }
 
-.save-button:hover::before {
-    left: 100%;
+.stat-number {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
 }
 
-.save-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.4);
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
-.save-button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+.stat-divider {
+  color: var(--text-light);
+  font-size: 1.5rem;
 }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+/* Filtros */
+.filters-section {
+  background: white;
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 1rem;
 }
 
-.form-section {
-    background: white;
-    border-radius: var(--radius);
-    padding: 2rem;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+.search-group {
+  grid-column: 1 / -1;
 }
 
-.form-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
+.search-input {
+  position: relative;
+  width: 100%;
 }
 
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--bg-light);
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
 }
 
-.section-header h3 {
-    color: var(--primary);
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 600;
+.search-input input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 3rem;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
 }
 
-.passenger-count {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 500;
+.search-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
 }
 
-.form-group {
-    margin-bottom: 1.5rem;
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--text);
-    font-weight: 500;
-    font-size: 0.9rem;
+.filter-label {
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.9rem;
 }
 
-.form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 2px solid #e2e8f0;
-    border-radius: var(--radius);
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    background: white;
+.filter-select {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+.filter-select:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
-.form-group textarea {
-    resize: vertical;
-    min-height: 80px;
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.distance-input {
-    display: flex;
-    gap: 0.5rem;
+.select-all-btn,
+.clear-all-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.distance-input input {
-    flex: 1;
+.select-all-btn {
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
 }
 
-.calculate-btn {
-    background: var(--secondary);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.8rem;
-    white-space: nowrap;
+.clear-all-btn {
+  background: linear-gradient(135deg, var(--danger), #dc2626);
+  color: white;
 }
 
-.calculate-btn:hover {
-    background: var(--primary);
-    transform: scale(1.05);
-}
-
-.time-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-/* Checkbox customizado */
-.checkbox-label {
-    display: flex !important;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    margin-bottom: 0.5rem !important;
-}
-
-.checkbox-label input[type="checkbox"] {
-    display: none;
-}
-
-.checkmark {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #e2e8f0;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    font-size: 0.8rem;
-    color: transparent;
-}
-
-.checkbox-label input[type="checkbox"]:checked+.checkmark {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-color: var(--accent);
-    color: white;
-}
-
-.form-group small {
-    display: block;
-    color: var(--text-light);
-    font-size: 0.8rem;
-    margin-top: 0.25rem;
-}
-
-.passengers-section {
-    grid-column: 1 / -1;
+.select-all-btn:hover,
+.clear-all-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .passengers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-    max-height: 400px;
-    overflow-y: auto;
-    padding: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .passenger-card {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    border: 2px solid #e2e8f0;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: white;
-    position: relative;
+  background: white;
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
 }
 
-.passenger-card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(26, 115, 232, 0.1);
+.passenger-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
 }
 
-.passenger-card.active {
-    border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(26, 115, 232, 0.05), rgba(2, 40, 64, 0.05));
+
+
+.passenger-card.selected {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(26, 115, 232, 0.03), rgba(2, 40, 64, 0.03));
 }
 
-.passenger-card.active::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
+.passenger-card.selected::before {
+  transform: scaleX(1);
+}
+
+.selection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(26, 115, 232, 0.05), rgba(2, 40, 64, 0.05));
+  pointer-events: none;
 }
 
 .passenger-avatar {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 0.9rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  position: relative;
+  border: 3px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(45deg, var(--primary), var(--accent)) border-box;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-initials {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .passenger-info {
-    flex: 1;
+  flex: 1;
 }
 
-.passenger-info strong {
-    display: block;
-    color: var(--text);
-    font-size: 0.9rem;
+.passenger-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom:.2rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.passenger-info small {
-    color: var(--text-light);
-    font-size: 0.8rem;
+.passenger-name {
+  color: var(--primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
 }
 
-.passenger-check {
-    width: 24px;
-    height: 24px;
-    border: 2px solid #e2e8f0;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
+.passenger-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-.passenger-card.active .passenger-check {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-color: var(--accent);
-    color: white;
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  font-weight: 500;
 }
 
-/* Resumo da Rota */
-.route-summary {
-    background: white;
-    border-radius: var(--radius);
-    padding: 2rem;
-    box-shadow: var(--shadow);
-    position: relative;
-    overflow: hidden;
+.student-badge {
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
 }
 
-.route-summary::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--success), var(--accent));
+.inactive-badge {
+  background: linear-gradient(135deg, var(--warning), #d97706);
+  color: white;
 }
 
-.route-summary h3 {
-    color: var(--primary);
-    margin: 0 0 1.5rem 0;
-    font-size: 1.3rem;
-    font-weight: 600;
+.passenger-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.summary-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+.detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
 }
 
-.summary-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--bg-light);
-    border-radius: var(--radius);
-    transition: all 0.3s ease;
+.detail-icon {
+  width: 20px;
+  text-align: center;
 }
 
-.summary-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+.detail-text {
+  color: var(--text);
+  flex: 1;
 }
 
-.summary-icon {
-    font-size: 1.5rem;
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+/* Checkbox de Seleção */
+.selection-checkbox {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
 
-.summary-item strong {
-    display: block;
-    color: var(--text);
-    font-size: 0.95rem;
-    margin-bottom: 0.2rem;
+.checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  background: white;
 }
 
-.summary-item small {
-    color: var(--text-light);
-    font-size: 0.8rem;
+.checkbox.checked {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-color: var(--accent);
+  color: white;
+}
+
+.checkmark {
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+/* Estado Vazio */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-light);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+.footer-actions {
+  background: white;
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-actions::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--success), var(--accent));
+}
+
+.selected-info {
+  flex: 1;
+}
+
+.selected-info strong {
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.selected-info p {
+  color: var(--text-light);
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9rem;
+}
+
+.cancel-btn,
+.confirm-btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.cancel-btn {
+  background: #e2e8f0;
+  color: var(--text);
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+}
+
+.confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-btn:hover:not(:disabled),
+.confirm-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.confirm-btn:hover:not(:disabled) {
+  box-shadow: 0 8px 25px rgba(26, 115, 232, 0.4);
 }
 
 /* Responsivo */
 @media (max-width: 768px) {
-    .create-route-container {
-        padding: 1rem;
-    }
-
-    .route-header {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .time-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .summary-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .passengers-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .distance-input {
-        flex-direction: column;
-    }
+  .passenger-selection-container {
+    padding: 1rem;
+  }
+  
+  .selection-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .passengers-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-select {
+    width: 100%;
+  }
+  
+  .footer-actions {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .passenger-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
-
-@media (max-width: 480px) {
-    .passengers-grid {
-        max-height: 300px;
-    }
-
-    .passenger-card {
-        padding: 0.75rem;
-    }
-
-    .passenger-avatar {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
-    }
-}
-</style>
+  </style>
