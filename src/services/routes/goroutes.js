@@ -17,6 +17,16 @@ class GoRoutesService {
             return response.data;
         } catch (error) {
             console.error(`Error fetching route with ID ${id}:`, error);
+            throw error;a
+        }
+    }
+
+    async getRouteByIdToInit(id){
+        try{
+            const response = await api.get(`/goroutes/routes/${id}/  `);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching route with ID ${id}:`, error);
             throw error;
         }
     }

@@ -35,3 +35,4 @@ export { default as DetailDependentComp} from './auth/profile-responsible/Detail
 export { default as DriverRetrieveDataComp } from "./admin/drivers/DriverRetrieveDataComp.vue";
 export { default as DataResponsible} from './admin/responsibles/DataResponsible.vue'
 export { default as CreateRouteComp } from './admin/route/create/CreateRouteComp.vue'
+export { default as InitRouteComp } from './admin/route/init/InitRouteComp.vue'

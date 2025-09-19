@@ -177,7 +177,7 @@ onMounted(async () => {
 
   if (data?.passengers) {
     data.passengers.forEach(passenger => {
-      if (!passenger.hasOwnProperty("pickedUp")) {
+      if (!Object.prototype.hasOwnProperty.call(passenger, "pickedUp")) {
         passenger.pickedUp = false
       }
     })
@@ -219,39 +219,39 @@ const toggleDriving = () => {
   }
 }
 
-const getCurrentPassenger = () => {
-  if (!routeData.value?.passengers || currentPassengerIndex.value < 0) return null
-  return routeData.value.passengers[currentPassengerIndex.value]
-}
+// const getCurrentPassenger = () => {
+//   if (!routeData.value?.passengers || currentPassengerIndex.value < 0) return null
+//   return routeData.value.passengers[currentPassengerIndex.value]
+// }
 
-const nextPassenger = () => {
-  if (currentPassengerIndex.value < routeData.value.passengers.length - 1) {
-    currentPassengerIndex.value++
-  }
-}
+// const nextPassenger = () => {
+//   if (currentPassengerIndex.value < routeData.value.passengers.length - 1) {
+//     currentPassengerIndex.value++
+//   }
+// }
 
-const previousPassenger = () => {
-  if (currentPassengerIndex.value > 0) {
-    currentPassengerIndex.value--
-  }
-}
+// const previousPassenger = () => {
+//   if (currentPassengerIndex.value > 0) {
+//     currentPassengerIndex.value--
+//   }
+// }
 
-const toggleCurrentPassenger = () => {
-  const currentPassenger = getCurrentPassenger()
-  if (currentPassenger) {
-    currentPassenger.pickedUp = !currentPassenger.pickedUp
-    onPassengerToggle(currentPassenger)
+// const toggleCurrentPassenger = () => {
+//   const currentPassenger = getCurrentPassenger()
+//   if (currentPassenger) {
+//     currentPassenger.pickedUp = !currentPassenger.pickedUp
+//     onPassengerToggle(currentPassenger)
     
-    if (currentPassenger.pickedUp) {
-      const nextUnpickedIndex = routeData.value.passengers.findIndex(
-        (p, index) => !p.pickedUp && index > currentPassengerIndex.value
-      )
-      if (nextUnpickedIndex >= 0) {
-        currentPassengerIndex.value = nextUnpickedIndex
-      }
-    }
-  }
-}
+//     if (currentPassenger.pickedUp) {
+//       const nextUnpickedIndex = routeData.value.passengers.findIndex(
+//         (p, index) => !p.pickedUp && index > currentPassengerIndex.value
+//       )
+//       if (nextUnpickedIndex >= 0) {
+//         currentPassengerIndex.value = nextUnpickedIndex
+//       }
+//     }
+//   }
+// }
 
 // Utils existentes
 const getShortAddress = (address) => address?.split(",").slice(0, 2).join(",") || ""

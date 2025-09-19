@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted } from "vue"
+import { computed, onMounted, ref, onUnmounted } from "vue"
 import Map from "vue-material-design-icons/Map.vue"
 import MapMarkerCheck from "vue-material-design-icons/MapMarkerCheck.vue"
 import MapMarkerRemoveVariant from "vue-material-design-icons/MapMarkerRemoveVariant.vue"
@@ -8,12 +8,13 @@ import AccountGroup from "vue-material-design-icons/AccountGroup.vue"
 import MapMarkerDistance from "vue-material-design-icons/MapMarkerDistance.vue"
 import Navigation from "vue-material-design-icons/Navigation.vue"
 import MapMarker from "vue-material-design-icons/MapMarker.vue"
-import { useGoRoutesStore, useAuthStore } from "@/stores"
+import { useGoRoutesStore } from "@/stores"
+import router from "@/router"
 
 const goRoutesStore = useGoRoutesStore()
-const authStore = useAuthStore()
 
 onMounted(async () => {
+    window.addEventListener('resize', handleResize)
     await goRoutesStore.filterMyDriverRoutes()
 })
 
@@ -26,8 +27,23 @@ const routes = computed(() =>
         vehicleModel: route.vehicle?.model || "Sem veículo"
     }))
 )
-</script>
 
+
+const windowWidth = ref(window.innerWidth)
+
+const handleResize = () => {
+  windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
+const isMobile = () => windowWidth.value <= 1024
+</script>
 <template>
     <div class="routes-container">
         <div class="page-header">
@@ -111,14 +127,17 @@ const routes = computed(() =>
                 </v-card-text>
 
                 <v-card-actions class="card-actions">
-                    <v-btn variant="elevated" color="primary" size="small" rounded="xs" prepend-icon="mdi-map-marker" class="solid-btn">
+                    <v-btn variant="elevated" color="primary" size="small" rounded="xs" prepend-icon="mdi-map-marker"
+                        class="solid-btn" :width="isMobile() ? '100%' : 'auto'">
                         Editar
                     </v-btn>
-                    <v-btn variant="elevated" color="primary" size="small" rounded="xs" prepend-icon="mdi-map-marker-check" class="solid-btn">
+                    <v-btn variant="elevated" color="primary" size="small" rounded="xs"
+                        prepend-icon="mdi-map-marker-check" class="solid-btn" :width="isMobile() ? '100%' : 'auto'">
                         Ver Detalhes
                     </v-btn>
                     <v-spacer />
-                    <v-btn variant="elevated" color="error" rounded="xs" prepend-icon="mdi-navigation" class="solid-btn">
+                    <v-btn variant="elevated" color="error" rounded="xs" prepend-icon="mdi-navigation" class="solid-btn"
+                        @click="router.push(`/default/admin/drivers/init-daily-route/${route.id}`)" :width="isMobile() ? '100%' : 'auto'">
                         INICIAR ROTA
                     </v-btn>
                 </v-card-actions>
@@ -134,7 +153,7 @@ const routes = computed(() =>
     margin: 0 auto;
 }
 
-.solid-btn{
+.solid-btn {
     padding: 1rem;
     display: flex;
     align-items: center;
@@ -149,7 +168,7 @@ const routes = computed(() =>
     border-bottom: 3px solid rgb(var(--v-theme-primary));
 }
 
-span{
+span {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -294,13 +313,6 @@ span{
     letter-spacing: 0.5px;
 }
 
-.detail-value {
-    font-size: 0.875rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    word-wrap: break-word;
-}
 
 .card-actions {
     padding: 0.75rem 1.25rem 1.25rem 1.25rem !important;
@@ -317,7 +329,7 @@ span{
         flex-direction: column;
     }
 
-    .card-actions{
+    .card-actions {
         flex-direction: column;
         gap: 0.5rem;
         padding: 0;

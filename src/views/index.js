@@ -23,6 +23,7 @@ import DetailDependentView from './responsibles/DetailDependentView.vue'
 import DataResponsibleAdminView from './admin/responsibles/DataResponsibleAdminView.vue'
 import AboutView from './global/AboutView.vue'
 import CreateRoutesView from './admin/routes/CreateRoutesView.vue'
+import DriverInitDailyRouteView from './admin/drivers/DriverInitDailyRouteView.vue'
 class Views {
   static HomeView = HomeView
   static LoginView = LoginView
@@ -49,6 +50,7 @@ class Views {
   static DataResponsibleAdminView = DataResponsibleAdminView
   static AboutView = AboutView
   static CreateRoutesView = CreateRoutesView
+  static DriverInitDailyRouteView = DriverInitDailyRouteView
 }
 
 export { Views }

@@ -28,6 +28,7 @@ const routes = [
       { path: 'admin/responsibles', component: Views.ResponsiblesAdminView },
       { path: 'admin/responsible/:id', component: Views.DataResponsibleAdminView },
       { path: 'admin/routes/create', component: Views.CreateRoutesView },
+      { path: 'admin/drivers/init-daily-route/:id', component: Views.DriverInitDailyRouteView },
     ],
   },
   {

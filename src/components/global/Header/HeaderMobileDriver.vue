@@ -15,11 +15,12 @@ const closeMenu = () => {
 
 // Dados dos cards/apps
 const menuItems = [
-    { name: 'Início', icon: 'mdi-home', color: '#4CAF50' },
-    { name: 'Perfil', icon: 'mdi-account', color: '#607D8B' },
-    { name: 'Minha Rotas', icon: 'mdi-map-marker-path', color: '#FF9800' },
-    { name: 'Rotas Feitas', icon: 'mdi-check-circle', color: '#2196F3' },
-    { name: 'Minha Rota De Hoje', icon: 'mdi-map-marker-path', color: '#FF9800' },
+    { name: 'Início', icon: 'mdi-home', color: '#4CAF50', route: '/' },
+    { name: 'Dashboard', icon: 'mdi-view-dashboard', color: '#673AB7', route: '/default/admin/dashboard' },
+    { name: 'Perfil', icon: 'mdi-account', color: '#607D8B', route: '/blank/profile/driver' },
+    { name: 'Minha Rotas', icon: 'mdi-map-marker-path', color: '#FF9800', route: '/blank/driver/my-routes' },
+    { name: 'Rotas Feitas', icon: 'mdi-check-circle', color: '#2196F3', route: '/completed-routes' },
+    // { name: 'Minha Rota De Hoje', icon: 'mdi-map-marker-path', color: '#FF9800', route: '/my-route' },
 ]
 
 const goToHome = () => {
@@ -28,47 +29,47 @@ const goToHome = () => {
 </script>
 
 <template>
-    <div class="mobile-container">
-        <header class="header">
-            <div class="logo-container" @click="goToHome">
-                <img src="../../../assets/images/LogoRemoved.png" alt="Logo" class="logo">
-                <h3>GoRoutes</h3>
-            </div>
-            
-            <v-btn @click="toggleMenu" icon variant="text" class="menu-btn">
-                <v-icon>mdi-menu</v-icon>
-            </v-btn>
-        </header>
+  <div class="mobile-container">
+    <header class="header">
+      <div class="logo-container" @click="goToHome">
+        <img src="../../../assets/images/LogoRemoved.png" alt="Logo" class="logo">
+        <h3>GoRoutes</h3>
+      </div>
+      
+      <v-btn @click="toggleMenu" icon variant="text" class="menu-btn">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
+    </header>
 
-        <div v-if="isMenuOpen" class="overlay" @click="closeMenu"></div>
+    <div v-if="isMenuOpen" class="overlay" @click="closeMenu"></div>
 
-        <aside class="sidebar" :class="{ 'sidebar-open': isMenuOpen }">
-            <div class="sidebar-header">
-                <h3>Menu</h3>
-                <v-btn @click="closeMenu" icon variant="text" size="small">
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
-            </div>
+    <aside class="sidebar" :class="{ 'sidebar-open': isMenuOpen }">
+      <div class="sidebar-header">
+        <h3>Menu</h3>
+        <v-btn @click="closeMenu" icon variant="text" size="small">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </div>
 
-            <div class="apps-container">
-                <div class="apps-grid">
-                    <div 
-                        v-for="item in menuItems" 
-                        :key="item.name"
-                        class="app-card"
-                        @click="closeMenu"
-                    >
-                        <div class="app-icon" :style="{ backgroundColor: item.color }">
-                            <v-icon size="24" color="white">{{ item.icon }}</v-icon>
-                        </div>
-                        <span class="app-name">{{ item.name }}</span>
-                    </div>
-                </div>
+      <div class="apps-container">
+        <div class="apps-grid">
+          <router-link 
+            v-for="item in menuItems" 
+            :key="item.name"
+            :to="item.route"
+            class="app-card"
+            @click="closeMenu"
+          >
+            <div class="app-icon" :style="{ backgroundColor: item.color }">
+              <v-icon size="24" color="white">{{ item.icon }}</v-icon>
             </div>
-        </aside>
-    </div>
+            <span class="app-name">{{ item.name }}</span>
+          </router-link>
+        </div>
+      </div>
+    </aside>
+  </div>
 </template>
-
 <style scoped>
 .mobile-container {
     position: relative;
@@ -213,6 +214,10 @@ const goToHome = () => {
 
 .app-card:hover .app-icon {
     transform: scale(1.05);
+}
+
+a {
+    text-decoration: none;
 }
 
 .app-name {

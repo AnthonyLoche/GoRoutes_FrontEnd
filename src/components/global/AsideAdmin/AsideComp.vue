@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="aside-admin">
     <button class="toggle-btn" @click="toggleSidebar">☰</button>
 
     <div class="sidebar" :class="{ show: isSidebarVisible }">
@@ -245,6 +245,10 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
     left: -250px;
     z-index: 100;
     transition: left 0.3s ease;
+  }
+
+  .aside-admin{
+    display: none;
   }
 
   .sidebar.show {

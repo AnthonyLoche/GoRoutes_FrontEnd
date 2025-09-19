@@ -7,6 +7,7 @@ export const useGoRoutesStore = defineStore("goroutes", () => {
        const state = reactive({
         routes: [],
         selectedRoute: null,
+        selectedRouteToInit: null,
         activeRoutes: [],
         transiDrivers: [],
         selectedDriverToTrack: null,
@@ -72,6 +73,18 @@ export const useGoRoutesStore = defineStore("goroutes", () => {
         }
     }
 
+     const getRouteByIdToInit = async (id) => {
+        state.loading = true;
+        try {
+            const response = await GoRoutesService.getRouteByIdToInit(id);
+            state.selectedRouteToInit = response;
+        } catch (error) {
+            state.error = error;
+        } finally {
+            state.loading = false;
+        }
+    }
+
     const getRouteByDriverId = async () => {
         state.loading = true;
         try {
@@ -102,7 +115,8 @@ export const useGoRoutesStore = defineStore("goroutes", () => {
         getActiveRoutes,
         getRouteById,
         getRouteByDriverId,
-        filterMyDriverRoutes
+        filterMyDriverRoutes,
+        getRouteByIdToInit
     }
 
 })
