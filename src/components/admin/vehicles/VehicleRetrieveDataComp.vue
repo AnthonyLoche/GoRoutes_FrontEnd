@@ -87,7 +87,7 @@ function toggleEdit() {
 
     <!-- Modais de foto -->
     <ShowPhoto v-model="viewPhotoDialog" :src="vehicleStore.state.selectedVehicle.picture" />
-    <UploadPhoto v-model="changePhotoDialog" :vehicle_id="vehicleStore.state.selectedVehicle.id" />
+    <UploadPhoto v-model="changePhotoDialog" :vehicle_id="vehicleStore.state.selectedVehicle.id" type="vehicle" />
 
     <!-- Seção de documentos -->
     <div class="documents-section">

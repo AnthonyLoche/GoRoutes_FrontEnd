@@ -54,11 +54,23 @@ class VehiclesService {
             showSuccessToast("Documento atualizado com sucesso!");
             return response;
         } catch (error) {
-            console.error(error); 
+            console.error(error);
             showErrorToast("Falha ao atualizar o documento.");
             return error;
         }
     }
+
+  async updateVehiclePicture(data) {
+    try {
+      const response = await api.post(`/goroutes/update-picture-vehicle/`, data);
+      showSuccessToast("Foto do veículo atualizada com sucesso!");
+      return response;
+    } catch (error) {
+      console.error(error);
+      showErrorToast("Falha ao atualizar a foto do veículo.");
+      return error;
+    }
+  }
 }
 
 export default new VehiclesService();

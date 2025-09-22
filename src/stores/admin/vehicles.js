@@ -73,12 +73,28 @@ export const useVehiclesStore = defineStore("vehicles", () => {
         }
     }
 
+    const updateVehiclePicture = async (formData, vehicleId) => {
+        state.loading = true;
+        try {
+            const response = await VehiclesService.updateVehiclePicture(formData);
+            // Refresh do veículo para refletir nova foto
+            await getVehicle(vehicleId);
+            return response;
+        } catch (error) {
+            state.error = error;
+            console.error(error);
+        } finally {
+            state.loading = false;
+        }
+    }
+
     return {
         state,
         getVehicles,
         createVehicle,
         getVehicle,
         deleteVehicle,
-        updateDocumentVehicle
+        updateDocumentVehicle,
+        updateVehiclePicture
     }
 });
