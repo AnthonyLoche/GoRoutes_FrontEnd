@@ -1,17 +1,27 @@
 <script setup>
-import { ref } from 'vue'
-import { useAuthStore } from '@/stores'
+import { ref, watch } from 'vue'
+import { useAuthStore, useVehiclesStore } from '@/stores'
 import { Cropper } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
 import Image from 'vue-material-design-icons/Image.vue'
 
 const emit = defineEmits(['update:modelValue'])
-const props = defineProps({ modelValue: Boolean, user_id: Number })
+const props = defineProps({ modelValue: Boolean, user_id: Number, vehicle_id: Number, type: { type: String, default: 'user' } })
 
 const file = ref(null)
 const imageSrc = ref(null)
 const cropperRef = ref(null)
+const isOpen = ref(props.modelValue)
 const authStore = useAuthStore()
+const vehiclesStore = useVehiclesStore()
+
+// Sincroniza abertura/fechamento via v-model sem mutar prop
+watch(() => props.modelValue, (val) => {
+  isOpen.value = val
+})
+watch(isOpen, (val) => {
+  emit('update:modelValue', val)
+})
 
 function handleFileChange(e) {
   const selected = e.target.files[0]
@@ -34,14 +44,23 @@ async function uploadPhoto() {
   const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'))
 
   const formData = new FormData()
-  formData.append('user_id', props.user_id)
   formData.append('picture', blob)
+  if (props.type === 'vehicle') {
+    formData.append('vehicle_id', props.vehicle_id)
+  } else {
+    formData.append('user_id', props.user_id)
+  }
 
   try {
     const reader = new FileReader()
     reader.readAsDataURL(blob)
 
-    const response = await authStore.updatePicture(formData, authStore.state.user.id)
+    let response
+    if (props.type === 'vehicle') {
+      response = await vehiclesStore.updateVehiclePicture(formData, props.vehicle_id)
+    } else {
+      response = await authStore.updatePicture(formData, authStore.state.user.id)
+    }
     console.log(response)
     emit('update:modelValue', false)
   } catch (error) {
@@ -51,7 +70,7 @@ async function uploadPhoto() {
 </script>
 
 <template>
-  <v-dialog v-model="props.modelValue" max-width="600">
+  <v-dialog v-model="isOpen" max-width="600">
     <v-card>
       <div class="title">
         <div class="text">
