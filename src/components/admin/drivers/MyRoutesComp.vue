@@ -34,7 +34,7 @@ const selectDailyRoute = (route) => {
         goRoutesStore.state_create.daily_route.passenger_list.push(p.user.id)
     }
     
-    goRoutesStore.state_create.daily_route.original = route.original
+    goRoutesStore.state_create.daily_route.original = route.original || true
     goRoutesStore.state_create.daily_route.date = "2024-02-02"
     goRoutesStore.state_create.daily_route.route = route.id
 

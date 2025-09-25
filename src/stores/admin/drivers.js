@@ -1,6 +1,7 @@
 import { DriversService } from "@/services";
 import { defineStore } from "pinia";
 import { reactive } from "vue";
+import { useAuthStore } from "../auth/auth";
 
 export const useDriversStore = defineStore("drivers", () => {
     const state = reactive({
@@ -8,7 +9,9 @@ export const useDriversStore = defineStore("drivers", () => {
         selectedDriver: null,
         loading: false,
         error: null,
+        hasOpenDailyRoute: false
     })
+    const authStore = useAuthStore()
 
     const getDrivers = async () => {
         state.loading = true;
@@ -65,12 +68,26 @@ export const useDriversStore = defineStore("drivers", () => {
         }
     }
 
+    const verifyOpenDailyRoutes = async () => {
+        state.loading = true;
+        try{
+            const response = await DriversService.verifyOpenDailyRoutes(authStore.state?.user?.driver_data?.id)
+            state.hasOpenDailyRoute = response.data?.has_active_route
+            return response.data
+        }catch(error){
+            console.error(error)
+        }finally{
+            state.loading = false
+        }
+    }
+
     return {
         state,
         getDrivers,
         getDriver,
         createDriver,
         deleteDriver,
+        verifyOpenDailyRoutes
     }
 
 });

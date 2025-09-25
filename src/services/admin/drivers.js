@@ -45,6 +45,15 @@ class DriversService {
             return error;
         }
     }
+
+    async verifyOpenDailyRoutes(id){
+        try{
+            const response = await api.get(`/goroutes/check-active-route-driver/${id}`);
+            return response
+        }catch(error){
+            console.error(error);
+        }
+    }
 }
 
 export default new DriversService();
