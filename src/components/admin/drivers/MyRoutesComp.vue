@@ -23,11 +23,23 @@ const routes = computed(() =>
         ...route,
         status: route.is_active ? "active" : "inactive",
         distanceKm: (route.distance / 1000).toFixed(1) + " km",
+        passengers: route.passengers,
         passengersCount: route.passengers.length,
         vehicleModel: route.vehicle?.model || "Sem veículo"
     }))
 )
 
+const selectDailyRoute = (route) => {
+    for (const p of route.passengers){
+        goRoutesStore.state_create.daily_route.passenger_list.push(p.user.id)
+    }
+    
+    goRoutesStore.state_create.daily_route.original = route.original
+    goRoutesStore.state_create.daily_route.date = "2024-02-02"
+    goRoutesStore.state_create.daily_route.route = route.id
+
+    router.push(`/default/admin/drivers/init-daily-route/${route.id}`)
+}
 
 const windowWidth = ref(window.innerWidth)
 
@@ -137,7 +149,7 @@ const isMobile = () => windowWidth.value <= 1024
                     </v-btn>
                     <v-spacer />
                     <v-btn variant="elevated" color="error" rounded="xs" prepend-icon="mdi-navigation" class="solid-btn"
-                        @click="router.push(`/default/admin/drivers/init-daily-route/${route.id}`)" :width="isMobile() ? '100%' : 'auto'">
+                        @click="selectDailyRoute(route)" :width="isMobile() ? '100%' : 'auto'">
                         INICIAR ROTA
                     </v-btn>
                 </v-card-actions>

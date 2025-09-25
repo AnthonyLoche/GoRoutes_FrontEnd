@@ -17,7 +17,7 @@ class GoRoutesService {
             return response.data;
         } catch (error) {
             console.error(`Error fetching route with ID ${id}:`, error);
-            throw error;a
+            throw error;
         }
     }
 
