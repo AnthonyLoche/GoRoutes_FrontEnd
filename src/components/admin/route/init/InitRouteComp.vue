@@ -11,6 +11,27 @@
           <p>Configure todos os detalhes da sua nova rota de transporte escolar</p>
         </div>
       </div>
+      <div class="buttons_original">
+        <v-btn 
+        rounded="1" 
+        size="large" 
+        variant="elevated" 
+        :disabled="goRoutesStore.state_create.daily_route.original"
+        @click="goRoutesStore.setDailyRouteOriginal(true)"
+        >
+        Original
+      </v-btn>
+      
+        <v-btn 
+        rounded="1" 
+        size="large" 
+        variant="tonal" 
+        :disabled="!goRoutesStore.state_create.daily_route.original"
+         @click="goRoutesStore.setDailyRouteOriginal(false)"
+        >
+        Não Original
+      </v-btn>
+      </div>
     </div>
 
     <transition name="fade" mode="out-in">
@@ -39,9 +60,11 @@
 import { ref, computed, onUnmounted, onMounted } from 'vue'
 import Map from 'vue-material-design-icons/Map.vue'
 import SecondFormInitRoute from './SecondFormInitRoute.vue'
+import { useGoRoutesStore } from '@/stores'
 
 const forms = [SecondFormInitRoute]
 const currentStep = ref(0)
+const goRoutesStore = useGoRoutesStore()
 
 const currentForm = computed(() => forms[currentStep.value])
 
@@ -65,7 +88,6 @@ onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 })
 
-// Computed para saber se é mobile
 const isMobile = () => windowWidth.value <= 1024
 </script>
 
@@ -115,6 +137,11 @@ const isMobile = () => windowWidth.value <= 1024
 .header-content {
   display: flex;
   align-items: center;
+  gap: 1rem;
+}
+
+.buttons_original{
+  display: flex;
   gap: 1rem;
 }
 </style>

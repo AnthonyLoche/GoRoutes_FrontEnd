@@ -2,9 +2,11 @@
   <div class="passenger-route-selection-container" v-if="routePassengers.length">
     <!-- Header com informações da rota -->
     <div class="route-info-header">
+
       <div class="route-summary">
         <h3>👥 Passageiros da Rota</h3>
         <p>Selecione quais passageiros farão parte desta viagem</p>
+        {{ goRoutesStore.state_create.daily_route }}
       </div>
       <div class="selection-stats">
         <div class="stat-item">
@@ -19,7 +21,6 @@
       </div>
     </div>
 
-    <!-- Filtros -->
     <div class="filters-section">
       <div class="search-group">
         <div class="search-input">
@@ -83,14 +84,12 @@
       </div>
     </div>
 
-    <!-- Estado vazio -->
     <div v-if="filteredPassengers.length === 0" class="empty-state">
       <div class="empty-icon">🚌</div>
       <h3>Nenhum passageiro encontrado</h3>
       <p>Tente ajustar os termos de busca</p>
     </div>
 
-    <!-- Resumo -->
     <div class="selection-summary">
       <div class="summary-content">
         <div class="summary-info">
@@ -170,19 +169,25 @@ watch(routePassengers, (newPassengers) => {
 
 // Funções
 const togglePassenger = (id) => {
+  const passengerList = goRoutesStore.state_create.daily_route.passenger_list;
+
   if (selectedPassengers.value.includes(id)) {
     selectedPassengers.value = selectedPassengers.value.filter(pid => pid !== id)
+    goRoutesStore.state_create.daily_route.passenger_list = passengerList.filter(pid => pid !== id);
   } else {
     selectedPassengers.value.push(id)
+    goRoutesStore.state_create.daily_route.passenger_list.push(id);
   }
 }
 
 const selectAllPassengers = () => {
   selectedPassengers.value = routePassengers.value.map(p => p.user.id)
+  goRoutesStore.state_create.daily_route.passenger_list = routePassengers.value.map(p => p.user.id)
 }
 
 const clearAllSelection = () => {
-  selectedPassengers.value = []
+  selectedPassengers.value = [],
+  goRoutesStore.state_create.daily_route.passenger_list = []
 }
 
 const getInitials = (name) => {
