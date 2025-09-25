@@ -4,7 +4,6 @@ import { AuthService } from '@/services';
 
 const API_URL = import.meta.env.VITE_API_URL + "/";
 
-console.log("API_URL:", API_URL);
 
 const api = axios.create({
   baseURL: API_URL?.endsWith("/") ? API_URL.slice(0, -1) : API_URL,
@@ -52,6 +51,7 @@ api.interceptors.response.use(
           }
         } catch (refreshError) {
           // Se falhar o refresh, limpa os dados e redireciona para login
+          console.error(refreshError)
           localStorage.removeItem('auth');
           if (window.location.pathname !== '/blank/login') {
             window.location.href = '/blank/login';

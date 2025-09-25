@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      
+      <!-- Toggle andando/parado -->
       <div class="driving-toggle-container">
         <div class="driving-toggle-wrapper">
           <span class="toggle-label" :class="{ active: !isDriving }">Parado</span>
@@ -33,7 +33,7 @@
         </div>
       </div>
 
-
+      <!-- Infos da rota -->
       <div class="route-info">
         <div class="time-section">
           <div class="time-item">
@@ -74,59 +74,53 @@
             <span class="stat-label">Distância</span>
           </div>
           <div class="stat-item">
-            <span class="stat-value">{{ routeData.passengers.length }}</span>
+            <span class="stat-value">{{ routeData?.passengers?.length }}</span>
             <span class="stat-label">Passageiros</span>
           </div>
           <div class="stat-item">
-            <span class="stat-value">{{ getPickedUpCount() }}/{{ routeData.passengers.length }}</span>
+            <span class="stat-value">{{ getPickedUpCount() }}/{{ routeData?.passengers?.length }}</span>
             <span class="stat-label">Embarcados</span>
           </div>
         </div>
       </div>
 
+      <!-- Lista de passageiros -->
       <div v-if="sheetHeight === maxHeight" class="passengers-section">
         <div class="passengers-header">
           <h3>Lista de Passageiros</h3>
           <div class="progress-indicator">
-            {{ getPickedUpCount() }} de {{ routeData.passengers.length }} embarcados
+            {{ getPickedUpCount() }} de {{ routeData?.passengers?.length }} embarcados
           </div>
         </div>
-
-        <div class="passengers-list">
-          <div 
-            v-for="(passenger, index) in routeData.passengers" 
-            :key="passenger.user.id"
-            class="passenger-item"
-            :class="{ 
-              'picked-up': passenger.pickedUp,
-              'current': isDriving && index === currentPassengerIndex
-            }"
-          >
-            <div class="passenger-checkbox">
-              <input 
-                type="checkbox" 
-                :id="`passenger-${passenger.user.id}`"
-                v-model="passenger.pickedUp"
-                @change="onPassengerToggle(passenger)"
-              >
-              <label :for="`passenger-${passenger.user.id}`" class="checkbox-custom"></label>
-            </div>
-            
-            <div class="passenger-info">
-              <div class="passenger-name">{{ passenger.user.name }}</div>
-              <div class="passenger-address">{{ passenger.user.address }}</div>
-            </div>
-            
-            <div class="passenger-order">
-              #{{ index + 1 }}
-            </div>
-            
-            <div v-if="isDriving && index === currentPassengerIndex" class="current-indicator">
-              🎯
-            </div>
-          </div>
-        </div>
-
+<div class="passengers-list">
+  <div 
+    v-for="(passenger, index) in routeData.presences" 
+    :key="passenger.id"
+    class="passenger-item"
+    :class="{ 'picked-up': passenger.status === 'PRESENTE' }"
+  >
+    <div class="passenger-checkbox">
+      <input 
+        type="checkbox" 
+        :id="`passenger-${passenger.id}`"
+      
+        :checked="passenger.status === 'PRESENTE'"
+      >
+      <label :for="`passenger-${passenger.id}`" class="checkbox-custom"></label>
+    </div>
+    
+    <div class="passenger-info">
+      <div class="passenger-name">{{ passenger.passenger_name }}</div>
+      <div class="passenger-address">
+        {{ passenger.address_passenger?.[0]?.address || 'Sem endereço' }}
+      </div>
+    </div>
+    
+    <div class="passenger-order">
+      #{{ index + 1 }}
+    </div>
+  </div>
+</div>
         <div class="vehicle-section">
           <h4>Informações do Veículo</h4>
           <div class="vehicle-info">
@@ -169,20 +163,16 @@ const isDriving = ref(false)
 const currentPassengerIndex = ref(0)
 
 onMounted(async () => {
-  await goRoutesStore.getRouteByDriverId()
+  // Pega a rota do motorista
+  await goRoutesStore.takeMyDailyRoute()
 
   const data = Array.isArray(goRoutesStore.state.myActiveRoute)
     ? goRoutesStore.state.myActiveRoute[0]
     : goRoutesStore.state.myActiveRoute
 
-  if (data?.passengers) {
-    data.passengers.forEach(passenger => {
-      if (!Object.prototype.hasOwnProperty.call(passenger, "pickedUp")) {
-        passenger.pickedUp = false
-      }
-    })
-  }
+  console.log(data.presences) // ver quem está presente ou não
 
+  // Nenhuma propriedade local extra necessária, usamos "status"
   routeData.value = data
   loading.value = false
 })
@@ -213,47 +203,12 @@ const onTouchEnd = () => {
 const toggleDriving = () => {
   isDriving.value = !isDriving.value
   if (isDriving.value) {
-    // Quando ativar o modo andando, vai para o primeiro passageiro não embarcado
     const nextUnpickedIndex = routeData.value.passengers.findIndex(p => !p.pickedUp)
     currentPassengerIndex.value = nextUnpickedIndex >= 0 ? nextUnpickedIndex : 0
   }
 }
 
-// const getCurrentPassenger = () => {
-//   if (!routeData.value?.passengers || currentPassengerIndex.value < 0) return null
-//   return routeData.value.passengers[currentPassengerIndex.value]
-// }
-
-// const nextPassenger = () => {
-//   if (currentPassengerIndex.value < routeData.value.passengers.length - 1) {
-//     currentPassengerIndex.value++
-//   }
-// }
-
-// const previousPassenger = () => {
-//   if (currentPassengerIndex.value > 0) {
-//     currentPassengerIndex.value--
-//   }
-// }
-
-// const toggleCurrentPassenger = () => {
-//   const currentPassenger = getCurrentPassenger()
-//   if (currentPassenger) {
-//     currentPassenger.pickedUp = !currentPassenger.pickedUp
-//     onPassengerToggle(currentPassenger)
-    
-//     if (currentPassenger.pickedUp) {
-//       const nextUnpickedIndex = routeData.value.passengers.findIndex(
-//         (p, index) => !p.pickedUp && index > currentPassengerIndex.value
-//       )
-//       if (nextUnpickedIndex >= 0) {
-//         currentPassengerIndex.value = nextUnpickedIndex
-//       }
-//     }
-//   }
-// }
-
-// Utils existentes
+// Utils
 const getShortAddress = (address) => address?.split(",").slice(0, 2).join(",") || ""
 const formatDistance = (distance) => distance ? (distance / 1000).toFixed(1) + " km" : ""
 const getDurationText = () => {
@@ -280,10 +235,9 @@ const getStatusText = () => {
     default: return "Indefinido"
   }
 }
-const onPassengerToggle = (passenger) => {
-  console.log(`Passageiro ${passenger.user.name} ${passenger.pickedUp ? "embarcou" : "desembarcou"}`)
-}
+
 </script>
+
 
 <style scoped>
 .bottom-sheet {

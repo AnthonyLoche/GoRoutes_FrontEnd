@@ -1,9 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useDriversStore } from '@/stores'
 
 const isMenuOpen = ref(false)
 const router = useRouter()
+const driversStore = useDriversStore()
 
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value
@@ -14,18 +16,24 @@ const closeMenu = () => {
 }
 
 // Dados dos cards/apps
-const menuItems = [
+const menuItems = ref([
     { name: 'Início', icon: 'mdi-home', color: '#4CAF50', route: '/' },
     { name: 'Dashboard', icon: 'mdi-view-dashboard', color: '#673AB7', route: '/default/admin/dashboard' },
     { name: 'Perfil', icon: 'mdi-account', color: '#607D8B', route: '/blank/profile/driver' },
     { name: 'Minha Rotas', icon: 'mdi-map-marker-path', color: '#FF9800', route: '/blank/driver/my-routes' },
     { name: 'Rotas Feitas', icon: 'mdi-check-circle', color: '#2196F3', route: '/completed-routes' },
-    // { name: 'Minha Rota De Hoje', icon: 'mdi-map-marker-path', color: '#FF9800', route: '/my-route' },
-]
+])
 
 const goToHome = () => {
     router.push('/')
 }
+
+onMounted(async()=>{
+    await driversStore.verifyOpenDailyRoutes()
+    if(driversStore.state.hasOpenDailyRoute){
+        menuItems.value.push({ name: 'Minha Rota de Hoje', icon: "mdi-map-marker-path", route: '/blank/admin/drivers/my-daily-route', color: '#5050ff' })
+    }
+})
 </script>
 
 <template>

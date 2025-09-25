@@ -60,6 +60,16 @@ class GoRoutesService {
             throw error;
         }
     }
+
+      async takeMyDailyRoute(id){
+        try{
+            const response = await api.get(`/goroutes/check-active-route-driver/${id}`);
+            return response
+        }catch(error){
+            console.error(error);
+        }
+    }
+
 }
 
 export default new GoRoutesService();

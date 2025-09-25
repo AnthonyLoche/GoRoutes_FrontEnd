@@ -1,12 +1,13 @@
 <script setup>
-import { HeaderRouteActive, MapRouteActive, CaptionRouteActive } from '@/components';
+import { HeaderMobileDriver, MapRouteActive, CaptionRouteActive } from '@/components';
+
 
 </script>
 
 <template>
   <div class="route-view">
     <!-- {{ goRoutesStore.state.myActiveRoute?.passengers }} -->
-    <HeaderRouteActive />
+    <HeaderMobileDriver />
     <MapRouteActive />
     <CaptionRouteActive />
   </div>

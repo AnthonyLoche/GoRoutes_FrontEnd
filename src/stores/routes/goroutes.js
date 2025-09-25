@@ -123,6 +123,16 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     console.log(state_create.daily_route)
   }
 
+  const takeMyDailyRoute = async () => {
+    try{
+        const response = await GoRoutesService.takeMyDailyRoute(authStore.state.user?.driver_data?.id)
+        state.myActiveRoute = response.data?.active_route
+        return response
+    }catch(error){
+        console.log(error)
+    }
+  }
+
   return {
     state,
     state_create,
@@ -132,6 +142,7 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     getRouteByDriverId,
     filterMyDriverRoutes,
     getRouteByIdToInit,
-    setDailyRouteOriginal
+    setDailyRouteOriginal,
+    takeMyDailyRoute
   }
 })

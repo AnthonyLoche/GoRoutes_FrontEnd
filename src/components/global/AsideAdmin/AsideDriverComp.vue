@@ -51,7 +51,7 @@ onMounted(async() => {
     window.addEventListener('resize', checkMobile);
     await driversStore.verifyOpenDailyRoutes()
     if(driversStore.state.hasOpenDailyRoute){
-        menuItems.value.push({ name: 'Minha Rota de Hoje', icon: markRaw(MapMarkerAccountOutline), route: '/my-route', color: '#5050ff' })
+        menuItems.value.push({ name: 'Minha Rota de Hoje', icon: markRaw(MapMarkerAccountOutline), route: '/blank/admin/drivers/my-daily-route', color: '#5050ff' })
     }
 });
 

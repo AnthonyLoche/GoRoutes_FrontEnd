@@ -25,7 +25,6 @@ export { default as TrackDriverMap } from "./admin/drivers/TrackDriverMap.vue";
 export { default as AsideToTrackDriver } from "./admin/drivers/AsideToTrackDriver.vue";
 export { default as TrackDriverMapById} from "./admin/drivers/TrackDriverMapById.vue";
 export { default as CaptionRouteActive } from "./admin/route/daily/CaptionRouteAtive.vue";
-export { default as HeaderRouteActive } from "./admin/route/daily/HeaderRouteActive.vue";
 export { default as MapRouteActive } from "./admin/route/daily/MapRouteActive.vue";
 export { default as AsideDriverComp} from "./global/AsideAdmin/AsideDriverComp.vue";
 export { default as FooterMain} from './global/Footer/FooterMain.vue'
@@ -36,3 +35,4 @@ export { default as DriverRetrieveDataComp } from "./admin/drivers/DriverRetriev
 export { default as DataResponsible} from './admin/responsibles/DataResponsible.vue'
 export { default as CreateRouteComp } from './admin/route/create/CreateRouteComp.vue'
 export { default as InitRouteComp } from './admin/route/init/InitRouteComp.vue'
+export { default as HeaderMobileDriver} from "./global/Header/HeaderMobileDriver.vue"

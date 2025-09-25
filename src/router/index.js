@@ -42,7 +42,7 @@ const routes = [
       { path: 'profile/driver', component: Views.ProfileDriverView },
       { path: 'test', component: Views.TestView },
       { path: 'websocket', component: Views.WebSocketView },
-      { path: 'admin/drivers/route-active', component: Views.DriverRouteIsActive },
+      { path: 'admin/drivers/my-daily-route', component: Views.DriverRouteIsActive },
       { path: 'responsible/dependents', component: Views.MyDependentsView },
       { path: 'responsible/dependent/:id', component: Views.DetailDependentView, props: true},
       { path: 'responsible/track-dependents', component: Views.TrackMyDependentsView },
