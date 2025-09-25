@@ -70,6 +70,24 @@ class GoRoutesService {
         }
     }
 
+    async markPresenceOrAbsence(data){
+        try{
+            const response = await api.post(`goroutes/change-presence-status/`, data)
+            return response
+        }catch(error){
+            console.error(error)
+        }
+    }
+
+    async refreshDailyRouteById(id) {
+        try{
+            const response = await api.get(`goroutes/dailyroute/${id}/`)
+            return response
+        }catch(error){
+            console.error(error)
+        }
+    }
+
 }
 
 export default new GoRoutesService();

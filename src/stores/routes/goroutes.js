@@ -133,6 +133,25 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     }
   }
 
+  const markPresenceOrAbsence = async (data) => {
+    try{
+        const response = GoRoutesService.markPresenceOrAbsence(data);
+        return response
+    }catch(error){
+        console.error(error)
+    }
+  }
+
+  const refreshDailyRouteById = async (id) =>{
+    try{
+        const response = await GoRoutesService.refreshDailyRouteById(id);
+        state.myActiveRoute = response.data
+        return response
+    }catch(error){
+        console.log(error)
+    }
+  }
+
   return {
     state,
     state_create,
@@ -143,6 +162,8 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     filterMyDriverRoutes,
     getRouteByIdToInit,
     setDailyRouteOriginal,
-    takeMyDailyRoute
+    takeMyDailyRoute,
+    markPresenceOrAbsence,
+    refreshDailyRouteById
   }
 })

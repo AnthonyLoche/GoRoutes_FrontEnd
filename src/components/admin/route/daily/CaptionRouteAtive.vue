@@ -1,6 +1,5 @@
 <template>
-  <!-- Renderiza só depois que os dados estiverem carregados -->
-  <div v-if="!loading && routeData"
+  <div v-if="routeData"
        class="bottom-sheet"
        :style="{ height: sheetHeight + 'px' }"
        @touchstart="onTouchStart"
@@ -11,10 +10,47 @@
     <div class="drag-handle"></div>
 
     <div class="content">
+      <!-- Header da rota -->
       <div class="route-header">
         <h2 class="route-title">{{ routeData.name }}</h2>
-        <div class="route-status" :class="getStatusClass()">
-          {{ getStatusText() }}
+        <div class="route-status" :class="getStatusClass()">{{ getStatusText() }}</div>
+      </div>
+
+      <!-- Próximo passageiro -->
+      <div v-if="isDriving && getCurrentPassenger()" class="current-passenger-section">
+        <div class="current-passenger-header">
+          <h3>Próximo Passageiro</h3>
+          <div class="passenger-progress">{{ currentPassengerIndex + 1 }} de {{ getUnprocessedPassengers().length }}</div>
+        </div>
+
+        <div class="current-passenger-card">
+          <div class="passenger-avatar">
+            {{ getCurrentPassenger().passenger_name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="passenger-details">
+            <div class="passenger-name">{{ getCurrentPassenger().passenger_name }}</div>
+            <div class="passenger-address">
+              {{ getCurrentPassenger().address_passenger?.[0]?.address || 'Sem endereço' }}
+            </div>
+          </div>
+        </div>
+
+        <div class="passenger-actions">
+          <button class="action-btn missed-btn" @click="markPassengerAsMissed">
+            ❌ Faltou
+          </button>
+          <button class="action-btn picked-btn" @click="markPassengerAsPickedUp">
+            ✅ Pego
+          </button>
+        </div>
+      </div>
+
+      <!-- Rota concluída -->
+      <div v-if="isDriving && !getCurrentPassenger()" class="no-passengers-section">
+        <div class="no-passengers-card">
+          <div class="completion-icon">🎉</div>
+          <h3>Rota Concluída!</h3>
+          <p>Todos os passageiros foram processados.</p>
         </div>
       </div>
 
@@ -22,18 +58,14 @@
       <div class="driving-toggle-container">
         <div class="driving-toggle-wrapper">
           <span class="toggle-label" :class="{ active: !isDriving }">Parado</span>
-          <div 
-            class="driving-toggle" 
-            :class="{ active: isDriving }"
-            @click="toggleDriving"
-          >
+          <div class="driving-toggle" :class="{ active: isDriving }" @click="toggleDriving">
             <div class="toggle-slider" :class="{ active: isDriving }"></div>
           </div>
           <span class="toggle-label" :class="{ active: isDriving }">Andando</span>
         </div>
       </div>
 
-      <!-- Infos da rota -->
+      <!-- Informações da rota -->
       <div class="route-info">
         <div class="time-section">
           <div class="time-item">
@@ -58,7 +90,6 @@
               <div class="location-address">{{ getShortAddress(routeData.origin) }}</div>
             </div>
           </div>
-          
           <div class="location-item">
             <div class="location-icon destination">🎯</div>
             <div class="location-text">
@@ -74,11 +105,11 @@
             <span class="stat-label">Distância</span>
           </div>
           <div class="stat-item">
-            <span class="stat-value">{{ routeData?.passengers?.length }}</span>
+            <span class="stat-value">{{ routeData.presences?.length }}</span>
             <span class="stat-label">Passageiros</span>
           </div>
           <div class="stat-item">
-            <span class="stat-value">{{ getPickedUpCount() }}/{{ routeData?.passengers?.length }}</span>
+            <span class="stat-value">{{ getPickedUpCount() }}/{{ routeData.presences?.length }}</span>
             <span class="stat-label">Embarcados</span>
           </div>
         </div>
@@ -88,39 +119,30 @@
       <div v-if="sheetHeight === maxHeight" class="passengers-section">
         <div class="passengers-header">
           <h3>Lista de Passageiros</h3>
-          <div class="progress-indicator">
-            {{ getPickedUpCount() }} de {{ routeData?.passengers?.length }} embarcados
+          <div class="progress-indicator">{{ getPickedUpCount() }} de {{ routeData.presences?.length }} embarcados</div>
+        </div>
+        <div class="passengers-list">
+          <div v-for="(passenger, index) in routeData.presences" :key="passenger.id"
+               class="passenger-item"
+               :class="{ 'picked-up': passenger.status==='PRESENTE', 'missed': passenger.status==='FALTOU', 'current': isDriving && getCurrentPassenger()?.id===passenger.id }">
+            <div class="passenger-checkbox">
+              <input type="checkbox" :id="`passenger-${passenger.id}`" :checked="passenger.status==='PRESENTE'" disabled>
+              <label :for="`passenger-${passenger.id}`" class="checkbox-custom"></label>
+            </div>
+            <div class="passenger-info">
+              <div class="passenger-name">{{ passenger.passenger_name }}</div>
+              <div class="passenger-address">{{ passenger.address_passenger?.[0]?.address || 'Sem endereço' }}</div>
+              <div v-if="passenger.status==='FALTOU'" class="passenger-status-badge missed">Faltou</div>
+              <div v-if="passenger.status==='PRESENTE'" class="passenger-status-badge picked">Embarcou</div>
+            </div>
+            <div class="passenger-order">
+              #{{ index + 1 }}
+              <div v-if="isDriving && getCurrentPassenger()?.id===passenger.id" class="current-indicator">👆 Atual</div>
+            </div>
           </div>
         </div>
-<div class="passengers-list">
-  <div 
-    v-for="(passenger, index) in routeData.presences" 
-    :key="passenger.id"
-    class="passenger-item"
-    :class="{ 'picked-up': passenger.status === 'PRESENTE' }"
-  >
-    <div class="passenger-checkbox">
-      <input 
-        type="checkbox" 
-        :id="`passenger-${passenger.id}`"
-      
-        :checked="passenger.status === 'PRESENTE'"
-      >
-      <label :for="`passenger-${passenger.id}`" class="checkbox-custom"></label>
-    </div>
-    
-    <div class="passenger-info">
-      <div class="passenger-name">{{ passenger.passenger_name }}</div>
-      <div class="passenger-address">
-        {{ passenger.address_passenger?.[0]?.address || 'Sem endereço' }}
-      </div>
-    </div>
-    
-    <div class="passenger-order">
-      #{{ index + 1 }}
-    </div>
-  </div>
-</div>
+
+        <!-- Informações do veículo -->
         <div class="vehicle-section">
           <h4>Informações do Veículo</h4>
           <div class="vehicle-info">
@@ -139,103 +161,96 @@
     </div>
   </div>
 
-  <div v-else class="loading-msg">
-    Carregando rota...
-  </div>
+  <div v-else class="loading-msg">Carregando rota...</div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
-import { useGoRoutesStore } from "@/stores"
+import { ref, computed } from "vue";
+import { useGoRoutesStore } from "@/stores";
 
-const goRoutesStore = useGoRoutesStore()
+const goRoutesStore = useGoRoutesStore();
+const routeData = computed(() => goRoutesStore.state.myActiveRoute);
 
-// Estado
-const isDragging = ref(false)
-const startY = ref(0)
-const sheetHeight = ref(300)
-const minHeight = 300
-const maxHeight = window.innerHeight * 0.8
-const routeData = ref(null)
-const loading = ref(true)
+const sheetHeight = ref(400);
+const minHeight = 400;
+const maxHeight = window.innerHeight * 0.8;
+const isDragging = ref(false);
+const startY = ref(0);
 
-const isDriving = ref(false)
-const currentPassengerIndex = ref(0)
+const isDriving = ref(false);
+const currentPassengerIndex = ref(0);
 
-onMounted(async () => {
-  // Pega a rota do motorista
-  await goRoutesStore.takeMyDailyRoute()
+const toggleDriving = () => { isDriving.value = !isDriving.value; currentPassengerIndex.value = 0; }
 
-  const data = Array.isArray(goRoutesStore.state.myActiveRoute)
-    ? goRoutesStore.state.myActiveRoute[0]
-    : goRoutesStore.state.myActiveRoute
+const onTouchStart = e => { isDragging.value = true; startY.value = e.touches[0].clientY; }
+const onTouchMove = e => {
+  if (!isDragging.value) return; e.preventDefault();
+  const delta = startY.value - e.touches[0].clientY;
+  let newHeight = sheetHeight.value + delta;
+  if (newHeight < minHeight) newHeight = minHeight;
+  if (newHeight > maxHeight) newHeight = maxHeight;
+  sheetHeight.value = newHeight;
+  startY.value = e.touches[0].clientY;
+}
+const onTouchEnd = () => { isDragging.value = false; const middle = (minHeight + maxHeight)/2; sheetHeight.value = sheetHeight.value >= middle ? maxHeight : minHeight; }
 
-  console.log(data.presences) // ver quem está presente ou não
+// Passageiros
+const getUnprocessedPassengers = () => routeData.value?.presences?.filter(p=>p.status!=='PRESENTE' && p.status!=='FALTOU')||[];
+const getCurrentPassenger = () => getUnprocessedPassengers()[currentPassengerIndex.value] || null;
 
-  // Nenhuma propriedade local extra necessária, usamos "status"
-  routeData.value = data
-  loading.value = false
-})
+const markPassengerAsPickedUp = async () => {
+  const passenger = getCurrentPassenger();
+  if (!passenger) return;
 
-// Drag do bottom sheet
-const onTouchStart = (e) => {
-  isDragging.value = true
-  startY.value = e.touches[0].clientY
+  passenger.status = 'PRESENTE';
+  await goRoutesStore.markPresenceOrAbsence({ 
+    daily_route: passenger.daily_route, 
+    new_status: 'PRESENTE', 
+    passenger_route: passenger.passenger_route 
+  });
+
+  await goRoutesStore.refreshDailyRouteById(passenger.daily_route);
+
+  // Agora zera o índice para pegar o próximo não processado corretamente
+  currentPassengerIndex.value = 0;
 }
 
-const onTouchMove = (e) => {
-  if (!isDragging.value) return
-  e.preventDefault()
-  const delta = startY.value - e.touches[0].clientY
-  let newHeight = sheetHeight.value + delta
-  if (newHeight < minHeight) newHeight = minHeight
-  if (newHeight > maxHeight) newHeight = maxHeight
-  sheetHeight.value = newHeight
-  startY.value = e.touches[0].clientY
-}
+const markPassengerAsMissed = async () => {
+  const passenger = getCurrentPassenger();
+  if (!passenger) return;
 
-const onTouchEnd = () => {
-  isDragging.value = false
-  const middle = (minHeight + maxHeight) / 2
-  sheetHeight.value = sheetHeight.value >= middle ? maxHeight : minHeight
-}
+  passenger.status = 'FALTOU';
+  await goRoutesStore.markPresenceOrAbsence({ 
+    daily_route: passenger.daily_route, 
+    new_status: 'FALTOU', 
+    passenger_route: passenger.passenger_route 
+  });
 
-const toggleDriving = () => {
-  isDriving.value = !isDriving.value
-  if (isDriving.value) {
-    const nextUnpickedIndex = routeData.value.passengers.findIndex(p => !p.pickedUp)
-    currentPassengerIndex.value = nextUnpickedIndex >= 0 ? nextUnpickedIndex : 0
-  }
-}
+  await goRoutesStore.refreshDailyRouteById(passenger.daily_route);
 
+  currentPassengerIndex.value = 0;
+}
 // Utils
-const getShortAddress = (address) => address?.split(",").slice(0, 2).join(",") || ""
-const formatDistance = (distance) => distance ? (distance / 1000).toFixed(1) + " km" : ""
+const getShortAddress = address => address?.split(",").slice(0,2).join(",")||"";
+const formatDistance = distance => distance ? (distance/1000).toFixed(1)+" km" : "";
 const getDurationText = () => {
-  if (!routeData.value?.init_hour || !routeData.value?.end_hour) return ""
-  const [startHour, startMin] = routeData.value.init_hour.split(":").map(Number)
-  const [endHour, endMin] = routeData.value.end_hour.split(":").map(Number)
-  const duration = (endHour * 60 + endMin) - (startHour * 60 + startMin)
-  return `${duration} min`
+  if (!routeData.value?.init_hour || !routeData.value?.end_hour) return "";
+  const [h1,m1]=routeData.value.init_hour.split(":").map(Number);
+  const [h2,m2]=routeData.value.end_hour.split(":").map(Number);
+  return `${(h2*60+m2)-(h1*60+m1)} min`;
 }
-const getPickedUpCount = () => routeData.value?.passengers?.filter(p => p.pickedUp).length || 0
+const getPickedUpCount = () => routeData.value?.presences?.filter(p=>p.status==='PRESENTE').length || 0;
 const getStatusClass = () => {
-  if (!routeData.value) return ""
-  const now = new Date()
-  const currentTime = now.getHours() + ":" + now.getMinutes().toString().padStart(2, "0")
-  if (currentTime < routeData.value.init_hour) return "pending"
-  if (currentTime > routeData.value.end_hour) return "completed"
-  return "in-progress"
+  if (!routeData.value) return "";
+  const now = new Date();
+  const currentTime = now.getHours()+":"+now.getMinutes().toString().padStart(2,"0");
+  if (currentTime < routeData.value.init_hour) return "pending";
+  if (currentTime > routeData.value.end_hour) return "completed";
+  return "in-progress";
 }
 const getStatusText = () => {
-  switch (getStatusClass()) {
-    case "pending": return "Aguardando"
-    case "in-progress": return "Em andamento"
-    case "completed": return "Concluída"
-    default: return "Indefinido"
-  }
+  switch(getStatusClass()){ case "pending": return "Aguardando"; case "in-progress": return "Em andamento"; case "completed": return "Concluída"; default: return "Indefinido";}
 }
-
 </script>
 
 
@@ -362,10 +377,9 @@ const getStatusText = () => {
 /* Seção do Passageiro Atual */
 .current-passenger-section {
   margin-bottom: 20px;
-  padding: 16px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
   border-radius: 16px;
-  color: white;
+  border: 2px solid var(--primary-color);
 }
 
 .current-passenger-header {
@@ -379,7 +393,6 @@ const getStatusText = () => {
   font-size: 16px;
   font-weight: 600;
   margin: 0;
-  color: white;
 }
 
 .passenger-progress {
@@ -387,58 +400,27 @@ const getStatusText = () => {
   opacity: 0.8;
 }
 
-.passenger-navigation {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.nav-button {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border-radius: 50%;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.05);
-}
-
-.nav-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
 .current-passenger-card {
-  flex: 1;
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  padding: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
   backdrop-filter: blur(10px);
 }
 
 .passenger-avatar {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 16px;
-  margin-right: 12px;
+  font-size: 18px;
+  margin-right: 16px;
 }
 
 .passenger-details {
@@ -446,58 +428,93 @@ const getStatusText = () => {
 }
 
 .passenger-details .passenger-name {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .passenger-details .passenger-address {
   font-size: 12px;
   opacity: 0.8;
-  margin-bottom: 4px;
 }
 
-.passenger-status {
-  font-size: 11px;
-  padding: 2px 6px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  display: inline-block;
+.passenger-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
 }
 
-.passenger-status.picked {
-  background: rgba(16, 185, 129, 0.3);
-}
-
-.pickup-button {
-  width: 36px;
-  height: 36px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  background: transparent;
-  color: white;
-  border-radius: 50%;
-  font-size: 18px;
-  font-weight: bold;
+.action-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
 }
 
-.align-dflex{
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
+.missed-btn {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
 }
 
-.pickup-button.picked {
-  background: #10b981;
-  border-color: #10b981;
+.missed-btn:hover {
+  background: rgba(239, 68, 68, 1);
+  transform: translateY(-2px);
 }
 
-.pickup-button:hover {
-  transform: scale(1.1);
+.picked-btn {
+  background: rgba(16, 185, 129, 0.9);
+  color: white;
+}
+
+.picked-btn:hover {
+  background: rgba(16, 185, 129, 1);
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  font-size: 16px;
+}
+
+.btn-text {
+  font-size: 14px;
+}
+
+/* Seção quando não há passageiros */
+.no-passengers-section {
+  margin-bottom: 20px;
+}
+
+.no-passengers-card {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  color: white;
+}
+
+.completion-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.no-passengers-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.no-passengers-card p {
+  font-size: 14px;
+  opacity: 0.8;
+  margin: 0;
 }
 
 .time-section {
@@ -653,6 +670,10 @@ const getStatusText = () => {
   background: #f0fdf4;
 }
 
+.passenger-item.missed {
+  background: #fef2f2;
+}
+
 .passenger-item.current {
   background: #eff6ff;
   border-left: 4px solid #3b82f6;
@@ -660,8 +681,10 @@ const getStatusText = () => {
 }
 
 .current-indicator {
-  margin-left: 8px;
-  font-size: 14px;
+  font-size: 10px;
+  color: #3b82f6;
+  font-weight: 600;
+  margin-top: 2px;
 }
 
 .passenger-checkbox {
@@ -716,12 +739,33 @@ const getStatusText = () => {
 
 .passenger-address {
   font-size: 12px;
+  color: #6b7280;
+}
+
+.passenger-status-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 4px;
+  display: inline-block;
+}
+
+.passenger-status-badge.picked {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.passenger-status-badge.missed {
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 .passenger-order {
   font-size: 12px;
   color: #9ca3af;
   font-weight: 500;
+  text-align: center;
 }
 
 .vehicle-section {
