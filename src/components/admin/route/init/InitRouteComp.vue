@@ -107,8 +107,10 @@ const isMobile = () => windowWidth.value <= 1024
 }
 
 .create-route-container {
+  width: 80%;
   --primary: #022840;
   --accent: #1a73e8;
+  margin: 0 auto;
   padding: 2rem;
   font-family: 'Poppins', sans-serif;
 }
