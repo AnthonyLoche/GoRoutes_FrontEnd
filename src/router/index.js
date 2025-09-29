@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import BlankLayout from '@/layouts/BlankLayout.vue'
 import { Views } from '@/views'
-// import { useAuthStore } from '@/stores'  
+// import { useAuthStore } from '@/stores'
 
 const routes = [
   {
@@ -29,6 +29,8 @@ const routes = [
       { path: 'admin/responsible/:id', component: Views.DataResponsibleAdminView },
       { path: 'admin/routes/create', component: Views.CreateRoutesView },
       { path: 'admin/drivers/init-daily-route/:id', component: Views.DriverInitDailyRouteView },
+      { path: 'admin/routes/list', component: Views.RoutesListView },
+      {path: 'admin/routes/consult', component: Views.RoutesConsultView}
     ],
   },
   {
@@ -44,7 +46,7 @@ const routes = [
       { path: 'websocket', component: Views.WebSocketView },
       { path: 'admin/drivers/my-daily-route', component: Views.DriverRouteIsActive },
       { path: 'responsible/dependents', component: Views.MyDependentsView },
-      { path: 'responsible/dependent/:id', component: Views.DetailDependentView, props: true},
+      { path: 'responsible/dependent/:id', component: Views.DetailDependentView, props: true },
       { path: 'responsible/track-dependents', component: Views.TrackMyDependentsView },
       { path: 'driver/my-routes', component: Views.DriverMyRoutesView },
       { path: 'about', component: Views.AboutView },

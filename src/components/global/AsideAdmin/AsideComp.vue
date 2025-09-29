@@ -86,9 +86,9 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: 'Ver Rotas', active: false, route: '/admin/routes', icon: markRaw(RouteIcon) },
+      { name: 'Ver Rotas', active: false, route: '/default/admin/routes/list', icon: markRaw(RouteIcon) },
       { name: 'Criar Rota', active: false, route: '/default/admin/routes/create', icon: markRaw(RouteIcon) },
-      { name: 'Consultar Rota', active: false, route: '/admin/search-route', icon: markRaw(RouteIcon) }
+      { name: 'Consultar Rota', active: false, route: '/default/admin/routes/consult', icon: markRaw(RouteIcon) }
     ]
   },
   {

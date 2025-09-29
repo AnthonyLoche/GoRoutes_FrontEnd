@@ -56,7 +56,7 @@ class GoRoutesService {
             const response = await api.get(`/goroutes/filter-my-driver-routes/${driverId}/`);
             return response.data;
         } catch (error) {
-            console.error(`Error fetching routes for driver ID ${driverId}:`, error);
+            console.error(error);
             throw error;
         }
     }

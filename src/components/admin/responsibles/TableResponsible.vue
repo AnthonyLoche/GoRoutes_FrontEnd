@@ -136,7 +136,7 @@ onMounted(async () => {
       <v-spacer />
 
       <div class="d-flex align-center">
-        <v-btn prepend-icon="mdi-plus" color="primary" @click="showAddDialog = true">
+        <v-btn prepend-icon="mdi-plus" color="primary" @click="showAddDialog = true" rounded="1">
           Adicionar Responsável
         </v-btn>
       </div>

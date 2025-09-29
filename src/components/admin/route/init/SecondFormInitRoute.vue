@@ -1,6 +1,6 @@
 <template>
+  <div :class="{ disabled: goRoutesStore.state_create.daily_route.original }">
   <div class="passenger-route-selection-container" v-if="routePassengers.length">
-    <!-- Header com informações da rota -->
     <div class="route-info-header">
 
       <div class="route-summary">
@@ -42,7 +42,6 @@
       </div>
     </div>
 
-    <!-- Grid de Passageiros -->
     <div class="passengers-grid">
       <div 
         v-for="passenger in filteredPassengers" 
@@ -58,7 +57,6 @@
           </span>
         </div>
 
-        <!-- Informações do Passageiro -->
         <div class="passenger-info">
           <div class="passenger-header">
             <h3 class="passenger-name">{{ passenger.user.name }}</h3>
@@ -72,14 +70,12 @@
           </div>
         </div>
 
-        <!-- Checkbox -->
         <div class="selection-checkbox">
           <div class="checkbox" :class="{ checked: selectedPassengers.includes(passenger.user.id) }">
             <span v-if="selectedPassengers.includes(passenger.user.id)" class="checkmark">✓</span>
           </div>
         </div>
 
-        <!-- Overlay -->
         <div v-if="selectedPassengers.includes(passenger.user.id)" class="selection-overlay"></div>
       </div>
     </div>
@@ -117,6 +113,7 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 
 <script setup>
@@ -125,21 +122,16 @@ import { useGoRoutesStore } from '@/stores'
 
 const goRoutesStore = useGoRoutesStore()
 
-// Estado local
 const selectedPassengers = ref([])
 const searchQuery = ref("")
 
-// Passageiros vindos da store
 const routePassengers = computed(() => {
   return goRoutesStore.state.selectedRouteToInit?.passengers || []
 })
-
-// Capacidade do veículo
 const vehicleCapacity = computed(() => {
   return goRoutesStore.state.selectedRouteToInit?.vehicle?.seats || 28
 })
 
-// Passageiros filtrados
 const filteredPassengers = computed(() => {
   if (!searchQuery.value) return routePassengers.value
   const query = searchQuery.value.toLowerCase()
@@ -149,25 +141,21 @@ const filteredPassengers = computed(() => {
   )
 })
 
-// Percentual de capacidade
 const capacityPercentage = computed(() => {
   const percentage = (selectedPassengers.value.length / vehicleCapacity.value) * 100
   return Math.min(percentage, 100)
 })
 
-// Se ultrapassou a capacidade
 const isOverCapacity = computed(() => {
   return selectedPassengers.value.length > vehicleCapacity.value
 })
 
-// Inicializar seleção com todos passageiros
 watch(routePassengers, (newPassengers) => {
   if (newPassengers?.length) {
     selectedPassengers.value = newPassengers.map(p => p.user.id)
   }
 }, { immediate: true })
 
-// Funções
 const togglePassenger = (id) => {
   const passengerList = goRoutesStore.state_create.daily_route.passenger_list;
 
@@ -211,6 +199,19 @@ const getInitials = (name) => {
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
+}
+
+.disabled {
+  background-color: rgba(255,255,255,0.9);
+  opacity: 0.9;
+}
+
+/* importantíssimo: esta regra impede qualquer interação dos filhos (clicks, hover, focos) */
+.disabled * {
+  pointer-events: none;
+  user-select: none;
+  /* se quiser que pareça visualmente "desativado" */
+  opacity: 0.7;
 }
 
 .passenger-route-selection-container {

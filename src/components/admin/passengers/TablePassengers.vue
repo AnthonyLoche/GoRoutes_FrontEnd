@@ -140,6 +140,7 @@ onMounted(async () => {
           prepend-icon="mdi-plus"
           color="primary"
           @click="showAddDialog = true"
+          rounded="1"
         >
           Adicionar Passageiro
         </v-btn>

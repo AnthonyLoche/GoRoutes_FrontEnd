@@ -32,6 +32,7 @@
           prepend-icon="mdi-plus"
           color="primary"
           @click="showAddDialog = true"
+          rounded="1"
         >
           Adicionar Veículo
         </v-btn>
