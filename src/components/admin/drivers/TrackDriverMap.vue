@@ -112,11 +112,6 @@ const handleAction1 = (id) => {
   router.push(`/default/admin/drivers/${id}`);
 };
 
-const handleAction2 = (driverName) => {
-  alert(`Ação 2 executada no motorista: ${driverName}`);
-  // Adicione aqui a lógica específica da Ação 2
-};
-
 // Posição padrão do mapa (Joinville, SC)
 const defaultCenter = { lat: -26.3, lng: -48.8 };
 // Abrir InfoWindow quando a seleção no store mudar (ex.: clique na aside)

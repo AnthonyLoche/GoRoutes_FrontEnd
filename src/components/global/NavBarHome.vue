@@ -60,6 +60,10 @@ onBeforeUnmount(() => document.removeEventListener("click", closeMenu));
               <Account />
                 Meu Perfil
             </router-link>
+             <router-link to="/blank/profile/minor" class="dropdown-item" v-if="authStore.state.type === 'minor'">
+              <Account />
+                Meu Perfil
+            </router-link>
             <button @click="authStore.logout" class="dropdown-item logout">
                 <Logout />
                Sair

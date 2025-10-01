@@ -36,3 +36,4 @@ export { default as DataResponsible} from './admin/responsibles/DataResponsible.
 export { default as CreateRouteComp } from './admin/route/create/CreateRouteComp.vue'
 export { default as InitRouteComp } from './admin/route/init/InitRouteComp.vue'
 export { default as HeaderMobileDriver} from "./global/Header/HeaderMobileDriver.vue"
+export {default as AsideMinorComp} from "./global/AsideAdmin/AsideMinorComp.vue"

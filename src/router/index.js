@@ -42,6 +42,7 @@ const routes = [
       { path: 'register', component: Views.RegisterView },
       { path: 'profile/responsible', component: Views.ProfileResponsibleView },
       { path: 'profile/driver', component: Views.ProfileDriverView },
+      { path: 'profile/minor', component: Views.ProfileMinorView },
       { path: 'test', component: Views.TestView },
       { path: 'websocket', component: Views.WebSocketView },
       { path: 'admin/drivers/my-daily-route', component: Views.DriverRouteIsActive },

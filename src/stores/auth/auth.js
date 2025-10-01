@@ -49,7 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
       } else if (userData.responsible_data) {
         userType = 'responsible'
       } else if (userData.passenger_data?.is_student) {
-        userType = 'student'
+        userType = 'minor'
       } else if (userData.passenger_data) {
         userType = 'passenger'
       }
@@ -73,7 +73,7 @@ export const useAuthStore = defineStore('auth', () => {
       const routes = {
         driver: '/blank/profile/driver',
         responsible: '/blank/profile/responsible',
-        student: '/blank/profile/student',
+        minor: '/blank/profile/minor',
         passenger: '/blank/profile/passenger'
       }
 

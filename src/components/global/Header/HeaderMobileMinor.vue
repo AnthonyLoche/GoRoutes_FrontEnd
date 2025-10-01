@@ -1,9 +1,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores'
 
 const isMenuOpen = ref(false)
 const router = useRouter()
+const authStore = useAuthStore()
 
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value
@@ -13,14 +15,32 @@ const closeMenu = () => {
     isMenuOpen.value = false
 }
 
-// Dados dos cards/apps
+// Dados dos cards/apps com rotas
 const menuItems = [
-    { name: 'Perfil', icon: 'mdi-account', color: '#607D8B' },
-    { name: 'Rota em que estou', icon: 'mdi-map-marker', color: '#FF5722' },
-    { name: 'Início', icon: 'mdi-home', color: '#4CAF50' },
-    { name: 'Informar Volta', icon: 'mdi-bus', color: '#3F51B5' },
-    { name: 'Contrato', icon: 'mdi-bus', color: '#3F51B5' },
+    { name: 'Início', icon: 'mdi-home', color: '#4CAF50', route: '/' },
+    { name: 'Perfil', icon: 'mdi-account', color: '#607D8B', route: '/blank/profile/minor' },
+    { name: 'Rota em que estou', icon: 'mdi-map-marker', color: '#FF5722', route: '/blank/driver/current-route' },
+    { name: 'Informar Volta', icon: 'mdi-bus', color: '#3F51B5', route: '/blank/driver/report-return' },
+    { 
+        name: 'Logout', 
+        icon: 'mdi-logout', 
+        color: '#F44336', 
+        action: () => {
+            authStore.logout()
+            router.push('/blank/login')
+        }
+    }
 ]
+
+const handleItemClick = (item) => {
+    closeMenu()
+    
+    if (item.action) {
+        item.action()
+    } else if (item.route) {
+        router.push(item.route)
+    }
+}
 
 const goToHome = () => {
     router.push('/')
@@ -52,11 +72,25 @@ const goToHome = () => {
 
             <div class="apps-container">
                 <div class="apps-grid">
-                    <div 
-                        v-for="item in menuItems" 
+                    <router-link
+                        v-for="item in menuItems.filter(item => item.route)" 
                         :key="item.name"
+                        :to="item.route"
                         class="app-card"
                         @click="closeMenu"
+                    >
+                        <div class="app-icon" :style="{ backgroundColor: item.color }">
+                            <v-icon size="24" color="white">{{ item.icon }}</v-icon>
+                        </div>
+                        <span class="app-name">{{ item.name }}</span>
+                    </router-link>
+                    
+                    <!-- Item com ação personalizada (Logout) -->
+                    <div 
+                        v-for="item in menuItems.filter(item => item.action)" 
+                        :key="item.name"
+                        class="app-card"
+                        @click="handleItemClick(item)"
                     >
                         <div class="app-icon" :style="{ backgroundColor: item.color }">
                             <v-icon size="24" color="white">{{ item.icon }}</v-icon>
@@ -186,6 +220,7 @@ const goToHome = () => {
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.1);
+    text-decoration: none;
 }
 
 .app-card:hover {

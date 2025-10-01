@@ -26,6 +26,7 @@ import CreateRoutesView from './admin/routes/CreateRoutesView.vue'
 import DriverInitDailyRouteView from './admin/drivers/DriverInitDailyRouteView.vue'
 import RoutesListView from './admin/routes/RoutesListView.vue'
 import RoutesConsultView from './admin/routes/RoutesConsultView.vue'
+import ProfileMinorView from './auth/ProfileMinorView.vue'
 class Views {
   static HomeView = HomeView
   static LoginView = LoginView
@@ -55,6 +56,8 @@ class Views {
   static DriverInitDailyRouteView = DriverInitDailyRouteView
   static RoutesListView = RoutesListView
   static RoutesConsultView = RoutesConsultView
+  static ProfileMinorView = ProfileMinorView
 }
+
 
 export { Views }
