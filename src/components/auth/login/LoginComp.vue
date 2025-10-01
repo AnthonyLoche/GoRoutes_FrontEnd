@@ -5,7 +5,6 @@ import { InputComp, LogoComp, ButtonComp } from "@/components";
 import { useAuthStore } from "@/stores";
 
 import { reactive, onMounted, onUnmounted } from "vue";
-import ButtonCompBorded from "@/components/global/ButtonCompBorded.vue";
 
 const authStore = useAuthStore();
 

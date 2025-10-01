@@ -26,7 +26,11 @@ import CreateRoutesView from './admin/routes/CreateRoutesView.vue'
 import DriverInitDailyRouteView from './admin/drivers/DriverInitDailyRouteView.vue'
 import RoutesListView from './admin/routes/RoutesListView.vue'
 import RoutesConsultView from './admin/routes/RoutesConsultView.vue'
-import ProfileMinorView from './auth/ProfileMinorView.vue'
+import ProfileMinorView from './auth/minor/ProfileMinorView.vue'
+import MinorMyDailyRouteView from './auth/minor/MinorMyDailyRouteView.vue'
+import MinorMyRoutesView from './auth/minor/MinorMyRoutesView.vue'
+import MinorReportBackView from './auth/minor/MinorReportBackView.vue'
+
 class Views {
   static HomeView = HomeView
   static LoginView = LoginView
@@ -57,6 +61,9 @@ class Views {
   static RoutesListView = RoutesListView
   static RoutesConsultView = RoutesConsultView
   static ProfileMinorView = ProfileMinorView
+  static MinorMyDailyRouteView = MinorMyDailyRouteView
+  static MinorMyRoutesView = MinorMyRoutesView
+  static MinorReportBackView = MinorReportBackView
 }
 
 

@@ -37,3 +37,4 @@ export { default as CreateRouteComp } from './admin/route/create/CreateRouteComp
 export { default as InitRouteComp } from './admin/route/init/InitRouteComp.vue'
 export { default as HeaderMobileDriver} from "./global/Header/HeaderMobileDriver.vue"
 export {default as AsideMinorComp} from "./global/AsideAdmin/AsideMinorComp.vue"
+export {default as DataMinorComp} from "./auth/minor/DataCompMinor.vue"

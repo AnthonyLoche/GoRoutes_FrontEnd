@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { HeaderMain, AsideMinorComp, LoadingComp, FooterMain } from '@/components'
+import { HeaderMain, AsideMinorComp, LoadingComp, FooterMain} from '@/components'
 
 const isLoading = ref(true)
 const hasError = ref(false)
@@ -35,6 +35,7 @@ onMounted(() => {
                 <AsideMinorComp />
             </div>
             <div class="view">
+                <h1>Minhas Rotas</h1>
             </div>
         </div>
     </div>

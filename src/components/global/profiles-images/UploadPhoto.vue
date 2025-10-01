@@ -70,7 +70,7 @@ async function uploadPhoto() {
 </script>
 
 <template>
-  <v-dialog v-model="isOpen" max-width="600">
+  <v-dialog v-model="isOpen" max-width="750" height="750">
     <v-card>
       <div class="title">
         <div class="text">
@@ -122,7 +122,7 @@ async function uploadPhoto() {
 }
 .cropper-wrapper {
   margin-top: 1rem;
-  max-height: 400px;
+  max-height: 600px;
   overflow: hidden;
 }
 </style>
