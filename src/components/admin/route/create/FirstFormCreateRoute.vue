@@ -189,7 +189,6 @@ onMounted(async () => {
 
 .first-form-create-route f {
     min-height: 100vh;
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .form-grid {

@@ -31,6 +31,7 @@ const routes = [
       { path: 'admin/drivers/init-daily-route/:id', component: Views.DriverInitDailyRouteView },
       { path: 'admin/routes/list', component: Views.RoutesListView },
       {path: 'admin/routes/consult', component: Views.RoutesConsultView}
+
     ],
   },
   {
@@ -42,6 +43,7 @@ const routes = [
       { path: 'register', component: Views.RegisterView },
       { path: 'profile/responsible', component: Views.ProfileResponsibleView },
       { path: 'profile/driver', component: Views.ProfileDriverView },
+      { path: 'driver/completed-routes', component: Views.DriverAdminCompletedRoutesView },
       { path: 'profile/minor', component: Views.ProfileMinorView },
       { path: 'minor/my-daily-route', component: Views.MinorMyDailyRouteView },
       { path: 'minor/report-back', component: Views.MinorReportBackView },

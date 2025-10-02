@@ -30,6 +30,8 @@ import ProfileMinorView from './auth/minor/ProfileMinorView.vue'
 import MinorMyDailyRouteView from './auth/minor/MinorMyDailyRouteView.vue'
 import MinorMyRoutesView from './auth/minor/MinorMyRoutesView.vue'
 import MinorReportBackView from './auth/minor/MinorReportBackView.vue'
+import DashboardDetailView from './admin/DashboardDetailView.vue'
+import DriverAdminCompletedRoutesView from './admin/drivers/DriverAdminCompletedRoutesView.vue'
 
 class Views {
   static HomeView = HomeView
@@ -64,6 +66,8 @@ class Views {
   static MinorMyDailyRouteView = MinorMyDailyRouteView
   static MinorMyRoutesView = MinorMyRoutesView
   static MinorReportBackView = MinorReportBackView
+  static DashboardDetailView = DashboardDetailView
+  static DriverAdminCompletedRoutesView = DriverAdminCompletedRoutesView
 }
 
 

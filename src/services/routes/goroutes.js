@@ -3,7 +3,7 @@ import api from "@/plugins/axios";
 class GoRoutesService {
     async getRoutes() {
         try {
-            const response = await api.get("/goroutes/filter-active-routes/");
+            const response = await api.get("/goroutes/routes/");
             return response.data;
         } catch (error) {
             console.error("Error fetching routes:", error);

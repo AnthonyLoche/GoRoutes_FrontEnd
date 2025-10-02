@@ -154,8 +154,7 @@ const getMainAddress = (passenger) => {
 
 <style scoped>
 .confirmation-container {
-  min-height: 70vh;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 60vh;
 }
 
 .confirmation-grid {

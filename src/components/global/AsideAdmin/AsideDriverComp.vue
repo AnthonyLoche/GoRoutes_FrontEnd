@@ -36,7 +36,7 @@ const menuItems = ref([
     { name: 'Dashboard', icon: markRaw(Dashboard), route: '/default/admin/dashboard', color: '#5050ff' },
     { name: 'Perfil', icon: markRaw(AccountIcon), route: '/blank/profile/driver', color: '#5050ff' },
     { name: 'Minha Rotas', icon: markRaw(MapMarkerPathIcon), route: '/blank/driver/my-routes', color: '#5050ff' },
-    { name: 'Rotas Feitas', icon: markRaw(CheckCircleIcon), route: '/completed-routes', color: '#5050ff' },
+    { name: 'Rotas Feitas', icon: markRaw(CheckCircleIcon), route: '/blank/driver/completed-routes', color: '#5050ff' },
 ]);
 
 const isMobile = ref(false);

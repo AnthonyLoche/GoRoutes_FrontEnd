@@ -45,3 +45,7 @@ export { default as HowItWorksSectionComp } from './homeview/HowItWorksSectionCo
 export { default as UserTypesSectionComp } from './homeview/UserTypesSectionComp.vue'
 export { default as TeamSectionComp } from './homeview/TeamSectionComp.vue'
 export { default as CTASectionComp } from './homeview/CTASectionComp.vue'
+export {default as TableRoutes} from "./admin/route/list/TableRoutes.vue"
+export {default as CardListRoute} from "./admin/route/list/CardListRoute.vue"
+export {default as DashboardMainComp} from './admin/dashboard/DashboardMainComp.vue'
+export {default as DashboardDetailsComp} from './admin/dashboard/DashboardDetailsComp.vue'

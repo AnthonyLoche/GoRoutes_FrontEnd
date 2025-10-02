@@ -272,7 +272,6 @@ onMounted(() => {
 
 .passenger-selection-container {
   min-height: 100vh;
-  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Header */

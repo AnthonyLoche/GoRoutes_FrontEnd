@@ -4,15 +4,30 @@
 
     <div class="sidebar" :class="{ show: isSidebarVisible }">
       <div class="menu-category" v-for="(category, index) in menuItems" :key="index">
-        <div
+        <!-- Se não tem subitens, é um link direto -->
+        <router-link
+          v-if="category.subItems.length === 0"
+          :to="category.route"
           class="menu-item"
           :class="{ active: category.active }"
-          @click="category.name === 'Configurações' ? activateCategory(index) : toggleCategory(index)">
+          @click="activateCategory(index)">
           <div class="menu-icon">
             <component :is="category.icon" />
           </div>
           <span>{{ category.name }}</span>
-          <span v-if="category.subItems.length > 0" class="arrow" :class="{ rotated: category.expanded }">▼</span>
+        </router-link>
+
+        <!-- Se tem subitens, mantém o comportamento original -->
+        <div
+          v-else
+          class="menu-item"
+          :class="{ active: category.active }"
+          @click="toggleCategory(index)">
+          <div class="menu-icon">
+            <component :is="category.icon" />
+          </div>
+          <span>{{ category.name }}</span>
+          <span class="arrow" :class="{ rotated: category.expanded }">▼</span>
         </div>
 
         <Transition name="accordion">
@@ -38,22 +53,27 @@
 import { ref, markRaw } from 'vue'
 
 import CarIcon from 'vue-material-design-icons/Car.vue'
-import AccountIcon from 'vue-material-design-icons/Account.vue'
 import MapMarkerPathIcon from 'vue-material-design-icons/MapMarkerPath.vue'
 import CogIcon from 'vue-material-design-icons/Cog.vue'
-import UserIcon from 'vue-material-design-icons/AccountCircle.vue'
-// import CreditCardIcon from 'vue-material-design-icons/CreditCard.vue'
-// import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
 import RouteIcon from 'vue-material-design-icons/MapMarker.vue'
 import AccountMultiple from "vue-material-design-icons/AccountMultiple.vue"
 import HumanMaleBoy from "vue-material-design-icons/HumanMaleBoy.vue"
 import SeatPassenger from "vue-material-design-icons/SeatPassenger.vue"
 import CardAccountDetails from "vue-material-design-icons/CardAccountDetails.vue"
 import Steering from "vue-material-design-icons/Steering.vue"
+import Dashboard from "vue-material-design-icons/ViewDashboard.vue"
 
 const isSidebarVisible = ref(true)
 
 const menuItems = ref([
+  {
+    name: 'Dashboard',
+    icon: markRaw(Dashboard),
+    route: '/default/admin/dashboard', // Nova rota para o dashboard
+    expanded: false,
+    active: false,
+    subItems: []
+  },
   {
     name: 'Veículos',
     icon: markRaw(CarIcon),
@@ -99,6 +119,7 @@ const menuItems = ref([
   {
     name: 'Configurações',
     icon: markRaw(CogIcon),
+    route: '/default/admin/settings', // Nova rota para configurações
     expanded: false,
     active: false,
     subItems: []
@@ -123,6 +144,10 @@ const toggleCategory = (index) => {
 const activateCategory = (index) => {
   menuItems.value.forEach((category, i) => {
     category.active = i === index
+    // Fecha todos os submenus ao ativar um item sem subitens
+    if (category.subItems.length === 0) {
+      category.expanded = false
+    }
   })
 }
 
