@@ -14,28 +14,47 @@
       </div>
       <div class="filter-group">
         <label class="filter-label">Filtrar por:</label>
-        <select v-model="gradeFilter" class="filter-select">
-          <option value="">Todas as séries</option>
-          <option v-for="grade in availableGrades" :key="grade" :value="grade">
-            {{ grade }}
-          </option>
-        </select>
-        <select v-model="cityFilter" class="filter-select">
-          <option value="">Todas as cidades</option>
-          <option v-for="city in availableCities" :key="city" :value="city">
-            {{ city }}
-          </option>
-        </select>
-        <select v-model="studentFilter" class="filter-select">
-          <option value="">Todos os tipos</option>
-          <option value="true">Apenas estudantes</option>
-          <option value="false">Não estudantes</option>
-        </select>
-      </div>
-      <div class="action-buttons">
-        <v-btn color="error" @click="clearAllSelection" rounded="1">
-          ✗ Limpar Seleção
-        </v-btn>
+        
+        <!-- Select de Série -->
+        <div class="filter-select-wrapper">
+          <v-select
+            v-model="gradeFilter"
+            :items="availableGrades"
+            placeholder="Todas as séries"
+            variant="outlined"
+            density="compact"
+            hide-details
+          ></v-select>
+        </div>
+
+        <!-- Select de Bairro -->
+        <div class="filter-select-wrapper">
+          <v-select
+            v-model="neighborhoodFilter"
+            :items="availableNeighborhoods"
+            placeholder="Todos os bairros"
+            variant="outlined"
+            density="compact"
+            hide-details
+          ></v-select>
+        </div>
+
+        <!-- Select de Tipo -->
+        <div class="filter-select-wrapper">
+          <v-select
+            v-model="studentFilter"
+            :items="studentTypes"
+            placeholder="Todos os tipos"
+            variant="outlined"
+            density="compact"
+            hide-details
+          ></v-select>
+        </div>
+        <div class="action-buttons">
+          <v-btn color="error" @click="clearAllSelection" rounded="1">
+            ✗ Limpar Seleção
+          </v-btn>
+        </div>
       </div>
     </div>
 
@@ -94,16 +113,15 @@
       <h3>Nenhum passageiro encontrado</h3>
       <p>Tente ajustar os filtros ou termos de busca</p>
     </div>
-
-   
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue"
-import { usePassengersStore } from "@/stores"
+import { ref, computed, onMounted, watch } from "vue"
+import { usePassengersStore, useGoRoutesStore } from "@/stores"
 
 const passengersStore = usePassengersStore()
+const goRoutesStore = useGoRoutesStore()
 
 const props = defineProps({
   preSelected: {
@@ -112,11 +130,20 @@ const props = defineProps({
   }
 })
 
-const selectedPassengers = ref([...props.preSelected])
+// Usa os passageiros selecionados da store
+const selectedPassengers = ref([...goRoutesStore.state_create.create_route.passengers_list])
+
 const searchQuery = ref("")
 const gradeFilter = ref("")
-const cityFilter = ref("")
+const neighborhoodFilter = ref("")
 const studentFilter = ref("")
+
+// Opções para o select de tipo de estudante
+const studentTypes = [
+  { title: 'Todos os tipos', value: '' },
+  { title: 'Apenas estudantes', value: 'true' },
+  { title: 'Não estudantes', value: 'false' }
+]
 
 const allPassengers = computed(() => passengersStore.state.passengers)
 
@@ -127,19 +154,26 @@ const availableGrades = computed(() => {
       grades.add(passenger.passenger_data.student_data.grade)
     }
   })
-  return Array.from(grades).sort()
+  const gradeArray = Array.from(grades).sort()
+  return [
+    { title: 'Todas as séries', value: '' },
+    ...gradeArray.map(grade => ({ title: grade, value: grade }))
+  ]
 })
 
-const availableCities = computed(() => {
-  const cities = new Set()
+const availableNeighborhoods = computed(() => {
+  const neighborhoods = new Set()
   allPassengers.value.forEach(passenger => {
-    const address = getMainAddress(passenger)
-    if (address) {
-      const city = address.split(",")[0].split(" - ").pop()
-      cities.add(city)
+    const address = passenger.passenger_data?.address?.find(addr => addr.is_main)
+    if (address?.neighborhood) {
+      neighborhoods.add(address.neighborhood)
     }
   })
-  return Array.from(cities).sort()
+  const neighborhoodArray = Array.from(neighborhoods).sort()
+  return [
+    { title: 'Todos os bairros', value: '' },
+    ...neighborhoodArray.map(neighborhood => ({ title: neighborhood, value: neighborhood }))
+  ]
 })
 
 const filteredPassengers = computed(() => {
@@ -160,10 +194,10 @@ const filteredPassengers = computed(() => {
     )
   }
 
-  if (cityFilter.value) {
+  if (neighborhoodFilter.value) {
     filtered = filtered.filter(passenger => {
-      const address = getMainAddress(passenger)
-      return address && address.includes(cityFilter.value)
+      const address = passenger.passenger_data?.address?.find(addr => addr.is_main)
+      return address?.neighborhood === neighborhoodFilter.value
     })
   }
 
@@ -204,6 +238,11 @@ const getMainAddress = (passenger) => {
   return `${address.street}, ${address.number} - ${address.neighborhood}, ${address.city} - ${address.state}`
 }
 
+// Sincroniza com a store
+watch(selectedPassengers, (newValue) => {
+  goRoutesStore.state_create.create_route.passengers_list = [...newValue]
+}, { deep: true })
+
 onMounted(() => {
   passengersStore.getPassengers()
 
@@ -212,6 +251,7 @@ onMounted(() => {
   }
 })
 </script>
+
 
 <style scoped>
 .passenger-selection-container {
@@ -231,7 +271,6 @@ onMounted(() => {
 }
 
 .passenger-selection-container {
-  background-color: var(--bg-light);
   min-height: 100vh;
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -375,19 +414,12 @@ onMounted(() => {
   font-size: 0.9rem;
 }
 
-.filter-select {
-  padding: 0.5rem 0.75rem;
-  border: 2px solid #e2e8f0;
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.filter-select-wrapper {
+  min-width: 150px;
 }
 
-.filter-select:focus {
-  outline: none;
-  border-color: var(--accent);
+.filter-select-wrapper .v-select {
+  font-size: 0.9rem;
 }
 
 .action-buttons {
@@ -715,7 +747,7 @@ onMounted(() => {
     align-items: stretch;
   }
   
-  .filter-select {
+  .filter-select-wrapper {
     width: 100%;
   }
   
@@ -729,4 +761,4 @@ onMounted(() => {
     align-items: flex-start;
   }
 }
-  </style>
+</style>

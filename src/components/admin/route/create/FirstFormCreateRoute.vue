@@ -1,146 +1,178 @@
-    <template>
+<template>
     <div class="first-form-create-route f">
-
         <div class="form-grid">
-        <div class="form-section">
-            <div class="section-header">
-            <h3>📋 Informações Básicas</h3>
+            <div class="form-section">
+                <div class="section-header">
+                    <h3>📋 Informações Básicas</h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="route-name">Nome da Rota</label>
+                    <v-text-field
+                        id="route-name"
+                        v-model="routeData.name"
+                        placeholder="Ex: Rota Sul"
+                        variant="outlined"
+                        hide-details
+                    ></v-text-field>
+                </div>
+                
+                <div class="form-group">
+                    <label for="origin">Origem</label>
+                    <v-text-field
+                        id="origin"
+                        v-model="routeData.origin"
+                        placeholder="Endereço de origem completo"
+                        variant="outlined"
+                        hide-details
+                    ></v-text-field>
+                </div>
+                
+                <div class="form-group">
+                    <label for="destination">Destino</label>
+                    <v-text-field
+                        id="destination"
+                        v-model="routeData.destination"
+                        placeholder="Endereço de destino completo"
+                        variant="outlined"
+                        hide-details
+                    ></v-text-field>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <v-checkbox
+                            v-model="routeData.auto_recalculate"
+                            hide-details
+                        ></v-checkbox>
+                        Recalcular automaticamente
+                    </label>
+                    <small>O sistema recalculará a rota automaticamente baseado nos passageiros</small>
+                </div>
             </div>
-            <div class="form-group">
-            <label for="route-name">Nome da Rota</label>
-            <input 
-                id="route-name"
-                type="text" 
-                v-model="routeData.name"
-                placeholder="Ex: Rota Sul"
-            />
-            </div>
-            <div class="form-group">
-            <label for="origin">Origem</label>
-            <input 
-                id="origin"
-                v-model="routeData.origin"
-                placeholder="Endereço de origem completo"
-            />
-            </div>
-            <div class="form-group">
-            <label for="destination">Destino</label>
-            <input 
-                id="destination"
-                v-model="routeData.destination"
-                placeholder="Endereço de destino completo"
-            />
-            </div>
-           
-            <div class="form-group">
-            <label class="checkbox-label">
-                <input 
-                type="checkbox" 
-                v-model="routeData.auto_recalculate"
-                />
-                <span class="checkmark">✓</span>
-                Recalcular automaticamente
-            </label>
-            <small>O sistema recalculará a rota automaticamente baseado nos passageiros</small>
-            </div>
-        </div>
 
-        <div class="form-section">
-            <div class="section-header">
-            <h3>🕐 Horários</h3>
-            </div>
-            <div class="time-grid">
-            <div class="form-group">
-                <label for="init-hour">Horário de Início</label>
-                <input 
-                id="init-hour"
-                type="time" 
-                v-model="routeData.init_hour"
-                />
-            </div>
-            <div class="form-group">
-                <label for="end-hour">Horário de Fim</label>
-                <input 
-                id="end-hour"
-                type="time" 
-                v-model="routeData.end_hour"
-                />
-            </div>
-            </div>
-            
-   <div class="section-header">
-            <h3>🚗 Veículo e Motorista</h3>
-            </div>
-            <div class="form-group">
-            <label for="vehicle">Veículo</label>
-            <select 
-                id="vehicle"
-                v-model="routeData.vehicle"
-            >
-                <option value="">Selecione um veículo</option>
-                <option 
-                v-for="vehicle in mockVehicles" 
-                :key="vehicle.id" 
-                :value="vehicle.id"
-                >
-                {{ vehicle.name }}
-                </option>
-            </select>
-            </div>
-            <div class="form-group">
-            <label for="driver">Motorista</label>
-            <select 
-                id="driver"
-                v-model="routeData.driver"
-            >
-                <option value="">Selecione um motorista</option>
-                <option 
-                v-for="driver in mockDrivers" 
-                :key="driver.id" 
-                :value="driver.id"
-                >
-                {{ driver.name }}
-                </option>
-            </select>
-            </div>
-        </div>        
+            <div class="form-section">
+                <div class="section-header">
+                    <h3>🕐 Horários</h3>
+                </div>
+                
+                <div class="time-grid">
+                    <div class="form-group">
+                        <label for="init-hour">Horário de Início</label>
+                        <v-text-field
+                            id="init-hour"
+                            type="time"
+                            v-model="routeData.init_hour"
+                            variant="outlined"
+                            hide-details
+                        ></v-text-field>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="end-hour">Horário de Fim</label>
+                        <v-text-field
+                            id="end-hour"
+                            type="time"
+                            v-model="routeData.end_hour"
+                            variant="outlined"
+                            hide-details
+                        ></v-text-field>
+                    </div>
+                </div>
+                
+                <div class="section-header">
+                    <h3>🚗 Veículo e Motorista</h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="vehicle">Veículo</label>
+                    <v-select
+                        id="vehicle"
+                        v-model="routeData.vehicle"
+                        :items="availableVehicles"
+                        item-title="displayName"
+                        item-value="id"
+                        placeholder="Selecione um veículo"
+                        variant="outlined"
+                        hide-details
+                        :loading="vehiclesStore.state.loading"
+                    ></v-select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="driver">Motorista</label>
+                    <v-select
+                        id="driver"
+                        v-model="routeData.driver"
+                        :items="availableDrivers"
+                        item-title="displayName"
+                        item-value="id"
+                        placeholder="Selecione um motorista"
+                        variant="outlined"
+                        hide-details
+                        :loading="driversStore.state.loading"
+                    ></v-select>
+                </div>
+            </div>        
         </div>
     </div>
-    </template>
+</template>
 
-    <script setup>
-    import { ref } from 'vue'
+<script setup>
+import { ref, watch, computed, onMounted } from 'vue'
+import { useGoRoutesStore, useDriversStore, useVehiclesStore } from '@/stores'
 
-    const routeData = ref({
-    name: "Rota Sul",
-    origin: "Avenida Rolf Wiest, 333 - Bom Retiro, Joinville - SC, 89223-005",
-    destination: "BR-280 - Colégio Agrícola, 5200, Araquari - SC, 89245-000",
-    distance: 0,
-    init_hour: "07:00",
-    end_hour: "07:45",
-    passengers_list: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-    auto_recalculate: true,
-    vehicle: 1,
-    driver: 1
-    })
+const goRoutesStore = useGoRoutesStore()
+const driversStore = useDriversStore()
+const vehiclesStore = useVehiclesStore()
 
+// Usa os dados da store
+const routeData = ref(goRoutesStore.state_create.create_route)
 
-    const mockVehicles = ref([
-    { id: 1, name: 'Van Mercedes - ABC1234' },
-    { id: 2, name: 'Ônibus Volkswagen - DEF5678' },
-    { id: 3, name: 'Micro-ônibus Iveco - GHI9012' }
+// Computed para motoristas disponíveis
+const availableDrivers = computed(() => {
+    return driversStore.state.drivers
+        .filter(driver => driver.driver_data?.is_active)
+        .map(driver => ({
+            id: driver.driver_data.id,
+            displayName: `${driver.name} - ${driver.driver_data.cnh}`,
+            name: driver.name,
+            cnh: driver.driver_data.cnh,
+            cpf: driver.driver_data.cpf
+        }))
+})
+
+// Computed para veículos disponíveis
+const availableVehicles = computed(() => {
+    return vehiclesStore.state.vehicles
+        .filter(vehicle => vehicle.status === 'disponível')
+        .map(vehicle => ({
+            id: vehicle.id,
+            displayName: `${vehicle.model} - ${vehicle.plate} (${vehicle.seats} lugares)`,
+            model: vehicle.model,
+            plate: vehicle.plate,
+            seats: vehicle.seats,
+            status: vehicle.status
+        }))
+})
+
+// Sincroniza com a store
+watch(routeData, (newValue) => {
+    goRoutesStore.state_create.create_route = { ...newValue }
+}, { deep: true })
+
+// Carrega os dados ao montar o componente
+onMounted(async () => {
+    await Promise.all([
+        driversStore.getDrivers(),
+        vehiclesStore.getVehicles()
     ])
+})
+</script>
 
-    const mockDrivers = ref([
-    { id: 1, name: 'João Silva' },
-    { id: 2, name: 'Maria Santos' },
-    { id: 3, name: 'Pedro Oliveira' }
-    ])
-
-    </script>
-
-    <style scoped>
-    .first-form-create-route f {
+<style scoped>
+/* Mantém o CSS original */
+.first-form-create-route f {
     --primary: #022840;
     --primary-dark: #011a2b;
     --secondary: #0d4f6b;
@@ -153,22 +185,22 @@
     --radius: 12px;
     --success: #10b981;
     --warning: #f59e0b;
-    }
+}
 
-    .first-form-create-route f {
+.first-form-create-route f {
     padding: 2rem;
     min-height: 100vh;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+}
 
-    .form-grid {
+.form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 2rem;
     margin-bottom: 2rem;
-    }
+}
 
-    .form-section {
+.form-section {
     background: white;
     border-radius: var(--radius);
     padding: 2rem;
@@ -176,9 +208,9 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    }
+}
 
-    .form-section::before {
+.form-section::before {
     content: '';
     position: absolute;
     top: 0;
@@ -188,39 +220,39 @@
     background: linear-gradient(90deg, var(--primary), var(--accent));
     transform: scaleX(0);
     transition: transform 0.3s ease;
-    }
+}
 
-    .section-header {
+.section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 2px solid var(--bg-light);
-    }
+}
 
-    .section-header h3 {
+.section-header h3 {
     color: var(--primary);
     margin: 0;
     font-size: 1.2rem;
     font-weight: 600;
-    }
+}
 
-    .form-group {
+.form-group {
     margin-bottom: 1.5rem;
-    }
+}
 
-    .form-group label {
+.form-group label {
     display: block;
     margin-bottom: 0.5rem;
     color: var(--text);
     font-weight: 500;
     font-size: 0.9rem;
-    }
+}
 
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
+.form-group input,
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 0.75rem;
     border: 2px solid #e2e8f0;
@@ -228,31 +260,31 @@
     font-size: 0.9rem;
     transition: all 0.3s ease;
     background: white;
-    }
+}
 
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none;
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
-    }
+}
 
-    .form-group textarea {
+.form-group textarea {
     resize: vertical;
     min-height: 80px;
-    }
+}
 
-    .distance-input {
+.distance-input {
     display: flex;
     gap: 0.5rem;
-    }
+}
 
-    .distance-input input {
+.distance-input input {
     flex: 1;
-    }
+}
 
-    .calculate-btn {
+.calculate-btn {
     background: var(--secondary);
     color: white;
     border: none;
@@ -262,29 +294,27 @@
     transition: all 0.3s ease;
     font-size: 0.8rem;
     white-space: nowrap;
-    }
+}
 
-
-
-    .time-grid {
+.time-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    }
+}
 
-    .checkbox-label {
+.checkbox-label {
     display: flex !important;
     align-items: center;
     gap: 0.5rem;
     cursor: pointer;
     margin-bottom: 0.5rem !important;
-    }
+}
 
-    .checkbox-label input[type="checkbox"] {
+.checkbox-label input[type="checkbox"] {
     display: none;
-    }
+}
 
-    .checkmark {
+.checkmark {
     width: 20px;
     height: 20px;
     border: 2px solid #e2e8f0;
@@ -295,23 +325,23 @@
     transition: all 0.3s ease;
     font-size: 0.8rem;
     color: transparent;
-    }
+}
 
-    .checkbox-label input[type="checkbox"]:checked + .checkmark {
+.checkbox-label input[type="checkbox"]:checked + .checkmark {
     background: linear-gradient(135deg, var(--primary), var(--accent));
     border-color: var(--accent);
     color: white;
-    }
+}
 
-    .form-group small {
+.form-group small {
     display: block;
     color: var(--text-light);
     font-size: 0.8rem;
     margin-top: 0.25rem;
-    }
+}
 
-    /* Responsivo */
-    @media (max-width: 768px) {
+/* Responsivo */
+@media (max-width: 768px) {
     .create-route-container {
         padding: 1rem;
     }
@@ -329,6 +359,34 @@
     .time-grid {
         grid-template-columns: 1fr;
     }
-    
-    }
-    </style>
+}
+
+/* Ajustes para os componentes do Vuetify */
+:deep(.v-text-field .v-field) {
+    border-radius: var(--radius) !important;
+    font-size: 0.9rem !important;
+}
+
+:deep(.v-text-field .v-field__field) {
+    min-height: auto !important;
+}
+
+:deep(.v-select .v-field) {
+    border-radius: var(--radius) !important;
+    font-size: 0.9rem !important;
+}
+
+:deep(.v-checkbox .v-selection-control) {
+    min-height: auto !important;
+    margin: 0 !important;
+}
+
+:deep(.v-checkbox .v-selection-control__input) {
+    margin-right: 0 !important;
+}
+
+:deep(.v-checkbox) {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+</style>

@@ -24,6 +24,19 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
       date: '2024-02-02',
       route: null,
     },
+
+    create_route: {
+      name: '',
+      origin: '',
+      destination: '',
+      distance: 0,
+      init_hour: null,
+      end_hour: null,
+      passengers_list: [],
+      auto_recalculate: true,
+      vehicle: null,
+      driver: null,
+    },
   })
 
   const authStore = useAuthStore()
@@ -44,30 +57,29 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
   const getActiveRoutes = async () => {
     state.loading = true
     try {
-      if(authStore.state.user.driver_data){
-      const response = await GoRoutesService.getActiveRoutes()
-      state.activeRoutes = response
+      if (authStore.state.user.driver_data) {
+        const response = await GoRoutesService.getActiveRoutes()
+        state.activeRoutes = response
 
-      let allRoutes = []
+        let allRoutes = []
 
-      for (const route of state.activeRoutes) {
-        allRoutes.push({
-          route_id: route.id,
-          driver_name: route.driver.user.name,
-          driver_id: route.driver.id,
-          email: route.driver.user.email,
-          icon_driver: route.driver.user.picture?.file,
-          my_location: route.driver.user.my_location,
-          vehicle: route.vehicle.id,
-          route_name: route.name,
-        })
+        for (const route of state.activeRoutes) {
+          allRoutes.push({
+            route_id: route.id,
+            driver_name: route.driver.user.name,
+            driver_id: route.driver.id,
+            email: route.driver.user.email,
+            icon_driver: route.driver.user.picture?.file,
+            my_location: route.driver.user.my_location,
+            vehicle: route.vehicle.id,
+            route_name: route.name,
+          })
+        }
+
+        state.transiDrivers = allRoutes
+      } else {
+        return null
       }
-
-      state.transiDrivers = allRoutes
-    }
-    else{
-      return null;
-    }
     } catch (error) {
       state.error = error
     } finally {
@@ -129,31 +141,31 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
   }
 
   const takeMyDailyRoute = async () => {
-    try{
-        const response = await GoRoutesService.takeMyDailyRoute(authStore.state.user?.driver_data?.id)
-        state.myActiveRoute = response.data?.active_route
-        return response
-    }catch(error){
-        console.log(error)
+    try {
+      const response = await GoRoutesService.takeMyDailyRoute(authStore.state.user?.driver_data?.id)
+      state.myActiveRoute = response.data?.active_route
+      return response
+    } catch (error) {
+      console.log(error)
     }
   }
 
   const markPresenceOrAbsence = async (data) => {
-    try{
-        const response = GoRoutesService.markPresenceOrAbsence(data);
-        return response
-    }catch(error){
-        console.error(error)
+    try {
+      const response = GoRoutesService.markPresenceOrAbsence(data)
+      return response
+    } catch (error) {
+      console.error(error)
     }
   }
 
-  const refreshDailyRouteById = async (id) =>{
-    try{
-        const response = await GoRoutesService.refreshDailyRouteById(id);
-        state.myActiveRoute = response.data
-        return response
-    }catch(error){
-        console.log(error)
+  const refreshDailyRouteById = async (id) => {
+    try {
+      const response = await GoRoutesService.refreshDailyRouteById(id)
+      state.myActiveRoute = response.data
+      return response
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -169,6 +181,6 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     setDailyRouteOriginal,
     takeMyDailyRoute,
     markPresenceOrAbsence,
-    refreshDailyRouteById
+    refreshDailyRouteById,
   }
 })

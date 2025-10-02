@@ -11,15 +11,22 @@
         </div>
       </div>
 
-      <!-- Botão de salvar -->
-      <button 
-        class="save-button"
-        @click="handleSave"
-        :disabled="loading"
-      >
-        <span v-if="loading">💾 Salvando...</span>
-        <span v-else>💾 Salvar Rota</span>
-      </button>
+      <v-tooltip location="top">
+        <template v-slot:activator="{ props }">
+          <button 
+            v-bind="props"
+            class="save-button"
+            :class="{ 'save-button--disabled': !isFormValid }"
+            @click="handleSave"
+            :disabled="loading || !isFormValid"
+          >
+            <span v-if="loading">💾 Salvando...</span>
+            <span v-else>💾 Salvar Rota</span>
+          </button>
+        </template>
+        <span v-if="!isFormValid">Preencha todos os campos corretamente</span>
+        <span v-else>Clique para salvar a rota</span>
+      </v-tooltip>
     </div>
 
     <transition name="fade" mode="out-in">
@@ -30,7 +37,7 @@
         />
         <div class="navigation-buttons">
           <v-btn 
-          variant="tonal" 
+            variant="tonal" 
             @click="prevForm" 
             :disabled="currentStep === 0"
             rounded="1"
@@ -44,6 +51,7 @@
             :disabled="currentStep === forms.length - 1"
             rounded="1"
             append-icon="mdi-arrow-right"
+            v-if="currentStep != 2"
           >
             Próximo
           </v-btn>
@@ -58,31 +66,32 @@ import { ref, computed } from 'vue'
 import Map from 'vue-material-design-icons/Map.vue'
 import FirstFormCreateRoute from './FirstFormCreateRoute.vue'
 import SecondFormCreateRoute from './SecondFormCreateRoute.vue'
+import ConfirmCreateRouteComp from './ConfirmCreateRouteComp.vue'
+import { useGoRoutesStore } from '@/stores'
 
-// Lista de formulários
-const forms = [FirstFormCreateRoute, SecondFormCreateRoute]
+const forms = [FirstFormCreateRoute, SecondFormCreateRoute, ConfirmCreateRouteComp]
 const currentStep = ref(0)
+const goRoutesStore = useGoRoutesStore()
 
-// Dados da rota compartilhados entre formulários
-const routeData = ref({
-  name: "Rota Sul",
-  origin: "Avenida Rolf Wiest, 333 - Bom Retiro, Joinville - SC, 89223-005",
-  destination: "BR-280 - Colégio Agrícola, 5200, Araquari - SC, 89245-000",
-  distance: 0,
-  init_hour: "07:00",
-  end_hour: "07:45",
-  passengers_list: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
-  auto_recalculate: true,
-  vehicle: 1,
-  driver: 1
+const routeData = computed(() => goRoutesStore.state_create.create_route)
+
+const isFormValid = computed(() => {
+  const data = routeData.value
+  return (
+    data.name &&
+    data.origin &&
+    data.destination &&
+    data.init_hour &&
+    data.end_hour &&
+    data.vehicle &&
+    data.driver
+  )
 })
 
 const loading = ref(false)
 
-// Computed para o formulário atual
 const currentForm = computed(() => forms[currentStep.value])
 
-// Funções para navegação
 const nextForm = () => {
   if(currentStep.value < forms.length - 1){
     currentStep.value++
@@ -95,19 +104,18 @@ const prevForm = () => {
   }
 }
 
-// Função para salvar
 const handleSave = async () => {
+  if (!isFormValid.value) return
+  
   loading.value = true
   setTimeout(() => {
     loading.value = false
     alert('Rota criada com sucesso!')
-    console.log('Dados da rota:', routeData.value)
   }, 2000)
 }
 </script>
 
 <style scoped>
-/* Transição suave */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.4s ease;
 }
@@ -115,12 +123,11 @@ const handleSave = async () => {
   opacity: 0;
 }
 
-/* Botões de navegação */
 .navigation-buttons {
   display: flex;
   justify-content: flex-end;
   margin-top: 2rem;
-    gap: 1rem;
+  gap: 1rem;
 }
 
 .nav-button {
@@ -145,7 +152,6 @@ const handleSave = async () => {
   cursor: not-allowed;
 }
 
-/* Mantendo o CSS existente para container e header */
 .create-route-container {
   --primary: #022840;
   --accent: #1a73e8;
@@ -183,21 +189,37 @@ const handleSave = async () => {
 
 .save-button {
   background: linear-gradient(135deg, var(--primary), var(--accent));
-  color:white;
-  border:none;
-  border-radius:25px;
-  padding:0.75rem 2rem;
-  font-weight:600;
-  cursor:pointer;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  overflow:hidden;
-  box-shadow:0 4px 15px rgba(26,115,232,0.3);
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+}
+
+.save-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(26, 115, 232, 0.4);
 }
 
 .save-button:disabled {
-  opacity:0.7;
-  cursor:not-allowed;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.save-button--disabled {
+  background: #e2e8f0 !important;
+  color: #94a3b8 !important;
+  box-shadow: 0 4px 15px rgba(148, 163, 184, 0.3) !important;
+}
+
+.save-button--disabled:hover {
+  transform: none !important;
+  box-shadow: 0 4px 15px rgba(148, 163, 184, 0.3) !important;
 }
 
 span{
