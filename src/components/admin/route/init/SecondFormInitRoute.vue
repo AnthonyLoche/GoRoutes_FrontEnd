@@ -4,9 +4,11 @@
     <div class="route-info-header">
 
       <div class="route-summary">
-        <h3>👥 Passageiros da Rota</h3>
+        <h3>
+        <AccountMultiple size="30" />
+          Passageiros da Rota
+        </h3>
         <p>Selecione quais passageiros farão parte desta viagem</p>
-        {{ goRoutesStore.state_create.daily_route }}
       </div>
       <div class="selection-stats">
         <div class="stat-item">
@@ -119,6 +121,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useGoRoutesStore } from '@/stores'
+import AccountMultiple from 'vue-material-design-icons/AccountMultiple.vue'
 
 const goRoutesStore = useGoRoutesStore()
 

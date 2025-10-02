@@ -4,11 +4,10 @@
     <div class="route-header">
       <div class="header-content">
         <div class="header-icon">
-          <Map />
+          <Map size="50" />
         </div>
         <div>
-          <h1>Iniciar Uma Rota Diaria</h1>
-          <p>Configure todos os detalhes da sua nova rota de transporte escolar</p>
+          <h1>Iniciar Uma Rota Diária</h1>
         </div>
       </div>
       <div class="buttons_original">
@@ -145,5 +144,11 @@ const isMobile = () => windowWidth.value <= 1024
 .buttons_original{
   display: flex;
   gap: 1rem;
+}
+
+span{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

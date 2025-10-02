@@ -79,7 +79,6 @@ const userTypes = [
 
 <style scoped>
 .user-types {
-  background-color: var(--bg-light);
   padding: 5rem 2rem;
   max-width: 1200px;
   margin: 0 auto;

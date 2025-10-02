@@ -223,7 +223,7 @@ span {
 
 .stat-label {
     font-size: 0.875rem;
-    color: rgb(var(--v-theme-on-surface-variant));
+    color: black;
     margin-top: 0.25rem;
 }
 

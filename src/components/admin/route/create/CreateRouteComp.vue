@@ -4,11 +4,10 @@
     <div class="route-header">
       <div class="header-content">
         <div class="header-icon">
-          <Map />
+          <Map size="50" />
         </div>
         <div>
           <h1>Criar Nova Rota</h1>
-          <p>Configure todos os detalhes da sua nova rota de transporte escolar</p>
         </div>
       </div>
 
@@ -199,5 +198,11 @@ const handleSave = async () => {
 .save-button:disabled {
   opacity:0.7;
   cursor:not-allowed;
+}
+
+span{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

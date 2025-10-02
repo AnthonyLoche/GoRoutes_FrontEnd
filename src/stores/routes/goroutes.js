@@ -44,7 +44,7 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
   const getActiveRoutes = async () => {
     state.loading = true
     try {
-      if(authStore.state.user.passenger_data){
+      if(authStore.state.user.driver_data){
       const response = await GoRoutesService.getActiveRoutes()
       state.activeRoutes = response
 
