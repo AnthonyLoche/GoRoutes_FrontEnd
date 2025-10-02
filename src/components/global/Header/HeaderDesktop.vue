@@ -31,7 +31,6 @@ const goToHome = () => {
         </div>
         <div class="nav">
             <div class="itens">
-                <input type="text" placeholder="Search" />
                 <button class="icon-btn">
                     <Bell />
                 </button>
@@ -98,7 +97,8 @@ h1 {
     display: flex;
     gap: 1rem;
     margin-right: 1rem;
-    align-items: center;
+    align-items: end;
+    justify-content: end;
 }
 
 input {
