@@ -188,7 +188,6 @@ onMounted(async () => {
 }
 
 .first-form-create-route f {
-    padding: 2rem;
     min-height: 100vh;
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -197,13 +196,12 @@ onMounted(async () => {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 2rem;
-    margin-bottom: 2rem;
 }
 
 .form-section {
     background: white;
     border-radius: var(--radius);
-    padding: 2rem;
+    padding: 1rem;
     box-shadow: var(--shadow);
     transition: all 0.3s ease;
     position: relative;
@@ -226,9 +224,7 @@ onMounted(async () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--bg-light);
 }
 
 .section-header h3 {
@@ -328,8 +324,8 @@ onMounted(async () => {
 }
 
 .checkbox-label input[type="checkbox"]:checked + .checkmark {
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    border-color: var(--accent);
+    background: var(--primary);
+    border-color: var(--primary);
     color: white;
 }
 

@@ -101,7 +101,7 @@ async function uploadPhoto() {
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="primary" @click="uploadPhoto" :disabled="!file">Enviar</v-btn>
+        <v-btn color="primary" @click="uploadPhoto" :disabled="!file" variant="elevated" rounded="1" append-icon="mdi-arrow-right">Enviar</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

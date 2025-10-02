@@ -21,7 +21,10 @@
             :disabled="loading || !isFormValid"
           >
             <span v-if="loading">💾 Salvando...</span>
-            <span v-else>💾 Salvar Rota</span>
+            <span v-else style="display: flex; gap: 1rem;">
+            <Download style="color: white;" />
+              Salvar Rota
+            </span>
           </button>
         </template>
         <span v-if="!isFormValid">Preencha todos os campos corretamente</span>
@@ -64,6 +67,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import Map from 'vue-material-design-icons/Map.vue'
+import Download from "vue-material-design-icons/Download.vue"
 import FirstFormCreateRoute from './FirstFormCreateRoute.vue'
 import SecondFormCreateRoute from './SecondFormCreateRoute.vue'
 import ConfirmCreateRouteComp from './ConfirmCreateRouteComp.vue'
@@ -84,7 +88,8 @@ const isFormValid = computed(() => {
     data.init_hour &&
     data.end_hour &&
     data.vehicle &&
-    data.driver
+    data.driver &&
+    data.passengers_list.length >= 5
   )
 })
 
