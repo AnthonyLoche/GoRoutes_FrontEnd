@@ -185,7 +185,6 @@ span{
   right: 0;
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   min-width: 180px;
