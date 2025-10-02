@@ -45,6 +45,11 @@ import UserIcon from 'vue-material-design-icons/AccountCircle.vue'
 // import CreditCardIcon from 'vue-material-design-icons/CreditCard.vue'
 // import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
 import RouteIcon from 'vue-material-design-icons/MapMarker.vue'
+import AccountMultiple from "vue-material-design-icons/AccountMultiple.vue"
+import HumanMaleBoy from "vue-material-design-icons/HumanMaleBoy.vue"
+import SeatPassenger from "vue-material-design-icons/SeatPassenger.vue"
+import CardAccountDetails from "vue-material-design-icons/CardAccountDetails.vue"
+import Steering from "vue-material-design-icons/Steering.vue"
 
 const isSidebarVisible = ref(true)
 
@@ -60,23 +65,23 @@ const menuItems = ref([
   },
   {
     name: 'Clientes',
-    icon: markRaw(CogIcon),
+    icon: markRaw(AccountMultiple),
     expanded: false,
     active: false,
     subItems: [
-      { name: 'Passageiros', active: false, route: '/default/admin/passengers', icon: markRaw(UserIcon) },
-      { name: 'Responsáveis', active: false, route: '/default/admin/responsibles', icon: markRaw(UserIcon) },
+      { name: 'Passageiros', active: false, route: '/default/admin/passengers', icon: markRaw(SeatPassenger) },
+      { name: 'Responsáveis', active: false, route: '/default/admin/responsibles', icon: markRaw(HumanMaleBoy) },
       // { name: 'Pagamentos', active: false, route: '/default/admin/payments', icon: markRaw(CreditCardIcon) },
       // { name: 'Contratos', active: false, route: '/default/admin/contracts', icon: markRaw(FileDocumentIcon) }
     ]
   },
   {
     name: 'Motoristas',
-    icon: markRaw(AccountIcon),
+    icon: markRaw(Steering),
     expanded: false,
     active: false,
     subItems: [
-      { name: 'Motoristas', active: false, route: '/default/admin/drivers', icon: markRaw(UserIcon) },
+      { name: 'Motoristas', active: false, route: '/default/admin/drivers', icon: markRaw(CardAccountDetails) },
       { name: 'Rastrear Motorista', active: false, route: '/default/admin/drivers/track-driver', icon: markRaw(MapMarkerPathIcon) }
     ]
   },

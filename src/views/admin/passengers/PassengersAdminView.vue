@@ -10,7 +10,7 @@ const cards = [
     {
         icon: PersonIcon,
         text: 'Total de Passageiros',
-        subText: 'Número total de passageiros cadastrados',
+        subText: 'Número total de passageiros',
         number: '50',
     },
     {

@@ -42,19 +42,6 @@ onMounted(async () => {
 function toggleEdit() {
   isEditing.value = !isEditing.value
 }
-
-function formatCPF(cpf) {
-  if (!cpf) return ''
-  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-}
-
-// Função para formatar telefone
-function formatPhone(phone) {
-  if (!phone) return ''
-  return phone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3')
-}
-
-
 </script>
 
 <template>

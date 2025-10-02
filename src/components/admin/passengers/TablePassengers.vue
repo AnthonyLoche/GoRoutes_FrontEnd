@@ -40,7 +40,7 @@ const items = computed(() => {
   return passengersStore.state.passengers
     .filter(passenger => passenger.passenger_data)
     .map(passenger => {
-      const address = passenger.passenger_data.adresses?.[0]
+      const address = passenger.passenger_data.address?.[0]
       return {
         ID: passenger.id,
         Nome: passenger.name,
@@ -122,7 +122,7 @@ onMounted(async () => {
           variant="outlined"
           density="compact"
           class="mr-3"
-          style="max-width: 300px;"
+          style="width: 300px;"
         />
 
         <v-btn

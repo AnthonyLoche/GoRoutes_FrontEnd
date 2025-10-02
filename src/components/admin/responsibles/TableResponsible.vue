@@ -122,7 +122,7 @@ onMounted(async () => {
           variant="outlined"
           density="compact"
           class="mr-3"
-          style="max-width: 300px"
+          style="width: 300px"
         />
 
         <v-btn

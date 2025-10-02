@@ -134,6 +134,7 @@ import { ref } from 'vue'
 import FooterMain from '@/components/global/Footer/FooterMain.vue'
 import { useAuthStore } from '@/stores'
 import NavBarHome from '@/components/global/NavBarHome.vue'
+import Map from "vue-material-design-icons/Map.vue"
 
 const authStore = useAuthStore()
 // Reactive data
@@ -346,10 +347,6 @@ body {
   transition: transform 0.3s ease;
 }
 
-.logo:hover {
-  transform: scale(1.05);
-}
-
 .logo-icon {
   display: inline-flex;
   align-items: center;
@@ -366,7 +363,6 @@ body {
 }
 
 .logo:hover .logo-icon {
-  transform: rotate(360deg);
   box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
 }
 

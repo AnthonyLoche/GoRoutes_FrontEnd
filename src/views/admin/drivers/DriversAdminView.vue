@@ -10,7 +10,7 @@ const cards = [
     {
         icon: PersonIcon,
         text: 'Total de Motoristas',
-        subText: 'Número total de motoristas cadastrados',
+        subText: 'Número total de motoristas',
         number: '50',
     },
     {

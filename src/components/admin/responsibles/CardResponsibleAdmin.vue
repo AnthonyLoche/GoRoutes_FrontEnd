@@ -1,4 +1,5 @@
 <script setup>
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
     icon: Object,
     text: String,
@@ -12,7 +13,7 @@ const props = defineProps({
         <div class="card-content">
             <div class="card-left">
                 <div class="icon-container">
-                    <component :is="icon" class="card-icon" />
+                    <component :is="icon"  size="50" />
                 </div>
                 <div class="text-content">
                     <h3 class="card-title">{{ text }}</h3>
