@@ -7,6 +7,7 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
   const state = reactive({
     routes: [],
     selectedRoute: null,
+    retrieveRoute: null,
     selectedRouteToInit: null,
     activeRoutes: [],
     transiDrivers: [],
@@ -53,6 +54,19 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
       state.loading = false
     }
   }
+
+  const getRoute = async (id) => {
+    state.loading = true
+    try {
+      const response = await GoRoutesService.getRoute(id)
+      state.retrieveRoute = response
+    } catch (error) {
+      state.error = error
+    } finally {
+      state.loading = false
+    }
+  }
+  
 
   const getActiveRoutes = async () => {
     state.loading = true
@@ -182,5 +196,6 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     takeMyDailyRoute,
     markPresenceOrAbsence,
     refreshDailyRouteById,
+    getRoute
   }
 })

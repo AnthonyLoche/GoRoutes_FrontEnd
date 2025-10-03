@@ -17,6 +17,7 @@ const routes = [
       { path: '', component: Views.HomeView },
       { path: 'home', component: Views.HomeView },
       { path: 'admin/dashboard', component: Views.DashboardView },
+      { path: 'admin/dashboard-details', component: Views.DashboardDetailView },
       { path: 'admin/drivers', component: Views.DriverAdminView },
       { path: 'admin/vehicles', component: Views.VehiclesAdminView },
       { path: 'admin/vehicles/:id', component: Views.VehicleAdminRetrieveView },
@@ -30,7 +31,8 @@ const routes = [
       { path: 'admin/routes/create', component: Views.CreateRoutesView },
       { path: 'admin/drivers/init-daily-route/:id', component: Views.DriverInitDailyRouteView },
       { path: 'admin/routes/list', component: Views.RoutesListView },
-      {path: 'admin/routes/consult', component: Views.RoutesConsultView}
+      {path: 'admin/routes/consult', component: Views.RoutesConsultView},
+      {path: 'admin/route/:id', component: Views.RouteRetrieveView}
 
     ],
   },

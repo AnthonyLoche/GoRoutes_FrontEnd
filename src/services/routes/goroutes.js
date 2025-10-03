@@ -11,6 +11,16 @@ class GoRoutesService {
         }
     }
 
+    async getRoute(id){
+        try {
+            const response = await api.get(`/goroutes/routes/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching routes:", error);
+            throw error;
+        }
+    }
+
     async getRouteById(id) {
         try {
             const response = await api.get(`/goroutes/filter-active-routes/${id}`);

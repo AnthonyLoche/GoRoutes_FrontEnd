@@ -164,10 +164,6 @@ onMounted(async () => {
                 <v-list-item-icon class="d-flex justify-center"><v-icon>mdi-pencil</v-icon></v-list-item-icon>
                 <v-list-item-title class="d-flex justify-center">Editar</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="track(item.raw)">
-                <v-list-item-icon class="d-flex justify-center"><v-icon>mdi-radar</v-icon></v-list-item-icon>
-                <v-list-item-title class="d-flex justify-center">Rastrear</v-list-item-title>
-              </v-list-item>
               <v-list-item @click="deleteItem(item.raw)">
                 <v-list-item-icon class="d-flex justify-center"><v-icon class="text-error">mdi-delete</v-icon></v-list-item-icon>
                 <v-list-item-title class="text-error d-flex justify-center" >Deletar</v-list-item-title>
