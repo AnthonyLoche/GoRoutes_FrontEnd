@@ -1,13 +1,14 @@
 <!-- eslint-disable no-unused-vars -->
 <script setup>
 import { useRouter } from 'vue-router'
-import ArrowLeft from 'vue-material-design-icons/ArrowLeft.vue'
+import { useGoRoutesStore } from '@/stores'
 import MapMarkerPath from 'vue-material-design-icons/MapMarkerPath.vue'
 import FileDownload from 'vue-material-design-icons/FileDownload.vue'
 import Pencil from 'vue-material-design-icons/Pencil.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 
 const router = useRouter()
+const goRoutesStore = useGoRoutesStore()
 
 const props = defineProps({
   routeData: {
@@ -28,10 +29,6 @@ const goBack = () => {
 
 const editRoute = () => {
   emit('edit')
-}
-
-const deleteRoute = () => {
-  emit('delete')
 }
 
 const exportRoute = () => {
@@ -60,7 +57,7 @@ const exportRoute = () => {
         <FileDownload :size="20" />
         <span>Exportar</span>
       </button>
-      <button class="action-btn delete-btn" @click="deleteRoute">
+      <button class="action-btn delete-btn" @click="goRoutesStore.deleteRoute(goRoutesStore.state.retrieveRoute.id)">
         <Delete :size="20" />
         <span>Excluir</span>
       </button>

@@ -69,8 +69,6 @@ const editRoute = () => {
 const deleteRoute = async () => {
   if (confirm('Tem certeza que deseja excluir esta rota?')) {
     try {
-      // Aqui você implementaria a chamada para deletar a rota
-      // await GoRoutesService.deleteRoute(routeData.value.id)
       alert('Rota excluída com sucesso!')
       router.push('/routes')
     } catch (err) {
@@ -82,7 +80,6 @@ const deleteRoute = async () => {
 
 const exportRoute = () => {
   alert('Exportando relatório da rota...')
-  // Implementar lógica de exportação
 }
 </script>
 

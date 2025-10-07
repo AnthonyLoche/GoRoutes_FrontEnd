@@ -18,10 +18,9 @@
             class="save-button"
             :class="{ 'save-button--disabled': !isFormValid }"
             @click="handleSave"
-            :disabled="loading || !isFormValid"
+            :disabled="!isFormValid"
           >
-            <span v-if="loading">💾 Salvando...</span>
-            <span v-else style="display: flex; gap: 1rem;">
+            <span style="display: flex; gap: 1rem;">
             <Download style="color: white;" />
               Salvar Rota
             </span>
@@ -111,12 +110,9 @@ const prevForm = () => {
 
 const handleSave = async () => {
   if (!isFormValid.value) return
-  
   loading.value = true
-  setTimeout(() => {
-    loading.value = false
-    alert('Rota criada com sucesso!')
-  }, 2000)
+  await goRoutesStore.createRoute(goRoutesStore.state_create.create_route)
+
 }
 </script>
 

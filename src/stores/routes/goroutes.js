@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 import { GoRoutesService } from '@/services'
 import { reactive, ref } from 'vue'
 import { useAuthStore } from '../auth/auth'
+import { showErrorToast, showSuccessToast } from '@/utils/toast'
+import router from '@/router'
 
 export const useGoRoutesStore = defineStore('goroutes', () => {
   const state = reactive({
@@ -66,7 +68,6 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
       state.loading = false
     }
   }
-  
 
   const getActiveRoutes = async () => {
     state.loading = true
@@ -183,6 +184,41 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     }
   }
 
+  const createRoute = async (data) => {
+    state_create.create_route.vehicle = data.vehicle.id
+    try {
+      // Validação de horários
+      if (data.init_hour && data.end_hour && data.init_hour > data.end_hour) {
+        showErrorToast('Horário de início não pode ser depois do horário de fim')
+        return false
+      }
+
+      if (data.passengers_list.length > data.vehicle.seats) {
+        showErrorToast(`O número de passageiros excede o número de lugares do veículo`)
+        return false
+      } else {
+        const response = await GoRoutesService.createRoute(data)
+        showSuccessToast(`${response.data.name} criada com sucesso`)
+        return response
+      }
+    } catch (error) {
+      console.log(error)
+      showErrorToast('Erro ao criar rota')
+      return false
+    }
+  }
+
+  const deleteRoute = async (id) => {
+    try {
+      const response = await GoRoutesService.deleteRoute(id)
+      router.push(`/default/admin/routes/list`)
+      showSuccessToast(`Rota deletada com Sucesso`)
+      return response
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return {
     state,
     state_create,
@@ -196,6 +232,8 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     takeMyDailyRoute,
     markPresenceOrAbsence,
     refreshDailyRouteById,
-    getRoute
+    getRoute,
+    createRoute,
+    deleteRoute
   }
 })

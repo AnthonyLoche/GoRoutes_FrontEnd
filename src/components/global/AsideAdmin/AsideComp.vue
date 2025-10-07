@@ -4,7 +4,6 @@
 
     <div class="sidebar" :class="{ show: isSidebarVisible }">
       <div class="menu-category" v-for="(category, index) in menuItems" :key="index">
-        <!-- Se não tem subitens, é um link direto -->
         <router-link
           v-if="category.subItems.length === 0"
           :to="category.route"
@@ -17,7 +16,6 @@
           <span>{{ category.name }}</span>
         </router-link>
 
-        <!-- Se tem subitens, mantém o comportamento original -->
         <div
           v-else
           class="menu-item"
@@ -69,7 +67,7 @@ const menuItems = ref([
   {
     name: 'Dashboard',
     icon: markRaw(Dashboard),
-    route: '/default/admin/dashboard', // Nova rota para o dashboard
+    route: '/default/admin/dashboard',
     expanded: false,
     active: false,
     subItems: []
@@ -91,8 +89,6 @@ const menuItems = ref([
     subItems: [
       { name: 'Passageiros', active: false, route: '/default/admin/passengers', icon: markRaw(SeatPassenger) },
       { name: 'Responsáveis', active: false, route: '/default/admin/responsibles', icon: markRaw(HumanMaleBoy) },
-      // { name: 'Pagamentos', active: false, route: '/default/admin/payments', icon: markRaw(CreditCardIcon) },
-      // { name: 'Contratos', active: false, route: '/default/admin/contracts', icon: markRaw(FileDocumentIcon) }
     ]
   },
   {
@@ -119,7 +115,7 @@ const menuItems = ref([
   {
     name: 'Configurações',
     icon: markRaw(CogIcon),
-    route: '/default/admin/settings', // Nova rota para configurações
+    route: '/default/admin/settings',
     expanded: false,
     active: false,
     subItems: []

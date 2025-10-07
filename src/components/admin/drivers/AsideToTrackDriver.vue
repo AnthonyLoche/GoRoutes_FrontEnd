@@ -6,10 +6,8 @@ const goRoutesStore = useGoRoutesStore();
 
 const selectedDriver = computed(() => goRoutesStore.state.selectedDriverToTrack);
 
-// Ao clicar em um motorista na lista, definimos o driver selecionado no store
 const selectDriverFromAside = (driver) => {
   console.log('[Aside] click driver:', driver);
-  // Monta um objeto compatível com os markers do mapa
   const markerLike = {
     position: {
       lat: parseFloat(driver?.my_location?.latitude),
@@ -57,16 +55,7 @@ const selectDriverFromAside = (driver) => {
           </p>
         </div>
 
-        <!-- Dados extras fake -->
         <div class="metrics">
-          <div class="metric">
-            <span class="label">Velocidade</span>
-            <span class="value">87 km/h</span>
-          </div>
-          <div class="metric">
-            <span class="label">Combustível</span>
-            <span class="value success">73%</span>
-          </div>
           <div class="metric">
             <span class="label">Placa</span>
             <span class="value">ABC-1234</span>
@@ -102,8 +91,6 @@ const selectDriverFromAside = (driver) => {
         </div>
       </div>
     </div>
-
-    <!-- Nenhum motorista selecionado -->
     <div v-else class="no-driver">
       <v-icon size="28" color="grey">mdi-alert-circle-outline</v-icon>
       <span class="no-driver-text">Nenhum motorista selecionado</span>

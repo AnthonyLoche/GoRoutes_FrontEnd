@@ -86,17 +86,17 @@
                 
                 <div class="form-group">
                     <label for="vehicle">Veículo</label>
-                    <v-select
-                        id="vehicle"
-                        v-model="routeData.vehicle"
-                        :items="availableVehicles"
-                        item-title="displayName"
-                        item-value="id"
-                        placeholder="Selecione um veículo"
-                        variant="outlined"
-                        hide-details
-                        :loading="vehiclesStore.state.loading"
-                    ></v-select>
+                 <v-select
+                     id="vehicle"
+                    v-model="routeData.vehicle"
+                    :items="availableVehicles"
+                    item-title="displayName"
+                    placeholder="Selecione um veículo"
+                    variant="outlined"
+                    hide-details
+                    :loading="vehiclesStore.state.loading"
+                    return-object
+                ></v-select>
                 </div>
                 
                 <div class="form-group">

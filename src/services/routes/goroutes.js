@@ -98,6 +98,24 @@ class GoRoutesService {
         }
     }
 
+    async createRoute(data){
+        try{
+            const response = await api.post(`goroutes/routes/`, data)
+            return response
+        }catch(error){
+            console.error(error)
+        }
+    }
+
+    async deleteRoute(id){
+         try{
+            const response = await api.delete(`goroutes/routes/${id}/`)
+            return response
+        }catch(error){
+            console.error(error)
+        }
+    }
+
 }
 
 export default new GoRoutesService();

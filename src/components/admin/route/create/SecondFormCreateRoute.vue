@@ -1,120 +1,3 @@
-<template>
-  <div class="passenger-selection-container">
-    <!-- Filtros -->
-    <div class="filters-section">
-      <div class="search-group">
-        <div class="search-input">
-          <span class="search-icon">🔍</span>
-          <input 
-            type="text" 
-            v-model="searchQuery"
-            placeholder="Buscar por nome, email ou endereço..."
-          />
-        </div>
-      </div>
-      <div class="filter-group">
-        <label class="filter-label">Filtrar por:</label>
-        
-        <!-- Select de Série -->
-        <div class="filter-select-wrapper">
-          <v-select
-            v-model="gradeFilter"
-            :items="availableGrades"
-            placeholder="Todas as séries"
-            variant="outlined"
-            density="compact"
-            hide-details
-          ></v-select>
-        </div>
-
-        <!-- Select de Bairro -->
-        <div class="filter-select-wrapper">
-          <v-select
-            v-model="neighborhoodFilter"
-            :items="availableNeighborhoods"
-            placeholder="Todos os bairros"
-            variant="outlined"
-            density="compact"
-            hide-details
-          ></v-select>
-        </div>
-
-        <!-- Select de Tipo -->
-        <div class="filter-select-wrapper">
-          <v-select
-            v-model="studentFilter"
-            :items="studentTypes"
-            placeholder="Todos os tipos"
-            variant="outlined"
-            density="compact"
-            hide-details
-          ></v-select>
-        </div>
-        <div class="action-buttons">
-          <v-btn color="error" @click="clearAllSelection" rounded="1">
-            ✗ Limpar Seleção
-          </v-btn>
-        </div>
-      </div>
-    </div>
-
-    <div class="passengers-grid">
-      <div 
-        v-for="passenger in filteredPassengers" 
-        :key="passenger.id"
-        class="passenger-card"
-        :class="{ 
-          selected: selectedPassengers.includes(passenger.id),
-          student: passenger.passenger_data?.is_student
-        }"
-        @click="togglePassenger(passenger.id)"
-      >
-        <!-- Avatar/Foto -->
-        <div class="passenger-avatar">
-          <img 
-            v-if="passenger.picture_file" 
-            :src="passenger.picture_file" 
-            :alt="passenger.name"
-            class="avatar-image"
-          />
-          <span v-else class="avatar-initials">
-            {{ getInitials(passenger.name) }}
-          </span>
-        </div>
-
-        <!-- Informações do Passageiro -->
-        <div class="passenger-info">
-          <div class="passenger-header">
-            <h3 class="passenger-name">{{ passenger.name }}</h3>
-                <span class="detail-icon">-</span>
-              <span class="detail-text">{{ formatPhone(passenger.telephone) }}</span>
-          </div>
-          
-          <div class="passenger-details">
-            <div class="detail-row" v-if="getMainAddress(passenger)">
-              <span class="detail-icon">📍</span>
-              <span class="detail-text">{{ getMainAddress(passenger) }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="selection-checkbox">
-          <div class="checkbox" :class="{ checked: selectedPassengers.includes(passenger.id) }">
-            <span v-if="selectedPassengers.includes(passenger.id)" class="checkmark">✓</span>
-          </div>
-        </div>
-
-        <div v-if="selectedPassengers.includes(passenger.id)" class="selection-overlay"></div>
-      </div>
-    </div>
-
-    <div v-if="filteredPassengers.length === 0" class="empty-state">
-      <div class="empty-icon">🚌</div>
-      <h3>Nenhum passageiro encontrado</h3>
-      <p>Tente ajustar os filtros ou termos de busca</p>
-    </div>
-  </div>
-</template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from "vue"
@@ -130,7 +13,7 @@ const props = defineProps({
   }
 })
 
-// Usa os passageiros selecionados da store
+// Agora usa passenger_data.id em vez do user id
 const selectedPassengers = ref([...goRoutesStore.state_create.create_route.passengers_list])
 
 const searchQuery = ref("")
@@ -211,11 +94,29 @@ const filteredPassengers = computed(() => {
   return filtered
 })
 
-const togglePassenger = (passengerId) => {
-  if (selectedPassengers.value.includes(passengerId)) {
-    selectedPassengers.value = selectedPassengers.value.filter(id => id !== passengerId)
+// Função para obter o passenger_data.id
+const getPassengerDataId = (passenger) => {
+  return passenger.passenger_data?.id
+}
+
+// Função para verificar se um passageiro está selecionado
+const isPassengerSelected = (passenger) => {
+  const passengerDataId = getPassengerDataId(passenger)
+  return selectedPassengers.value.includes(passengerDataId)
+}
+
+const togglePassenger = (passenger) => {
+  const passengerDataId = getPassengerDataId(passenger)
+  
+  if (!passengerDataId) {
+    console.error('Passageiro não possui passenger_data.id:', passenger)
+    return
+  }
+
+  if (isPassengerSelected(passenger)) {
+    selectedPassengers.value = selectedPassengers.value.filter(id => id !== passengerDataId)
   } else {
-    selectedPassengers.value.push(passengerId)
+    selectedPassengers.value.push(passengerDataId)
   }
 }
 
@@ -246,12 +147,129 @@ watch(selectedPassengers, (newValue) => {
 onMounted(() => {
   passengersStore.getPassengers()
 
+  // Se houver pre-selecionados, converte para passenger_data.id se necessário
   if (props.preSelected.length > 0) {
     selectedPassengers.value = [...props.preSelected]
   }
 })
 </script>
+<template>
+  <div class="passenger-selection-container">
+    <!-- Filtros -->
+    <div class="filters-section">
+      <div class="search-group">
+        <div class="search-input">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            v-model="searchQuery"
+            placeholder="Buscar por nome, email ou endereço..."
+          />
+        </div>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Filtrar por:</label>
+        
+        <!-- Select de Série -->
+        <div class="filter-select-wrapper">
+          <v-select
+            v-model="gradeFilter"
+            :items="availableGrades"
+            placeholder="Todas as séries"
+            variant="outlined"
+            density="compact"
+            hide-details
+          ></v-select>
+        </div>
 
+        <!-- Select de Bairro -->
+        <div class="filter-select-wrapper">
+          <v-select
+            v-model="neighborhoodFilter"
+            :items="availableNeighborhoods"
+            placeholder="Todos os bairros"
+            variant="outlined"
+            density="compact"
+            hide-details
+          ></v-select>
+        </div>
+
+        <!-- Select de Tipo -->
+        <div class="filter-select-wrapper">
+          <v-select
+            v-model="studentFilter"
+            :items="studentTypes"
+            placeholder="Todos os tipos"
+            variant="outlined"
+            density="compact"
+            hide-details
+          ></v-select>
+        </div>
+        <div class="action-buttons">
+          <v-btn color="error" @click="clearAllSelection" rounded="1">
+            ✗ Limpar Seleção
+          </v-btn>
+        </div>
+      </div>
+    </div>
+
+    <div class="passengers-grid">
+      <div 
+        v-for="passenger in filteredPassengers" 
+        :key="passenger.id"
+        class="passenger-card"
+        :class="{ 
+          selected: isPassengerSelected(passenger),
+          student: passenger.passenger_data?.is_student
+        }"
+        @click="togglePassenger(passenger)"
+      >
+        <!-- Avatar/Foto -->
+        <div class="passenger-avatar">
+          <img 
+            v-if="passenger.picture_file" 
+            :src="passenger.picture_file" 
+            :alt="passenger.name"
+            class="avatar-image"
+          />
+          <span v-else class="avatar-initials">
+            {{ getInitials(passenger.name) }}
+          </span>
+        </div>
+
+        <!-- Informações do Passageiro -->
+        <div class="passenger-info">
+          <div class="passenger-header">
+            <h3 class="passenger-name">{{ passenger.name }}</h3>
+                <span class="detail-icon">-</span>
+              <span class="detail-text">{{ formatPhone(passenger.telephone) }}</span>
+          </div>
+          
+          <div class="passenger-details">
+            <div class="detail-row" v-if="getMainAddress(passenger)">
+              <span class="detail-icon">📍</span>
+              <span class="detail-text">{{ getMainAddress(passenger) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="selection-checkbox">
+          <div class="checkbox" :class="{ checked: isPassengerSelected(passenger) }">
+            <span v-if="isPassengerSelected(passenger)" class="checkmark">✓</span>
+          </div>
+        </div>
+
+        <div v-if="isPassengerSelected(passenger)" class="selection-overlay"></div>
+      </div>
+    </div>
+
+    <div v-if="filteredPassengers.length === 0" class="empty-state">
+      <div class="empty-icon">🚌</div>
+      <h3>Nenhum passageiro encontrado</h3>
+      <p>Tente ajustar os filtros ou termos de busca</p>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .passenger-selection-container {
