@@ -10,7 +10,6 @@
     <div class="drag-handle"></div>
 
     <div class="content">
-      <!-- Header da rota -->
       <div class="route-header">
         <h2 class="route-title">{{ routeData.name }}</h2>
         <div class="route-status" :class="getStatusClass()">{{ getStatusText() }}</div>
@@ -45,7 +44,6 @@
         </div>
       </div>
 
-      <!-- Rota concluída -->
       <div v-if="isDriving && !getCurrentPassenger()" class="no-passengers-section">
         <div class="no-passengers-card">
           <div class="completion-icon">🎉</div>
@@ -54,7 +52,6 @@
         </div>
       </div>
 
-      <!-- Toggle andando/parado -->
       <div class="driving-toggle-container">
         <div class="driving-toggle-wrapper">
           <span class="toggle-label" :class="{ active: !isDriving }">Parado</span>
@@ -96,21 +93,6 @@
               <div class="location-label">Destino</div>
               <div class="location-address">{{ getShortAddress(routeData.destination) }}</div>
             </div>
-          </div>
-        </div>
-
-        <div class="route-stats">
-          <div class="stat-item">
-            <span class="stat-value">{{ formatDistance(routeData.distance) }}</span>
-            <span class="stat-label">Distância</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">{{ routeData.presences?.length }}</span>
-            <span class="stat-label">Passageiros</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-value">{{ getPickedUpCount() }}/{{ routeData.presences?.length }}</span>
-            <span class="stat-label">Embarcados</span>
           </div>
         </div>
       </div>
@@ -169,7 +151,7 @@ import { ref, computed } from "vue";
 import { useGoRoutesStore } from "@/stores";
 
 const goRoutesStore = useGoRoutesStore();
-const routeData = computed(() => goRoutesStore.state.myActiveRoute);
+const routeData = computed(() => goRoutesStore.state.myDailyRouteDriver);
 
 const sheetHeight = ref(400);
 const minHeight = 400;
@@ -232,7 +214,6 @@ const markPassengerAsMissed = async () => {
 }
 // Utils
 const getShortAddress = address => address?.split(",").slice(0,2).join(",")||"";
-const formatDistance = distance => distance ? (distance/1000).toFixed(1)+" km" : "";
 const getDurationText = () => {
   if (!routeData.value?.init_hour || !routeData.value?.end_hour) return "";
   const [h1,m1]=routeData.value.init_hour.split(":").map(Number);

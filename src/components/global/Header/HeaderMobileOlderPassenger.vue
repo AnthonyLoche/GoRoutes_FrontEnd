@@ -13,12 +13,10 @@ const closeMenu = () => {
     isMenuOpen.value = false
 }
 
-// Dados dos cards/apps
 const menuItems = [
-    { name: 'Perfil', icon: 'mdi-account', color: '#607D8B' },
-    { name: 'Rota em que estou', icon: 'mdi-map-marker', color: '#FF5722' },
     { name: 'Início', icon: 'mdi-home', color: '#4CAF50' },
-    { name: 'Informar Volta', icon: 'mdi-bus', color: '#3F51B5' },
+    { name: 'Perfil', icon: 'mdi-account', color: '#607D8B' },
+    { name: 'Minha Rota', icon: 'mdi-bus', color: '#FF5722' },
     { name: 'Contrato', icon: 'mdi-bus', color: '#3F51B5' },
 ]
 

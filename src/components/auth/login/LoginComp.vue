@@ -132,7 +132,6 @@ onUnmounted(() => {
     width: 100%;
 }
 
-/* MOBILE */
 @media screen and (max-width: 1024px) {
     .container {
         flex-direction: column;
@@ -144,6 +143,7 @@ onUnmounted(() => {
         width: 100%;
         padding: 2rem 0;
         margin-top: 15%;
+     
     }
 
     .aside {
@@ -153,22 +153,22 @@ onUnmounted(() => {
     .form-container {
         width: 100%;
         padding: 0 1rem 1rem 1rem;
+        margin: 0 auto;
     }
 
     .back {
-        display: none; /* corrige o fundo */
+        display: none;
     }
 }
 
-/* Ajustes para botão funcionar no mobile */
 .button-wrapper {
     display: flex;
     justify-content: center;
-    pointer-events: none; /* evita que div bloqueie touch */
+    pointer-events: none;
 }
 
 .button-wrapper button {
-    pointer-events: auto; /* botão continua clicável */
-    touch-action: manipulation; /* força touch funcionar */
+    pointer-events: auto;
+    touch-action: manipulation; 
 }
 </style>

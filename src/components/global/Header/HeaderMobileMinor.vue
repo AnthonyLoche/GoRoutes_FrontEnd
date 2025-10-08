@@ -15,12 +15,10 @@ const closeMenu = () => {
     isMenuOpen.value = false
 }
 
-// Dados dos cards/apps com rotas
 const menuItems = [
     { name: 'Início', icon: 'mdi-home', color: '#4CAF50', route: '/' },
     { name: 'Perfil', icon: 'mdi-account', color: '#607D8B', route: '/blank/profile/minor' },
-    { name: 'Rota em que estou', icon: 'mdi-map-marker', color: '#FF5722', route: '/blank/driver/current-route' },
-    { name: 'Informar Volta', icon: 'mdi-bus', color: '#3F51B5', route: '/blank/driver/report-return' },
+    { name: 'Minha Rota', icon: 'mdi-bus', color: '#FF5722', route: '/blank/main/passengers' },
     { 
         name: 'Logout', 
         icon: 'mdi-logout', 
@@ -85,7 +83,6 @@ const goToHome = () => {
                         <span class="app-name">{{ item.name }}</span>
                     </router-link>
                     
-                    <!-- Item com ação personalizada (Logout) -->
                     <div 
                         v-for="item in menuItems.filter(item => item.action)" 
                         :key="item.name"

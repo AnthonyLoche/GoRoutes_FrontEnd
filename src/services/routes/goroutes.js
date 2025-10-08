@@ -116,6 +116,15 @@ class GoRoutesService {
         }
     }
 
+    async filterMyOpenedPassengerRoute(id) {
+        try{
+            const response = await api.get(`goroutes/filter-my-opened-route/${id}/`)
+            return response
+        }catch(error){
+            console.error(error)
+        }
+    }
+
 }
 
 export default new GoRoutesService();

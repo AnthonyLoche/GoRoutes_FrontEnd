@@ -9,9 +9,8 @@ const routePath = ref([]);
 const markerPositions = ref([]);
 const activeMarkerIndex = ref(null);
 
-// Atualiza markerPositions com o próximo passageiro
 const updateNextPassengerMarker = () => {
-  const routeData = goRoutesStore.state.myActiveRoute;
+  const routeData = goRoutesStore.state.myDailyRouteDriver;
   if (!routeData?.presences?.length) {
     markerPositions.value = [];
     return;
@@ -35,7 +34,7 @@ const updateNextPassengerMarker = () => {
 onMounted(async () => {
   await goRoutesStore.takeMyDailyRoute();
   
-  const routeData = goRoutesStore.state.myActiveRoute;
+  const routeData = goRoutesStore.state.myDailyRouteDriver;
   if (!routeData) return;
 
   // Polyline
@@ -49,8 +48,8 @@ onMounted(async () => {
 });
 
 // Reage quando a rota muda na store
-watch(() => goRoutesStore.state.myActiveRoute, () => {
-  const routeData = goRoutesStore.state.myActiveRoute;
+watch(() => goRoutesStore.state.myDailyRouteDriver, () => {
+  const routeData = goRoutesStore.state.myDailyRouteDriver;
   if (!routeData) return;
 
   if (routeData.overview_polyline?.points) {
@@ -62,7 +61,7 @@ watch(() => goRoutesStore.state.myActiveRoute, () => {
 const mapCenter = computed(() => {
   if (routePath.value.length) return routePath.value[0];
   if (markerPositions.value.length) return markerPositions.value[0];
-  const routeData = goRoutesStore.state.myActiveRoute;
+  const routeData = goRoutesStore.state.myDailyRouteDriver;
   if (routeData?.latitude_origin) {
     return { lat: routeData.latitude_origin, lng: routeData.longitude_origin };
   }

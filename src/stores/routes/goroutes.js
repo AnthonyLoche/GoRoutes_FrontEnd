@@ -18,6 +18,8 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     myDriverRoutes: [],
     loading: false,
     error: null,
+    myPassengerOpenedRoute : null,
+    myDailyRouteDriver: null
   })
 
   const state_create = reactive({
@@ -158,7 +160,7 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
   const takeMyDailyRoute = async () => {
     try {
       const response = await GoRoutesService.takeMyDailyRoute(authStore.state.user?.driver_data?.id)
-      state.myActiveRoute = response.data?.active_route
+      state.myDailyRouteDriver = response.data?.active_route
       return response
     } catch (error) {
       console.log(error)
@@ -177,7 +179,7 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
   const refreshDailyRouteById = async (id) => {
     try {
       const response = await GoRoutesService.refreshDailyRouteById(id)
-      state.myActiveRoute = response.data
+      state.myDailyRouteDriver = response.data
       return response
     } catch (error) {
       console.log(error)
@@ -219,6 +221,22 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     }
   }
 
+  const filterMyOpenedPassengerRoute = async (id) => {
+    try {
+      const response = await GoRoutesService.filterMyOpenedPassengerRoute(id)
+
+      if(response.data.has_route){
+        state.myPassengerOpenedRoute = response.data.route
+        return true
+      }else{
+        return false
+      }
+
+    } catch(error){
+      console.error(error)
+    }
+  }
+
   return {
     state,
     state_create,
@@ -234,6 +252,7 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     refreshDailyRouteById,
     getRoute,
     createRoute,
-    deleteRoute
+    deleteRoute,
+    filterMyOpenedPassengerRoute
   }
 })

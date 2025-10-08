@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores'
 
-import HeaderMobilePassenger from './HeaderMobilePassenger.vue'
+import HeaderMobilePassenger from './HeaderMobileOlderPassenger.vue'
 import HeaderMobileResponsible from './HeaderMobileResponsible.vue'
 import HeaderMobileDriver from './HeaderMobileDriver.vue'
 import HeaderMobileMinor from './HeaderMobileMinor.vue'
