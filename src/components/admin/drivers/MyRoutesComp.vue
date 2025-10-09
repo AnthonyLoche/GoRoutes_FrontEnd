@@ -76,7 +76,7 @@ const isMobile = () => windowWidth.value <= 1024
         </div>
 
         <div class="routes-grid">
-            <v-card v-for="route in routes" :key="route.id" class="route-card" elevation="2"
+            <v-card v-for=" route in routes" :key="route.id" class="route-card" elevation="2"
                 :class="{ 'inactive-route': route.status === 'inactive' }">
                 <v-card-title class="card-header">
                     <div class="route-status">

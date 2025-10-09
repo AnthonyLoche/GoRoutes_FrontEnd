@@ -41,14 +41,14 @@
         <div class="navigation-buttons">
           <v-btn 
             color="error" 
-            @click="nextForm" 
+            @click="goRoutesStore.createDailyRoute(goRoutesStore.state_create.daily_route)" 
             rounded="1"
             append-icon="mdi-arrow-right"
             size="large"
             :width="isMobile() ? '100%' : 'auto'"
           >
             INICIAR ROTA
-          </v-btn>
+          </v-btn>  
         </div>
       </div>
     </transition>

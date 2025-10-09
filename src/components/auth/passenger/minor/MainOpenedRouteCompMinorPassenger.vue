@@ -4,10 +4,14 @@ import { useGoRoutesStore, useAuthStore } from '@/stores'
 import MapMarker from 'vue-material-design-icons/MapMarker.vue'
 import Phone from 'vue-material-design-icons/Phone.vue'
 import ClockOutline from 'vue-material-design-icons/ClockOutline.vue'
+import CrosshairsGps from 'vue-material-design-icons/CrosshairsGps.vue'
+import maplibregl from 'maplibre-gl'
+import 'maplibre-gl/dist/maplibre-gl.css'
 
 const goRoutesStore = useGoRoutesStore()
 const authStore = useAuthStore()
 
+const map = ref(null)
 const routeData = computed(() => goRoutesStore.state.myPassengerOpenedRoute)
 
 const currentPassenger = computed(() => {
@@ -41,192 +45,343 @@ const getDriverLocation = computed(() => {
   return null
 })
 
+const getPassengerLocation = computed(() => {
+  const passenger = currentPassenger.value
+  if (!passenger?.address_passenger?.[0]) return null
+  
+  const addr = passenger.address_passenger[0]
+  if (addr.latitude && addr.longitude) {
+    return {
+      lat: parseFloat(addr.latitude),
+      lng: parseFloat(addr.longitude)
+    }
+  }
+  
+  return null
+})
+
 const mapCenter = computed(() => {
   const driverLocation = getDriverLocation.value
   if (driverLocation) {
     return driverLocation
   }
+  
+  const passengerLocation = getPassengerLocation.value
+  if (passengerLocation) {
+    return passengerLocation
+  }
+  
   return { 
     lat: routeData.value?.latitude_origin || -26.2743, 
     lng: routeData.value?.longitude_origin || -48.8215 
   }
 })
 
-const mapZoom = ref(12)
-
-
-const createCircularIcon = (imageUrl) => {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  const size = 60;
-
-  canvas.width = size;
-  canvas.height = size;
-
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-
-    img.onload = () => {
-      ctx.beginPath();
-      ctx.arc(size / 2, size / 2, size / 2, 0, 2 * Math.PI);
-      ctx.fillStyle = '#ffffff';
-      ctx.fill();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = '#1a73e8';
-      ctx.stroke();
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(size / 2, size / 2, (size / 2) - 2, 0, 2 * Math.PI);
-      ctx.clip();
-      ctx.drawImage(img, 0, 0, size, size);
-      ctx.restore();
-
-      resolve(canvas.toDataURL());
-    };
-
-    img.onerror = () => {
-      resolve("https://cdn-icons-png.flaticon.com/512/744/744465.png");
-    };
-
-    img.src = imageUrl;
-  });
-};
-
-const markers = ref([]);
-
-watch(() => routeData.value, async (newRouteData) => {
-  if (!newRouteData) {
-    markers.value = [];
-    return;
-  }
-
-  const driverLocation = getDriverLocation.value;
-  const markersArray = [];
-
-  // Marcador do motorista
+// Focar no motorista
+const focusOnDriver = () => {
+  if (!map.value) return
+  
+  const driverLocation = getDriverLocation.value
   if (driverLocation) {
-    const driver = newRouteData.driver;
-    let iconUrl = "https://cdn-icons-png.flaticon.com/512/744/744465.png";
-    
-    if (driver?.user?.picture?.file) {
-      try {
-        iconUrl = await createCircularIcon(driver.user.picture.file);
-      } catch (error) {
-        console.error('Erro ao criar ícone do motorista:', error);
-      }
-    }
-
-    markersArray.push({
-      position: driverLocation,
-      title: driver.user?.name || 'Motorista',
-      icon: {
-        url: iconUrl,
-        scaledSize: { width: 60, height: 60 },
-        anchor: { x: 30, y: 30 }
-      }
-    });
+    map.value.flyTo({
+      center: [driverLocation.lng, driverLocation.lat],
+      zoom: 16,
+      pitch: 45,
+      bearing: 0,
+      essential: true,
+      duration: 1000
+    })
   }
+}
 
-  markers.value = markersArray;
-}, { immediate: true, deep: true });
+// Inicializar mapa
+const initializeMap = () => {
+  const center = mapCenter.value
+  
+  map.value = new maplibregl.Map({
+    container: 'map',
+    style: {
+      version: 8,
+      sources: {
+        'osm': {
+          type: 'raster',
+          tiles: ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+          tileSize: 256,
+          attribution: '© OpenStreetMap Contributors'
+        }
+      },
+      layers: [{
+        id: 'osm',
+        type: 'raster',
+        source: 'osm'
+      }]
+    },
+    center: [center.lng, center.lat],
+    zoom: 13,
+    pitch: 45, // Vista 3D
+    bearing: 0
+  })
 
-const sheetHeight = ref(300);
-const minHeight = 300;
-const maxHeight = window.innerHeight * 0.75;
-const isDragging = ref(false);
-const startY = ref(300);
-const returnTime = ref(null);
+  map.value.on('load', () => {
+    // Adicionar marcadores
+    addDriverMarker()
+
+    // Adicionar controles
+    map.value.addControl(new maplibregl.NavigationControl())
+    map.value.addControl(new maplibregl.ScaleControl())
+    
+    // Focar na posição mais relevante
+    focusOnRelevantPosition()
+  })
+}
+
+// Adicionar marcador do motorista
+const addDriverMarker = () => {
+  const driverLocation = getDriverLocation.value
+  if (!driverLocation) return
+
+  const features = [{
+    type: 'Feature',
+    geometry: {
+      type: 'Point',
+      coordinates: [driverLocation.lng, driverLocation.lat]
+    },
+    properties: {
+      type: 'driver',
+      name: routeData.value?.driver?.user?.name || 'Motorista'
+    }
+  }]
+
+  map.value.addSource('driver', {
+    type: 'geojson',
+    data: {
+      type: 'FeatureCollection',
+      features: features
+    }
+  })
+
+  // Criar ícone SVG personalizado para o motorista
+  const driverSvg = `
+    <svg width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="40" fill="#1976D2" stroke="#FFFFFF" stroke-width="4"/>
+      <rect x="30" y="40" width="40" height="20" rx="3" fill="#FFFFFF"/>
+      <circle cx="40" cy="70" r="6" fill="#FFFFFF"/>
+      <circle cx="60" cy="70" r="6" fill="#FFFFFF"/>
+      <text x="50" y="58" text-anchor="middle" fill="#1976D2" font-size="28" font-weight="bold">🚗</text>
+    </svg>
+  `
+
+  const driverImage = new Image()
+  driverImage.onload = () => {
+    map.value.addImage('driver-icon', driverImage)
+    
+    map.value.addLayer({
+      id: 'driver',
+      type: 'symbol',
+      source: 'driver',
+      layout: {
+        'icon-image': 'driver-icon',
+        'icon-size': 1,
+        'icon-allow-overlap': true,
+        'icon-ignore-placement': true
+      }
+    })
+  }
+  driverImage.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(driverSvg)
+
+  // Adicionar popup do motorista
+  map.value.on('click', 'driver', (e) => {
+    const feature = e.features[0]
+    if (feature) {
+      new maplibregl.Popup()
+        .setLngLat(e.lngLat)
+        .setHTML(`
+          <div style="padding: 8px;">
+            <strong>🚗 Motorista</strong><br />
+            ${feature.properties.name}
+          </div>
+        `)
+        .addTo(map.value)
+    }
+  })
+
+  // Mudar cursor ao passar sobre motorista
+  map.value.on('mouseenter', 'driver', () => {
+    map.value.getCanvas().style.cursor = 'pointer'
+  })
+  map.value.on('mouseleave', 'driver', () => {
+    map.value.getCanvas().style.cursor = ''
+  })
+}
+
+// Focar na posição mais relevante
+const focusOnRelevantPosition = () => {
+  if (!map.value) return
+  
+  const driverLocation = getDriverLocation.value
+  const passengerLocation = getPassengerLocation.value
+  
+  // Se temos ambas as posições, mostrar ambas
+  if (driverLocation && passengerLocation) {
+    const bounds = new maplibregl.LngLatBounds()
+    bounds.extend([driverLocation.lng, driverLocation.lat])
+    bounds.extend([passengerLocation.lng, passengerLocation.lat])
+    map.value.fitBounds(bounds, { padding: 50, duration: 1000 })
+  } 
+  // Se só temos motorista, focar nele
+  else if (driverLocation) {
+    map.value.flyTo({
+      center: [driverLocation.lng, driverLocation.lat],
+      zoom: 15,
+      pitch: 45,
+      bearing: 0,
+      essential: true,
+      duration: 1000
+    })
+  }
+  // Se só temos passageiro, focar nele
+  else if (passengerLocation) {
+    map.value.flyTo({
+      center: [passengerLocation.lng, passengerLocation.lat],
+      zoom: 15,
+      pitch: 45,
+      bearing: 0,
+      essential: true,
+      duration: 1000
+    })
+  }
+}
+
+// Bottom sheet controls
+const sheetHeight = ref(300)
+const minHeight = 300
+const maxHeight = window.innerHeight * 0.75
+const isDragging = ref(false)
+const startY = ref(300)
+const returnTime = ref(null)
 
 const onTouchStart = e => { 
-  isDragging.value = true;
-  startY.value = e.touches[0].clientY;
-};
+  isDragging.value = true
+  startY.value = e.touches[0].clientY
+}
 
 const onTouchMove = e => {
-  if (!isDragging.value) return;
-  e.preventDefault();
-  const delta = startY.value - e.touches[0].clientY;
-  let newHeight = sheetHeight.value + delta;
-  if (newHeight < minHeight) newHeight = minHeight;
-  if (newHeight > maxHeight) newHeight = maxHeight;
-  sheetHeight.value = newHeight;
-  startY.value = e.touches[0].clientY;
-};
+  if (!isDragging.value) return
+  e.preventDefault()
+  const delta = startY.value - e.touches[0].clientY
+  let newHeight = sheetHeight.value + delta
+  if (newHeight < minHeight) newHeight = minHeight
+  if (newHeight > maxHeight) newHeight = maxHeight
+  sheetHeight.value = newHeight
+  startY.value = e.touches[0].clientY
+}
 
 const onTouchEnd = () => { 
-  isDragging.value = false;
-  const middle = (minHeight + maxHeight)/2;
-  sheetHeight.value = sheetHeight.value >= middle ? maxHeight : minHeight;
-};
+  isDragging.value = false
+  const middle = (minHeight + maxHeight)/2
+  sheetHeight.value = sheetHeight.value >= middle ? maxHeight : minHeight
+}
 
 const selectReturnTime = (time) => {
-  returnTime.value = time;
-};
+  returnTime.value = time
+}
 
 const getStatusInfo = () => {
   if (!routeData.value) {
-    return { text: "Carregando...", color: "#94a3b8", icon: "⏳" };
+    return { text: "Carregando...", color: "#94a3b8", icon: "⏳" }
   }
   
   if (routeData.value.finalized) {
-    return { text: "Finalizada", color: "#64748b", icon: "✓" };
+    return { text: "Finalizada", color: "#64748b", icon: "✓" }
   } else if (routeData.value.is_active) {
-    return { text: "Em Andamento", color: "#4CAF50", icon: "🚌" };
+    return { text: "Em Andamento", color: "#4CAF50", icon: "🚌" }
   } else {
-    return { text: "Aguardando", color: "#FF9800", icon: "⏰" };
+    return { text: "Aguardando", color: "#FF9800", icon: "⏰" }
   }
-};
+}
 
 const myPickupAddress = computed(() => {
-  return currentPassenger.value?.address_passenger?.[0]?.address || "Endereço não disponível";
-});
+  return currentPassenger.value?.address_passenger?.[0]?.address || "Endereço não disponível"
+})
 
-// Carrega a rota quando o componente é montado
-onMounted(async () => {
-  const passengerId = authStore.state.user.passenger_data?.id;
-  if (passengerId) {
-    await goRoutesStore.filterMyOpenedPassengerRoute(passengerId);
+// Watch para atualizações da rota
+watch(() => routeData.value, (newRouteData) => {
+  if (!newRouteData || !map.value) return
+  
+  // Recarregar dados no mapa
+  if (map.value.isStyleLoaded()) {
+    // Atualizar motorista
+    const driverLocation = getDriverLocation.value
+    if (map.value.getSource('driver') && driverLocation) {
+      map.value.getSource('driver').setData({
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [driverLocation.lng, driverLocation.lat]
+          },
+          properties: {
+            type: 'driver',
+            name: newRouteData.driver?.user?.name || 'Motorista'
+          }
+        }]
+      })
+    }
+    
+    // Atualizar passageiro
+    const passengerLocation = getPassengerLocation.value
+    if (map.value.getSource('passenger') && passengerLocation) {
+      map.value.getSource('passenger').setData({
+        type: 'FeatureCollection',
+        features: [{
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [passengerLocation.lng, passengerLocation.lat]
+          },
+          properties: {
+            type: 'passenger',
+            name: authStore.state.user.name || 'Você',
+            address: currentPassenger.value?.address_passenger?.[0]?.address || 'Seu endereço'
+          }
+        }]
+      })
+    }
+    
+    setTimeout(focusOnRelevantPosition, 500)
   }
-});
+}, { deep: true })
+
+onMounted(async () => {
+  const passengerId = authStore.state.user.passenger_data?.id
+  if (passengerId) {
+    await goRoutesStore.filterMyOpenedPassengerRoute(passengerId)
+  }
+  initializeMap()
+})
 </script>
 
 <template>
   <div class="passenger-view" v-if="routeData">
     <div class="map-container">
-      <GMapMap
-        :center="mapCenter"
-        :zoom="mapZoom"
-        map-type-id="roadmap"
-        style="width: 100%; height: 100vh"
-        :options="{
-          zoomControl: true,
-          mapTypeControl: false,
-          scaleControl: true,
-          streetViewControl: false,
-          rotateControl: false,
-          fullscreenControl: true,
-          styles: [
-            {
-              featureType: 'poi',
-              elementType: 'labels',
-              stylers: [{ visibility: 'off' }]
-            }
-          ]
-        }"
-      >
-        <!-- Marcadores -->
-        <GMapMarker
-          v-for="(marker, index) in markers"
-          :key="index"
-          :position="marker.position"
-          :title="marker.title"
-          :icon="marker.icon"
-          :clickable="true"
-        />
-
-      </GMapMap>
+      <div id="map"></div>
+      
+      <!-- Overlay com nome da rota e botão de foco -->
+      <div class="map-overlay-info">
+        <div class="route-name-badge">
+          <MapMarker :size="18" />
+          <span>{{ routeData.name || 'Minha Rota' }}</span>
+          <button 
+            class="focus-driver-btn"
+            @click="focusOnDriver"
+            title="Focar no motorista"
+            :disabled="!getDriverLocation"
+          >
+            <CrosshairsGps :size="18" />
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Bottom sheet -->
@@ -277,7 +432,9 @@ onMounted(async () => {
                 :class="{ selected: returnTime === '12:00' }"
                 @click="selectReturnTime('12:00')"
               >
-                🕛 <span>12:00</span>
+                <span class="return-emoji">🕛</span>
+                <span class="return-time">12:00</span>
+                <span class="return-label">Almoço</span>
               </button>
 
               <button 
@@ -285,7 +442,9 @@ onMounted(async () => {
                 :class="{ selected: returnTime === '17:00' }"
                 @click="selectReturnTime('17:00')"
               >
-                🕔 <span>17:00</span>
+                <span class="return-emoji">🕔</span>
+                <span class="return-time">17:00</span>
+                <span class="return-label">Final do dia</span>
               </button>
             </div>
 
@@ -301,17 +460,25 @@ onMounted(async () => {
             <h4>Motorista</h4>
             <div class="driver-card">
               <div class="driver-avatar">
-                <img :src="routeData.driver?.user?.picture?.file" :alt="routeData.driver?.user?.name" />
+                <img 
+                  :src="routeData.driver?.user?.picture?.file || 'https://cdn-icons-png.flaticon.com/512/744/744465.png'" 
+                  :alt="routeData.driver?.user?.name" 
+                />
               </div>
               <div class="driver-details">
-                <span class="driver-name">{{ routeData.driver?.user?.name }}</span>
-                <span class="driver-phone">
+                <div class="driver-name">{{ routeData.driver?.user?.name }}</div>
+                <div class="driver-phone">
                   <Phone :size="14" /> {{ routeData.driver?.user?.telephone }}
-                </span>
+                </div>
               </div>
+              <a 
+                :href="'tel:' + routeData.driver?.user?.telephone" 
+                class="call-button"
+              >
+                <Phone :size="20" />
+              </a>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -338,11 +505,15 @@ onMounted(async () => {
   font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Container do Mapa */
 .map-container {
   width: 100%;
   height: 100vh;
   position: relative;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
 }
 
 .map-overlay-info {
@@ -369,6 +540,42 @@ onMounted(async () => {
 
 .route-name-badge svg {
   color: var(--accent);
+}
+
+.focus-driver-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 0.5rem;
+  box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3);
+}
+
+.focus-driver-btn:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(26, 115, 232, 0.4);
+}
+
+.focus-driver-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.focus-driver-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.focus-driver-btn svg {
+  color: white;
 }
 
 /* Bottom Sheet */
@@ -735,6 +942,7 @@ onMounted(async () => {
   box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
   transition: all 0.3s ease;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .call-button:active {
@@ -785,5 +993,11 @@ onMounted(async () => {
 .no-route-content p {
   color: #64748b;
   margin: 0;
+}
+
+span{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

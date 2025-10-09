@@ -125,6 +125,15 @@ class GoRoutesService {
         }
     }
 
+    async createDailyRoute(data){
+        try{
+            const response = await api.post(`goroutes/dailyroute/`, data)
+            return response
+        }catch(error){
+            console.error(error)
+        }
+    }
+
 }
 
 export default new GoRoutesService();

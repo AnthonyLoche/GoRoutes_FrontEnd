@@ -10,7 +10,7 @@ const authStore = useAuthStore()
 
 onMounted(async() =>{
     const response = await goRoutesStore.filterMyOpenedPassengerRoute(authStore.state.user.passenger_data.id)
-    
+    console.log(response)
     if(response) {
         component.value = MainOpenedRouteCompMinorPassenger
     }else{

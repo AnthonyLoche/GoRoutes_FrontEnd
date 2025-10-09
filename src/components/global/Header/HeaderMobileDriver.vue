@@ -1,11 +1,12 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useDriversStore } from '@/stores'
+import { useDriversStore, useAuthStore } from '@/stores'
 
 const isMenuOpen = ref(false)
 const router = useRouter()
 const driversStore = useDriversStore()
+const authStore = useAuthStore()
 
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value
@@ -22,16 +23,39 @@ const menuItems = ref([
     { name: 'Perfil', icon: 'mdi-account', color: '#607D8B', route: '/blank/profile/driver' },
     { name: 'Minha Rotas', icon: 'mdi-map-marker-path', color: '#FF9800', route: '/blank/driver/my-routes' },
     { name: 'Rotas Feitas', icon: 'mdi-check-circle', color: '#2196F3', route: '/completed-routes' },
+    { 
+        name: 'Logout', 
+        icon: 'mdi-logout', 
+        color: '#F44336', 
+        action: () => {
+            authStore.logout()
+            router.push('/blank/login')
+        }
+    }
 ])
 
 const goToHome = () => {
     router.push('/')
 }
 
-onMounted(async()=>{
+const handleMenuItemClick = (item) => {
+    if (item.action) {
+        item.action()
+    } else if (item.route) {
+        router.push(item.route)
+    }
+    closeMenu()
+}
+
+onMounted(async () => {
     await driversStore.verifyOpenDailyRoutes()
-    if(driversStore.state.hasOpenDailyRoute){
-        menuItems.value.push({ name: 'Minha Rota de Hoje', icon: "mdi-map-marker-path", route: '/blank/admin/drivers/my-daily-route', color: '#5050ff' })
+    if (driversStore.state.hasOpenDailyRoute) {
+        menuItems.value.push({ 
+            name: 'Minha Rota de Hoje', 
+            icon: "mdi-map-marker-path", 
+            route: '/blank/admin/drivers/my-daily-route', 
+            color: '#5050ff' 
+        })
     }
 })
 </script>
@@ -61,24 +85,25 @@ onMounted(async()=>{
 
       <div class="apps-container">
         <div class="apps-grid">
-          <router-link 
+          <div 
             v-for="item in menuItems" 
             :key="item.name"
-            :to="item.route"
             class="app-card"
-            @click="closeMenu"
+            @click="handleMenuItemClick(item)"
           >
             <div class="app-icon" :style="{ backgroundColor: item.color }">
               <v-icon size="24" color="white">{{ item.icon }}</v-icon>
             </div>
             <span class="app-name">{{ item.name }}</span>
-          </router-link>
+          </div>
         </div>
       </div>
     </aside>
   </div>
 </template>
+
 <style scoped>
+/* Estilos permanecem os mesmos */
 .mobile-container {
     position: relative;
 }

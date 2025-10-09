@@ -45,7 +45,6 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
   })
 
   const authStore = useAuthStore()
-  const driverId = authStore.state.user.driver_data?.id
 
   const getRoutes = async () => {
     state.loading = true
@@ -143,7 +142,7 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
   const filterMyDriverRoutes = async () => {
     state.loading = true
     try {
-      const response = await GoRoutesService.filterMyDriverRoutes(driverId)
+      const response = await GoRoutesService.filterMyDriverRoutes(authStore.state.user?.driver_data?.id)
       state.myDriverRoutes = response
     } catch (error) {
       state.error = error
@@ -237,6 +236,17 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     }
   }
 
+  const createDailyRoute = async (data) => {
+    try{
+      const response = await GoRoutesService.createDailyRoute(data)
+      showSuccessToast(`Rota do dia criada com sucesso!`)
+      return response
+    }catch(error){
+      console.error(error)
+    }
+  }
+
+
   return {
     state,
     state_create,
@@ -253,6 +263,7 @@ export const useGoRoutesStore = defineStore('goroutes', () => {
     getRoute,
     createRoute,
     deleteRoute,
-    filterMyOpenedPassengerRoute
+    filterMyOpenedPassengerRoute,
+    createDailyRoute  
   }
 })
