@@ -8,6 +8,7 @@ import AccountGroup from "vue-material-design-icons/AccountGroup.vue"
 import MapMarkerDistance from "vue-material-design-icons/MapMarkerDistance.vue"
 import Navigation from "vue-material-design-icons/Navigation.vue"
 import MapMarker from "vue-material-design-icons/MapMarker.vue"
+import AlertCircle from "vue-material-design-icons/AlertCircle.vue"
 import { useGoRoutesStore } from "@/stores"
 import router from "@/router"
 
@@ -28,6 +29,9 @@ const routes = computed(() =>
         vehicleModel: route.vehicle?.model || "Sem veículo"
     }))
 )
+
+// Computed para verificar se há rotas
+const hasRoutes = computed(() => routes.value.length > 0)
 
 const selectDailyRoute = (route) => {
     for (const p of route.passengers){
@@ -63,7 +67,7 @@ const isMobile = () => windowWidth.value <= 1024
                 <Map :size="32" class="header-icon" />
                 <h2 class="page-title">Minhas Rotas</h2>
             </div>
-            <div class="header-stats">
+            <div v-if="hasRoutes" class="header-stats">
                 <div class="stat-item">
                     <span class="stat-number">{{routes.filter(r => r.status === 'active').length}}</span>
                     <span class="stat-label">Ativas</span>
@@ -75,7 +79,20 @@ const isMobile = () => windowWidth.value <= 1024
             </div>
         </div>
 
-        <div class="routes-grid">
+        <!-- Estado quando não há rotas -->
+        <div v-if="!hasRoutes" class="no-routes-container">
+            <div class="no-routes-content">
+                <AlertCircle :size="64" class="no-routes-icon" />
+                <h3 class="no-routes-title">Nenhuma rota cadastrada</h3>
+                <p class="no-routes-message">
+                    Você ainda não possui rotas cadastradas. 
+                    Entre em contato com a administração para criar suas rotas.
+                </p>
+            </div>
+        </div>
+
+        <!-- Grid de rotas (apenas quando há rotas) -->
+        <div v-else class="routes-grid">
             <v-card v-for=" route in routes" :key="route.id" class="route-card" elevation="2"
                 :class="{ 'inactive-route': route.status === 'inactive' }">
                 <v-card-title class="card-header">
@@ -227,6 +244,43 @@ span {
     margin-top: 0.25rem;
 }
 
+/* Estilos para o estado sem rotas */
+.no-routes-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    padding: 2rem;
+}
+
+.no-routes-content {
+    text-align: center;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.no-routes-icon {
+    color: rgb(var(--v-theme-warning));
+    opacity: 0.7;
+}
+
+.no-routes-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: rgb(var(--v-theme-on-surface));
+}
+
+.no-routes-message {
+    margin: 0;
+    font-size: 1rem;
+    color:  #c3c3c3;
+    line-height: 1.5;
+}
+
 .routes-grid {
     display: flex;
     flex-direction: column;
@@ -263,8 +317,6 @@ span {
     border-radius: 50%;
     background-color: rgba(var(--v-theme-surface-variant), 0.3);
 }
-
-
 
 .status-icon.active {
     color: rgb(var(--v-theme-success));
@@ -325,7 +377,6 @@ span {
     letter-spacing: 0.5px;
 }
 
-
 .card-actions {
     padding: 0.75rem 1.25rem 1.25rem 1.25rem !important;
 }
@@ -346,6 +397,19 @@ span {
         gap: 0.5rem;
         padding: 0;
         align-items: flex-start;
+    }
+
+    .no-routes-container {
+        min-height: 300px;
+        padding: 1rem;
+    }
+
+    .no-routes-title {
+        font-size: 1.25rem;
+    }
+
+    .no-routes-message {
+        font-size: 0.9rem;
     }
 }
 </style>

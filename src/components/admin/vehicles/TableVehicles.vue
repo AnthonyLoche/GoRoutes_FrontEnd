@@ -62,21 +62,21 @@
       <template #item.Status="{ item }">
         <div class="d-flex align-center">
           <v-icon
-            v-if="item.Status === 'disponível'"
+            v-if="item.Status === 'Disponivel'"
             color="success"
             class="mr-2"
           >
             mdi-check-circle
           </v-icon>
           <v-icon
-            v-else-if="item.Status === 'manutenção'"
+            v-else-if="item.Status === 'Manutencao'"
             color="warning"
             class="mr-2"
           >
             mdi-wrench
           </v-icon>
           <v-icon
-            v-else-if="item.Status === 'em rota'"
+            v-else-if="item.Status === 'Em rota'"
             color="info"
             class="mr-2"
           >

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { usePassengersStore } from '@/stores'
 import PhotoComp from '@/components/global/profiles-images/PhotoComp.vue'
 import ShowPhoto from '@/components/global/profiles-images/ShowPhoto.vue'
@@ -13,6 +13,11 @@ const changePhotoDialog = ref(false)
 function toggleEdit() {
     isEditing.value = !isEditing.value
 }
+
+// Computed para verificar se é estudante
+const isStudent = computed(() => {
+    return passengersStore.state.selectedPassenger.passenger_data?.student_data !== null
+})
 </script>
 
 <template>
@@ -26,8 +31,6 @@ function toggleEdit() {
 
             <div class="form-wrapper">
                 <div class="form-grid">
-                
-
                     <v-text-field
                         v-model="passengersStore.state.selectedPassenger.name"
                         label="Nome"
@@ -42,22 +45,43 @@ function toggleEdit() {
                         :readonly="!isEditing"
                     />
 
-             
-                    <v-text-field
-                        class="full"
-                        v-model="passengersStore.state.selectedPassenger.passenger_data.student_data.registration"
-                        label="Matrícula"
-                        variant="outlined"
-                        :readonly="!isEditing"
-                    />
+                    <!-- Campos de estudante (apenas se for estudante) -->
+                    <template v-if="isStudent">
+                        <v-text-field
+                            class="full"
+                            v-model="passengersStore.state.selectedPassenger.passenger_data.student_data.registration"
+                            label="Matrícula"
+                            variant="outlined"
+                            :readonly="!isEditing"
+                        />
 
-                    <v-text-field
-                        class="full"
-                        v-model="passengersStore.state.selectedPassenger.passenger_data.student_data.grade"
-                        label="Turma"
-                        variant="outlined"
-                        :readonly="!isEditing"
-                    />
+                        <v-text-field
+                            class="full"
+                            v-model="passengersStore.state.selectedPassenger.passenger_data.student_data.grade"
+                            label="Turma"
+                            variant="outlined"
+                            :readonly="!isEditing"
+                        />
+                    </template>
+
+                    <!-- Campos para não estudantes -->
+                    <template v-else>
+                        <v-text-field
+                            class="full"
+                            v-model="passengersStore.state.selectedPassenger.email"
+                            label="Email"
+                            variant="outlined"
+                            :readonly="!isEditing"
+                        />
+
+                        <v-text-field
+                            class="full"
+                            v-model="passengersStore.state.selectedPassenger.telephone"
+                            label="Telefone"
+                            variant="outlined"
+                            :readonly="!isEditing"
+                        />
+                    </template>
 
                     <div class="edit-button full">
                         <v-btn
@@ -67,9 +91,10 @@ function toggleEdit() {
                             prepend-icon="mdi-pencil-outline"
                             rounded="1"
                         >
-                            Editar
+                            {{ isEditing ? 'Cancelar' : 'Editar' }}
                         </v-btn>
                         <v-btn
+                            v-if="isEditing"
                             @click="toggleEdit"
                             color="primary"
                             prepend-icon="mdi-content-save-outline"
@@ -122,5 +147,27 @@ function toggleEdit() {
 
 .full {
     grid-column: span 2;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .photo {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .full {
+        grid-column: span 1;
+    }
+    
+    .edit-button {
+        justify-content: space-around;
+        margin-top: 1rem;
+    }
 }
 </style>

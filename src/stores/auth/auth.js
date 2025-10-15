@@ -3,6 +3,7 @@ import { useStorage } from '@vueuse/core'
 import { AuthService } from '@/services'
 import { useRouter } from 'vue-router'
 import { showSuccessToast } from '@/utils/toast'
+import { reactive } from 'vue'
 
 // Função para verificar se localStorage está disponível
 function isLocalStorageAvailable() {
@@ -29,6 +30,13 @@ export const useAuthStore = defineStore('auth', () => {
     type: '',
     token: '',
     message: '',
+  })
+  const selectedUserToUpdate = reactive({
+    id: null,
+    name: '',
+    username: '',
+    email: '',
+    telephone: '',
   })
 
   async function login(email, password) {
@@ -136,7 +144,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
   async function logout() {
-    // Limpa o state corretamente
     state.value = {
       user: {},
       isLogged: false,
@@ -146,24 +153,36 @@ export const useAuthStore = defineStore('auth', () => {
       message: ''
     }
 
-    // Limpa o storage
     if (storage) {
       storage.removeItem('auth')
     }
 
-    console.log('State after logout:', state.value)
-
-    // Redireciona para login
     await router.push('/blank/login')
   }
 
+  const updateUser = async () => {
+    try {
+      console.log('Updating user with data:', selectedUserToUpdate)
+      const response = await AuthService.updateUser(selectedUserToUpdate)
+      showSuccessToast('Dados atualizados com sucesso!')
+      refreshDataUser(selectedUserToUpdate.id)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+
+
   return {
     state,
+    selectedUserToUpdate,
     login,
     logout,
     register,
     updatePicture,
     refreshDataUser,
-    userById
+    userById,
+    updateUser
   }
 })

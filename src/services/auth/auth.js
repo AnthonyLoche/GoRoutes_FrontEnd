@@ -10,6 +10,8 @@ class AuthService {
       })
       return response
     } catch (error) {
+      showErrorToast('Erro ao fazer login, verifique suas credenciais e tente novamente.')
+      console.error(error)
       return error
     }
   }
@@ -85,6 +87,19 @@ class AuthService {
     }
   }
 
+  async updateUser(data) {
+    try {
+      const { id, ...formatedData } = data
+      console.log( data)
+      const response = await api.put(`/authentication/users/${id}/`, formatedData)
+      showSuccessToast('Dados atualizados com sucesso!')
+      return response
+    } catch (error) {
+      console.error(error)
+      showErrorToast('Erro ao atualizar dados')
+      return error
+    }
+  }
 }
 
 export default new AuthService()

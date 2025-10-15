@@ -59,9 +59,6 @@ onUnmounted(() => {
                     @keyup.enter="handleLogin"
                     style="margin-top: -10px;"
                 />
-                <div v-if="authStore.state.error" class="error-message">
-                    {{ authStore.state.message }}
-                </div>
                 <ButtonComp
                     name="LOGIN"
                     padding=".5rem"

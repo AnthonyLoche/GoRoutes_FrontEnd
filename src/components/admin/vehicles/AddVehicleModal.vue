@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 import { defineProps, defineEmits } from 'vue'
 import CarIcon from 'vue-material-design-icons/Car.vue'
 import { useVehiclesStore } from '@/stores'
+
 const vehiclesStore = useVehiclesStore()
 
 const props = defineProps({
@@ -28,9 +29,9 @@ const form = ref({
 })
 
 const vehicleStatuses = [
-    { text: 'Manutenção', value: 'manutenção' },
-    { text: 'Disponível', value: 'disponível' },
-    { text: 'Em Rota', value: 'em rota' },
+    { text: 'Manutenção', value: 'Manutencao' },
+    { text: 'Disponível', value: 'Disponivel' },
+    { text: 'Em Rota', value: 'Em rota' },
 ]
 
 function limparFormulario() {
@@ -46,6 +47,10 @@ function limparFormulario() {
 async function saveVehicle() {
     const response = await vehiclesStore.createVehicle(form.value)
     console.log(response.data)
+    if (response) {
+        isDialogOpen.value = false
+        limparFormulario()
+    }
 }
 </script>
 
@@ -82,7 +87,7 @@ async function saveVehicle() {
                             <v-select
                                 v-model="form.status"
                                 :items="vehicleStatuses"
-                                item-text="text"
+                                item-title="text"
                                 item-value="value"
                                 label="Status"
                                 outlined
@@ -92,35 +97,42 @@ async function saveVehicle() {
                 </v-container>
             </v-card-text>
 
-            <div class="edit-button full">
+            <v-card-actions class="card-actions">
                 <v-btn @click="limparFormulario" color="primary" variant="tonal" rounded="1">Limpar</v-btn>
-                <v-btn @click="saveVehicle" color="primary" prepend-icon="mdi-content-save-outline" rounded="1">Salvar</v-btn>
-            </div>
+                
+                <v-btn @click="saveVehicle" color="primary" variant="elevated" prepend-icon="mdi-content-save-outline" rounded="1">Salvar</v-btn>
+            </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <style scoped>
 .title {
-    border-bottom: 2px solid var(--primary-color);
+    border-bottom: 2px solid rgb(var(--v-theme-primary));
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 1rem 1.5rem;
 }
 
-.edit-button {
+.card-actions {
     display: flex;
-    align-items: end;
-    justify-content: end;
+    align-items: center;
+    justify-content: flex-end;
     width: 100%;
     gap: 1rem;
-    padding: 1rem;
+    padding: 1rem 1.5rem;
 }
 
 span {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+p {
+    margin-bottom: 1.5rem;
+    color: rgba(0, 0, 0, 0.7);
 }
 </style>
 

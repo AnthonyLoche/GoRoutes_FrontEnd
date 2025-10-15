@@ -46,10 +46,6 @@ import { HeaderMain, AsideDriverComp , ProfileDataDriver, FooterMain} from '@/co
     margin: auto;
 }
 
-/* .main-default div {
-    border: 1px solid #000;
-} */
-
 @media screen and (max-width: 1024px) {
     .grid {
         display: flex;
