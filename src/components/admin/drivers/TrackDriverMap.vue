@@ -239,4 +239,11 @@ watch(
 .action-btn.secondary:hover {
   background-color: #4b5563;
 }
+@media screen and (max-width: 1024px) {
+  .map-container {
+    width: 95%;
+    margin: 0 auto 2rem auto;
+
+}
+}
 </style>

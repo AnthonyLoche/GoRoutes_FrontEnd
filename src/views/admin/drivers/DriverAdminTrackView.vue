@@ -36,4 +36,10 @@ main{
     grid-template-columns: 20% 80%;
     width: 100%;
 }
+@media screen and (max-width: 1024px) {
+    .contain {
+        display: flex;
+        flex-direction: column;
+    }
+}
 </style>

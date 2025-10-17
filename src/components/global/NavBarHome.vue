@@ -33,14 +33,14 @@ onBeforeUnmount(() => document.removeEventListener("click", closeMenu));
 
       <div class="profile-container" v-else>
         <div class="profile-menu" @click="toggleMenu">
-          <img
+          <!-- <img
             :src="authStore.state.user.picture_file"
             class="profile-img"
             alt="profile"
-          />
-          <div class="profile-name">
+          /> -->
+          <!-- <div class="profile-name">
             {{ authStore.state.user.name.split(" ")[0] }}
-          </div>
+          </div> -->
           <svg class="chevron" width="16" height="16" viewBox="0 0 24 24">
             <path fill="currentColor" d="M7 10l5 5 5-5z" />
           </svg>
