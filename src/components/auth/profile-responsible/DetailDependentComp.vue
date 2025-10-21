@@ -115,16 +115,13 @@ onMounted(() => {
         <!-- Modais -->
         <ShowPhoto v-model="viewPhotoDialog" :src="d.foto" />
         <UploadPhoto v-model="changePhotoDialog" :user_id="d.id" />
-    <v-btn rounded="sm" @click="dialog = !dialog" class="b">
-      Adicionar dependente
-    </v-btn>
     <ModalAddDependent :model-value="dialog" />
   </section>
 </template>
 
 <style scoped>
 .photo {
-  width: 85%;
+  width: 100%;
   display: flex;
   flex-direction: row;
   align-items: flex-start;

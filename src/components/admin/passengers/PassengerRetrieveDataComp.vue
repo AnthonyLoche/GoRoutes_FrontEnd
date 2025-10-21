@@ -10,11 +10,6 @@ const isEditing = ref(false)
 const viewPhotoDialog = ref(false)
 const changePhotoDialog = ref(false)
 
-function toggleEdit() {
-    isEditing.value = !isEditing.value
-}
-
-// Computed para verificar se é estudante
 const isStudent = computed(() => {
     return passengersStore.state.selectedPassenger.passenger_data?.student_data !== null
 })
@@ -83,26 +78,6 @@ const isStudent = computed(() => {
                         />
                     </template>
 
-                    <div class="edit-button full">
-                        <v-btn
-                            @click="toggleEdit"
-                            color="primary"
-                            variant="tonal"
-                            prepend-icon="mdi-pencil-outline"
-                            rounded="1"
-                        >
-                            {{ isEditing ? 'Cancelar' : 'Editar' }}
-                        </v-btn>
-                        <v-btn
-                            v-if="isEditing"
-                            @click="toggleEdit"
-                            color="primary"
-                            prepend-icon="mdi-content-save-outline"
-                            rounded="1"
-                        >
-                            Salvar
-                        </v-btn>
-                    </div>
                 </div>
             </div>
         </div>

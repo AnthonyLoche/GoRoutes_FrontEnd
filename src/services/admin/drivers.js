@@ -54,6 +54,17 @@ class DriversService {
             console.error(error);
         }
     }
+
+    async updateDriverDocument(data) {
+        try {
+            const response = await api.post(`/goroutes/update-document-driver/`, data);
+            showSuccessToast('Documento atualizado com sucesso!');
+            return response;
+        }catch (error) {
+            console.error(error);
+            return error;
+        }
+    }
 }
 
 export default new DriversService();

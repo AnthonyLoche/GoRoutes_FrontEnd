@@ -5,6 +5,7 @@ import PhotoComp from '@/components/global/profiles-images/PhotoComp.vue'
 import ShowPhoto from '@/components/global/profiles-images/ShowPhoto.vue'
 import UploadPhoto from '@/components/global/profiles-images/UploadPhoto.vue'
 import AccountCircle from 'vue-material-design-icons/AccountCircle.vue'
+import MyAddressMinor from './MyAddressMinor.vue'
 import { LoadingComp } from '@/components'
 
 const authStore = useAuthStore()
@@ -47,8 +48,6 @@ function toggleEdit() {
 <template>
   <section>
     <LoadingComp v-if="isLoading" />
-
-
 
     <div class="title">
       <AccountCircle />
@@ -125,7 +124,7 @@ function toggleEdit() {
       </div>
     </div>
 
-    <!-- Modais -->
+    <MyAddressMinor v-if="passengerData && passengerData.address && passengerData.address.length" />
     <ShowPhoto v-model="viewPhotoDialog" :src="userData.picture_file" />
     <UploadPhoto v-model="changePhotoDialog" :user_id="userData.id" />
   </section>

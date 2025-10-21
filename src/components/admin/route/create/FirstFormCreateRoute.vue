@@ -126,10 +126,8 @@ const goRoutesStore = useGoRoutesStore()
 const driversStore = useDriversStore()
 const vehiclesStore = useVehiclesStore()
 
-// Usa os dados da store
 const routeData = ref(goRoutesStore.state_create.create_route)
 
-// Computed para motoristas disponíveis
 const availableDrivers = computed(() => {
     return driversStore.state.drivers
         .filter(driver => driver.driver_data?.is_active)
@@ -145,7 +143,6 @@ const availableDrivers = computed(() => {
 // Computed para veículos disponíveis
 const availableVehicles = computed(() => {
     return vehiclesStore.state.vehicles
-        .filter(vehicle => vehicle.status === 'disponível')
         .map(vehicle => ({
             id: vehicle.id,
             displayName: `${vehicle.model} - ${vehicle.plate} (${vehicle.seats} lugares)`,
@@ -156,12 +153,10 @@ const availableVehicles = computed(() => {
         }))
 })
 
-// Sincroniza com a store
 watch(routeData, (newValue) => {
     goRoutesStore.state_create.create_route = { ...newValue }
 }, { deep: true })
 
-// Carrega os dados ao montar o componente
 onMounted(async () => {
     await Promise.all([
         driversStore.getDrivers(),
@@ -171,7 +166,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Mantém o CSS original */
 .first-form-create-route f {
     --primary: #022840;
     --primary-dark: #011a2b;

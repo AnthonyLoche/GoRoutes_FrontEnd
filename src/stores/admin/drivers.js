@@ -81,13 +81,28 @@ export const useDriversStore = defineStore("drivers", () => {
         }
     }
 
+    const updateDriverDocument = async (data) => {
+        state.loading = true;
+        try {
+            const response = await DriversService.updateDriverDocument(data);
+            authStore.refreshDataUser(authStore.state.user.id)
+            return response;
+        } catch (error) {
+            state.error = error;
+            console.error(error);
+        } finally {
+            state.loading = false;
+        }
+    }
+
     return {
         state,
         getDrivers,
         getDriver,
         createDriver,
         deleteDriver,
-        verifyOpenDailyRoutes
+        verifyOpenDailyRoutes,
+        updateDriverDocument
     }
 
 });

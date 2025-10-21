@@ -51,3 +51,5 @@ export {default as CardListRoute} from "./admin/route/list/CardListRoute.vue"
 export {default as DashboardMainComp} from './admin/dashboard/DashboardMainComp.vue'
 export {default as DashboardDetailsComp} from './admin/dashboard/DashboardDetailsComp.vue'
 export {default as RouteRetrieveComp} from './admin/route/retrieve/RetrieveRouteComp.vue'
+export { default as MapToTrackMyDependents } from './auth/profile-responsible/MapToTrackMyDependents.vue'
+export { default as AsideToTrackMyDependents } from './auth/profile-responsible/AsideToTrackMyDependents.vue'

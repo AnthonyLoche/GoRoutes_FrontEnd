@@ -23,8 +23,6 @@ import { ref, markRaw, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import HomeIcon from 'vue-material-design-icons/Home.vue';
 import AccountIcon from 'vue-material-design-icons/Account.vue';
-import MapMarker from 'vue-material-design-icons/MapMarker.vue';
-import Route from "vue-material-design-icons/Routes.vue"
 import Calendar from "vue-material-design-icons/Calendar.vue"
 
 const route = useRoute();
@@ -32,8 +30,6 @@ const isSidebarVisible = ref(true);
 const menuItems = ref([
     { name: 'Início', icon: markRaw(HomeIcon), route: '/', color: '#5050ff' },
     { name: 'Perfil', icon: markRaw(AccountIcon), route: '/blank/profile/minor', color: '#5050ff' },
-    { name: 'Informar Volta', icon: markRaw(MapMarker), route: '/blank/minor/report-back', color: '#5050ff' },
-    { name: 'Rotas Em Que Estou', icon: markRaw(Route), route: '/blank/minor/my-routes', color: '#5050ff' },
     { name: 'Minha Rota Diária', icon: markRaw(Calendar), route: '/blank/minor/my-daily-route', color: '#5050ff' },
 ]);
 

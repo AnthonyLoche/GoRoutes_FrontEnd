@@ -83,25 +83,7 @@ onMounted(() => {
                 :readonly="!isEditing"
               />
 
-              <div class="edit-button full">
-                <v-btn
-                  @click="toggleEdit"
-                  color="primary"
-                  variant="tonal"
-                  prepend-icon="mdi-pencil-outline"
-                  rounded="1"
-                >
-                  Editar
-                </v-btn>
-                <v-btn
-                  @click="toggleEdit"
-                  color="primary"
-                  prepend-icon="mdi-content-save-outline"
-                  rounded="1"
-                >
-                  Salvar
-                </v-btn>
-              </div>
+              
             </div>
           </div>
         </div>

@@ -38,8 +38,10 @@ onMounted(() => {
             </div>
             <div class="view">
                 <div class="title">
-          <AccountCircle />
-          <h2>Dados dos Dependentes</h2>
+          <div style="display: flex; align-items: center; justify-content: center;">
+              <AccountCircle />
+              <h2>Meus Dependentes</h2>
+          </div>          
       </div>
                 <DependantsComp />
             </div>
@@ -55,6 +57,8 @@ onMounted(() => {
     display: flex;
     align-items: end;
     gap: 0.5rem;
+    justify-content: space-between;
+    padding: .5rem 0;
 }
 .main-default {
     display: grid;
@@ -80,9 +84,11 @@ onMounted(() => {
     margin: auto;
 }
 
-/* .main-default div {
-    border: 1px solid #000;
-} */
+span{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
 @media screen and (max-width: 1024px) {
     .grid {
