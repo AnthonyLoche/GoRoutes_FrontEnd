@@ -59,7 +59,7 @@ const routes = [
       { path: 'driver/my-routes', component: Views.DriverMyRoutesView },
       { path: 'about', component: Views.AboutView },
       { path: 'main/passengers', component: Views.MainPassengerView },
-      
+      { path: 'responsible/dependents/add', component: Views.AddDependentsView },
     ],
   },
 ]

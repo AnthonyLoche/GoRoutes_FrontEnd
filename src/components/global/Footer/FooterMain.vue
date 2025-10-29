@@ -57,7 +57,7 @@
 .footer {
   background-color: #0d4f6b;
   color: #aaa;
-  padding: 4rem 2rem 2rem;
+  padding: 2rem 2rem 2rem;
 }
 
 .footer-content {
@@ -102,7 +102,7 @@
   justify-content: space-between;
   align-items: center;
   max-width: 1200px;
-  margin: 2rem auto 0;
+  margin: 1rem auto 0;
   padding-top: 2rem;
   border-top: 1px solid #444;
 }

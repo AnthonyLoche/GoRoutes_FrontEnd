@@ -111,7 +111,7 @@ const menuItems = ref([
       {
         name: 'Adicionar Dependente',
         icon: markRaw(Plus),
-        route: '/blank/responsible/dependents/add-dependent',
+        route: '/blank/responsible/dependents/add',
         active: false,
       }
     ]
