@@ -7,6 +7,7 @@ import { useGoRoutesStore } from '@/stores'
 
 const goRoutesStore = useGoRoutesStore()
 
+
 onMounted(async () => {
   await goRoutesStore.getActiveRoutes();
 });
