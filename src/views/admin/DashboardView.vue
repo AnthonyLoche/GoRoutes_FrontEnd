@@ -1,6 +1,7 @@
 <script setup>
+import { DashboardMainComp } from '@/components';
 </script>
 
 <template>
-    <div>Dashboard a</div>
+    <DashboardMainComp />
 </template>

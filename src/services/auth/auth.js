@@ -1,22 +1,24 @@
-import api from "@/plugins/axios";
-
+import api from '@/plugins/axios'
+import { showSuccessToast, showErrorToast } from '@/utils/toast'
 
 class AuthService {
-  async login(username, password) {
+  async login(email, password) {
     try {
       const response = await api.post(`/authentication/token/`, {
-        username,
+        email,
         password,
-      });
+      })
       return response
     } catch (error) {
+      showErrorToast('Erro ao fazer login, verifique suas credenciais e tente novamente.')
+      console.error(error)
       return error
     }
   }
 
   async registerDriver(data) {
     try {
-      const response = await api.post(`/authentication/drivers/`, data);
+      const response = await api.post(`/authentication/drivers/`, data)
       return response
     } catch (error) {
       return error
@@ -25,21 +27,79 @@ class AuthService {
 
   async registerPassenger(data) {
     try {
-      const response = await api.post(`/authentication/passengers/`, data);
+      const response = await api.post(`/authentication/passengers/`, data)
+      showSuccessToast('Cadastro realizado com sucesso!')
       return response
     } catch (error) {
+      console.error(error)
+      showErrorToast(error)
       return error
     }
   }
 
   async registerResponsible(data) {
     try {
-      const response = await api.post(`/authentication/responsibles/`, data);
+      const response = await api.post(`/authentication/responsibles/`, data)
       return response
     } catch (error) {
       return error
     }
   }
+
+  async updatePicture(data) {
+    try {
+      const response = await api.post(`/authentication/update-picture/`, data)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+  async responsibleByStudentFilter(id){
+    try {
+      const response = await api.get(`/authentication/users/?responsible_id=${id}`)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+
+  async refreshDataUser(id){
+    try {
+      const response = await api.get(`/authentication/users/${id}/`)
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+
+  async refreshToken(refresh_token) {
+    try {
+      const response = await api.post(`/authentication/token/refresh/`, {
+        refresh: refresh_token
+      })
+      return response
+    } catch (error) {
+      console.error(error)
+      return error
+    }
+  }
+
+  async updateUser(data) {
+    try {
+      const { id, ...formatedData } = data
+      console.log( data)
+      const response = await api.put(`/authentication/users/${id}/`, formatedData)
+      showSuccessToast('Dados atualizados com sucesso!')
+      return response
+    } catch (error) {
+      console.error(error)
+      showErrorToast('Erro ao atualizar dados')
+      return error
+    }
+  }
 }
 
-export default new AuthService();
+export default new AuthService()

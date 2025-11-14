@@ -1,33 +1,49 @@
 <script setup>
 import BgImage from "@/components/auth/BgImage.vue";
 import captionComp from "@/components/auth/login/CaptionComp.vue";
-import { InputComp, ButtonComp, LogoComp } from "@/components";
+import { InputComp, LogoComp, ButtonComp } from "@/components";
 import { useAuthStore } from "@/stores";
 
-import { reactive } from "vue";
+import { reactive, onMounted, onUnmounted } from "vue";
 
 const authStore = useAuthStore();
 
 const login = reactive({
-    username: "",
+    email: "",
     password: ""
 });
 
+const isScreenLarge = reactive({
+    value: window.innerWidth > 1024
+});
+
 const handleLogin = () => {
-  authStore.login(login.username, login.password);
+  authStore.login(login.email, login.password);
 };
 
+const updateScreenSize = () => {
+  isScreenLarge.value = window.innerWidth > 1024;
+};
+
+onMounted(() => {
+  window.addEventListener("resize", updateScreenSize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateScreenSize);
+});
 </script>
+
 <template>
     <div class="container">
         <div class="login-container">
             <LogoComp :variant="2" />
             <div class="form-container">
                 <InputComp
-                    label="Nome de usuário"
+                    label="Email"
                     type="text"
-                    placeholder="Enter your username"
-                    v-model="login.username"
+                    placeholder="Enter your email"
+                    v-model="login.email"
                     :haveSubtext="false"
                     padding-props="1.3rem"
                 />
@@ -37,14 +53,17 @@ const handleLogin = () => {
                     placeholder="Enter your password"
                     v-model="login.password"
                     :haveSubtext="true"
-                    subtext="Esqueci minha senha"
-                    style="color: #353DCCE5 !important;"
+                    subtext="Esqueci minha senha?"
+                    :subtext-link="'/blank/forgot-password'"
                     padding-props="1.3rem"
+                    @keyup.enter="handleLogin"
+                    style="margin-top: -10px;"
                 />
-                <div v-if="authStore.state.error" class="error-message">
-                    {{ authStore.state.message }}
-                </div>
-                <ButtonComp name="LOGIN" @click="handleLogin" padding=".5rem" />
+                <ButtonComp
+                    name="LOGIN"
+                    padding=".5rem"
+                    @click="handleLogin"
+                />
                 <captionComp pCaption="Ainda não é nosso cliente?" txtLink="Cadastre-se" link="/blank/register" />
             </div>
         </div>
@@ -53,8 +72,11 @@ const handleLogin = () => {
             <div></div>
         </div>
     </div>
-    <BgImage :variant="1" />
+    <div class="back" v-if="isScreenLarge.value">
+        <BgImage :variant="1" />
+    </div>
 </template>
+
 <style scoped>
 .container {
     display: flex;
@@ -75,7 +97,7 @@ const handleLogin = () => {
     align-items: center;
 }
 
-.aside>div {
+.aside > div {
     width: 100%;
     min-height: 40vh;
     border-radius: 20px;
@@ -107,15 +129,18 @@ const handleLogin = () => {
     width: 100%;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     .container {
         flex-direction: column;
         height: auto;
+        padding: 1rem;
     }
 
     .login-container {
         width: 100%;
         padding: 2rem 0;
+        margin-top: 15%;
+     
     }
 
     .aside {
@@ -125,6 +150,22 @@ const handleLogin = () => {
     .form-container {
         width: 100%;
         padding: 0 1rem 1rem 1rem;
+        margin: 0 auto;
     }
+
+    .back {
+        display: none;
+    }
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.button-wrapper button {
+    pointer-events: auto;
+    touch-action: manipulation; 
 }
 </style>

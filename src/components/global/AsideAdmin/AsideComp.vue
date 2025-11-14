@@ -1,29 +1,45 @@
 <template>
-  <div>
+  <div class="aside-admin">
     <button class="toggle-btn" @click="toggleSidebar">☰</button>
 
     <div class="sidebar" :class="{ show: isSidebarVisible }">
       <div class="menu-category" v-for="(category, index) in menuItems" :key="index">
-        <div
+        <router-link
+          v-if="category.subItems.length === 0"
+          :to="category.route"
           class="menu-item"
           :class="{ active: category.active }"
-          @click="category.name === 'Configurações' ? activateCategory(index) : toggleCategory(index)">
+          @click="activateCategory(index)">
           <div class="menu-icon">
             <component :is="category.icon" />
           </div>
           <span>{{ category.name }}</span>
-          <span v-if="category.subItems.length > 0" class="arrow" :class="{ rotated: category.expanded }">▼</span>
+        </router-link>
+
+        <div
+          v-else
+          class="menu-item"
+          :class="{ active: category.active }"
+          @click="toggleCategory(index)">
+          <div class="menu-icon">
+            <component :is="category.icon" />
+          </div>
+          <span>{{ category.name }}</span>
+          <span class="arrow" :class="{ rotated: category.expanded }">▼</span>
         </div>
+
         <Transition name="accordion">
           <div class="submenu" v-if="category.expanded && category.subItems.length > 0">
-            <a href="#"
-               class="submenu-item"
-               :class="{ active: subItem.active }"
-               v-for="(subItem, subIndex) in category.subItems"
-               :key="subIndex"
-               @click.prevent="activateSubItem(index, subIndex)">
+            <router-link
+              v-for="(subItem, subIndex) in category.subItems"
+              :key="subIndex"
+              :to="subItem.route"
+              class="submenu-item"
+              :class="{ active: subItem.active }"
+              @click="activateSubItem(index, subIndex)">
+              <component :is="subItem.icon" class="submenu-icon" />
               <span>{{ subItem.name }}</span>
-            </a>
+            </router-link>
           </div>
         </Transition>
       </div>
@@ -32,43 +48,57 @@
 </template>
 
 <script setup>
-import { ref, markRaw } from 'vue';
+import { ref, markRaw } from 'vue'
 
-import CarIcon from "vue-material-design-icons/Car.vue";
-import AccountIcon from "vue-material-design-icons/Account.vue";
-import MapMarkerPathIcon from "vue-material-design-icons/MapMarkerPath.vue";
-import CogIcon from "vue-material-design-icons/Cog.vue";
+import CarIcon from 'vue-material-design-icons/Car.vue'
+import MapMarkerPathIcon from 'vue-material-design-icons/MapMarkerPath.vue'
+import CogIcon from 'vue-material-design-icons/Cog.vue'
+import RouteIcon from 'vue-material-design-icons/MapMarker.vue'
+import AccountMultiple from "vue-material-design-icons/AccountMultiple.vue"
+import HumanMaleBoy from "vue-material-design-icons/HumanMaleBoy.vue"
+import SeatPassenger from "vue-material-design-icons/SeatPassenger.vue"
+import CardAccountDetails from "vue-material-design-icons/CardAccountDetails.vue"
+import Steering from "vue-material-design-icons/Steering.vue"
+import Dashboard from "vue-material-design-icons/ViewDashboard.vue"
 
-const isSidebarVisible = ref(true);
+const isSidebarVisible = ref(true)
+
 const menuItems = ref([
+  {
+    name: 'Dashboard',
+    icon: markRaw(Dashboard),
+    route: '/default/admin/dashboard',
+    expanded: false,
+    active: false,
+    subItems: []
+  },
   {
     name: 'Veículos',
     icon: markRaw(CarIcon),
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Vans e Micros', active: false },
-      { name: '> Rastrear Veiculo', active: false },
+      { name: 'Vans e Micros', active: false, route: '/default/admin/vehicles', icon: markRaw(CarIcon) }
     ]
   },
   {
     name: 'Clientes',
-    icon: markRaw(CogIcon),
+    icon: markRaw(AccountMultiple),
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Alunos', active: false },
-      { name: '> Pais', active: false },
+      { name: 'Passageiros', active: false, route: '/default/admin/passengers', icon: markRaw(SeatPassenger) },
+      { name: 'Responsáveis', active: false, route: '/default/admin/responsibles', icon: markRaw(HumanMaleBoy) },
     ]
   },
   {
     name: 'Motoristas',
-    icon: markRaw(AccountIcon),
+    icon: markRaw(Steering),
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Motoristas', active: false },
-      { name: '> Rastrear Motorista', active: false },
+      { name: 'Motoristas', active: false, route: '/default/admin/drivers', icon: markRaw(CardAccountDetails) },
+      { name: 'Rastrear Motorista', active: false, route: '/default/admin/drivers/track-driver', icon: markRaw(MapMarkerPathIcon) }
     ]
   },
   {
@@ -77,60 +107,58 @@ const menuItems = ref([
     expanded: false,
     active: false,
     subItems: [
-      { name: '> Ver Rotas', active: false },
-      { name: '> Criar Rota', active: false },
-      { name: '> Consultar Rota', active: false }
+      { name: 'Ver Rotas', active: false, route: '/default/admin/routes/list', icon: markRaw(RouteIcon) },
+      { name: 'Criar Rota', active: false, route: '/default/admin/routes/create', icon: markRaw(RouteIcon) },
+      { name: 'Consultar Rota', active: false, route: '/default/admin/routes/consult', icon: markRaw(RouteIcon) }
     ]
   },
   {
     name: 'Configurações',
     icon: markRaw(CogIcon),
+    route: '/default/admin/settings',
     expanded: false,
     active: false,
     subItems: []
   }
-]);
+])
 
 const toggleSidebar = () => {
-  isSidebarVisible.value = !isSidebarVisible.value;
-};
+  isSidebarVisible.value = !isSidebarVisible.value
+}
 
 const toggleCategory = (index) => {
-  menuItems.value[index].expanded = !menuItems.value[index].expanded;
+  menuItems.value[index].expanded = !menuItems.value[index].expanded
 
-  // Close other categories when opening a new one
   menuItems.value.forEach((category, i) => {
     if (i !== index) {
-      category.expanded = false;
+      category.expanded = false
     }
-  });
-
-  // Mark category as active
-  menuItems.value.forEach((category, i) => {
-    category.active = i === index;
-  });
-};
+    category.active = i === index
+  })
+}
 
 const activateCategory = (index) => {
   menuItems.value.forEach((category, i) => {
-    category.active = i === index;
-  });
-};
+    category.active = i === index
+    // Fecha todos os submenus ao ativar um item sem subitens
+    if (category.subItems.length === 0) {
+      category.expanded = false
+    }
+  })
+}
 
 const activateSubItem = (categoryIndex, subItemIndex) => {
-  menuItems.value.forEach(category => {
-    category.subItems.forEach(subItem => {
-      subItem.active = false;
-    });
-  });
+  menuItems.value.forEach((category) => {
+    category.subItems.forEach((subItem) => {
+      subItem.active = false
+    })
+  })
 
-  // Activate selected subitem
-  menuItems.value[categoryIndex].subItems[subItemIndex].active = true;
-};
+  menuItems.value[categoryIndex].subItems[subItemIndex].active = true
+}
 </script>
 
 <style scoped>
-/* Estilos permanecem os mesmos */
 * {
   margin: 0;
   padding: 0;
@@ -144,18 +172,8 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease;
   overflow-y: auto;
-  height: 100vh;
+  height: 90vh;
   border-right: 2px solid #E5E7EB;
-}
-
-.sidebar-collapsed {
-  width: 60px;
-}
-
-.sidebar-header {
-  padding: 15px;
-  text-align: center;
-  border-bottom: 1px solid #e0e0fe;
 }
 
 .menu-category {
@@ -217,6 +235,13 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
   border-right: 2px solid #5050ff;
 }
 
+.submenu-icon {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+  color: #5050ff;
+}
+
 .arrow {
   margin-left: auto;
   transition: transform 0.3s;
@@ -224,11 +249,6 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
 
 .arrow.rotated {
   transform: rotate(180deg);
-}
-
-.main-content {
-  flex: 1;
-  padding: 20px;
 }
 
 .toggle-btn {
@@ -251,6 +271,10 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
     left: -250px;
     z-index: 100;
     transition: left 0.3s ease;
+  }
+
+  .aside-admin{
+    display: none;
   }
 
   .sidebar.show {
@@ -277,5 +301,11 @@ const activateSubItem = (categoryIndex, subItemIndex) => {
 .accordion-leave-from {
   max-height: 200px;
   opacity: 1;
+}
+
+span{
+  display: flex;
+  align-items: center;
+ justify-content: center;
 }
 </style>

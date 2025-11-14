@@ -1,7 +1,80 @@
-import LoginView from './auth/LoginView.vue';
-import RegisterView from './auth/RegisterView.vue';
-import HomeView from './global/HomeView.vue';
+import LoginView from './auth/LoginView.vue'
+import RegisterView from './auth/RegisterView.vue'
+import DashboardView from './admin/DashboardView.vue'
+import ProfileResponsibleView from './auth/ProfileResponsibleView.vue'
+import HomeView from './global/HomeView.vue'
+import ProfileDriverView from './auth/ProfileDriverView.vue'
+import TestView from './tests/TestView.vue'
+import DriverAdminView from './admin/drivers/DriversAdminView.vue'
+import VehiclesAdminView from './admin/vehicles/VehiclesAdminView.vue'
+import VehicleAdminRetrieveView from './admin/vehicles/VehicleAdminRetrieveView.vue'
+import DriverAdminRetrieveView from './admin/drivers/DriverAdminRetrieveView.vue'
+import WebSocketView from './tests/WebSocketView.vue'
+import DriverAdminTrackByIdView from './admin/drivers/DriverAdminTrackByIdView.vue'
+import PassengersAdminView from './admin/passengers/PassengersAdminView.vue'
+import ResponsiblesAdminView from './admin/responsibles/ResponsiblesAdminView.vue'
+import DriverAdminTrackView from './admin/drivers/DriverAdminTrackView.vue'
+import PassengerAdminRetrieveView from './admin/passengers/PassengerAdminRetrieveView.vue'
+import DriverRouteIsActive from './admin/drivers/DriverRouteIsActive.vue'
+import TrackMyDependentsView from './responsibles/TrackMyDependentsView.vue'
+import MyDependentsView from './responsibles/MyDependentsView.vue'
+import DriverMyRoutesView from "./admin/drivers/DriverMyRoutesView.vue"
+import DetailDependentView from './responsibles/DetailDependentView.vue'
+import DataResponsibleAdminView from './admin/responsibles/DataResponsibleAdminView.vue'
+import AboutView from './global/AboutView.vue'
+import CreateRoutesView from './admin/routes/CreateRoutesView.vue'
+import DriverInitDailyRouteView from './admin/drivers/DriverInitDailyRouteView.vue'
+import RoutesListView from './admin/routes/RoutesListView.vue'
+import RoutesConsultView from './admin/routes/RoutesConsultView.vue'
+import ProfileMinorView from './auth/minor/ProfileMinorView.vue'
+import MinorMyDailyRouteView from './auth/minor/MinorMyDailyRouteView.vue'
+import MinorMyRoutesView from './auth/minor/MinorMyRoutesView.vue'
+import MinorReportBackView from './auth/minor/MinorReportBackView.vue'
+import DashboardDetailView from './admin/DashboardDetailView.vue'
+import DriverAdminCompletedRoutesView from './admin/drivers/DriverAdminCompletedRoutesView.vue'
+import RouteRetrieveView from './admin/routes/RouteRetrieveView.vue'
+import MainPassengerView from './passengers/MainPassengerView.vue'
+import AddDependentsView from './responsibles/AddDependentsView.vue'
 
-export { LoginView, RegisterView, HomeView };
+class Views {
+  static HomeView = HomeView
+  static LoginView = LoginView
+  static RegisterView = RegisterView
+  static DashboardView = DashboardView
+  static ProfileResponsibleView = ProfileResponsibleView
+  static ProfileDriverView = ProfileDriverView
+  static TestView = TestView
+  static DriverAdminView = DriverAdminView
+  static VehiclesAdminView = VehiclesAdminView
+  static VehicleAdminRetrieveView = VehicleAdminRetrieveView
+  static DriverAdminRetrieveView = DriverAdminRetrieveView
+  static WebSocketView = WebSocketView
+  static DriverAdminTrackByIdView = DriverAdminTrackByIdView
+  static PassengersAdminView = PassengersAdminView
+  static ResponsiblesAdminView = ResponsiblesAdminView
+  static DriverAdminTrackView = DriverAdminTrackView
+  static PassengerAdminRetrieveView = PassengerAdminRetrieveView
+  static DriverRouteIsActive = DriverRouteIsActive
+  static TrackMyDependentsView = TrackMyDependentsView
+  static MyDependentsView = MyDependentsView
+  static DriverMyRoutesView = DriverMyRoutesView
+  static DetailDependentView = DetailDependentView
+  static DataResponsibleAdminView = DataResponsibleAdminView
+  static AboutView = AboutView
+  static CreateRoutesView = CreateRoutesView
+  static DriverInitDailyRouteView = DriverInitDailyRouteView
+  static RoutesListView = RoutesListView
+  static RoutesConsultView = RoutesConsultView
+  static ProfileMinorView = ProfileMinorView
+  static MinorMyDailyRouteView = MinorMyDailyRouteView
+  static MinorMyRoutesView = MinorMyRoutesView
+  static MinorReportBackView = MinorReportBackView
+  static DashboardDetailView = DashboardDetailView
+  static DriverAdminCompletedRoutesView = DriverAdminCompletedRoutesView
+  static RouteRetrieveView = RouteRetrieveView
+  static MainPassengerView = MainPassengerView
+  static AddDependentsView = AddDependentsView
+}
 
-export { default as DashboardView } from './admin/DashboardView.vue';
+
+export { Views }

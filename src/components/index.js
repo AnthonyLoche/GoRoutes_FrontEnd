@@ -1,11 +1,55 @@
-import HeaderMain from "./global/Header/HeaderMain.vue";
-import AsideMain from "./global/AsideAdmin/AsideMain.vue";
-import LoadingComp from "./global/LoadingComp.vue";
-import LoginComp from "./auth/login/LoginComp.vue";
-import InputComp from "./global/InputComp.vue";
-import ButtonComp from "./global/ButtonComp.vue";
-import LogoComp from "./global/LogoComp.vue";
-import RegisterComp from "./auth/register/RegisterComp.vue";
-import ButtonCompBorded from "./global/ButtonCompBorded.vue";
-
-export { HeaderMain, AsideMain, LoadingComp, LoginComp, InputComp, ButtonComp, LogoComp, RegisterComp, ButtonCompBorded};
+export { default as HeaderMain } from './global/Header/HeaderMain.vue'
+export { default as AsideMain } from './global/AsideAdmin/AsideMain.vue'
+export { default as LoadingComp } from './global/LoadingComp.vue'
+export { default as LoginComp } from './auth/login/LoginComp.vue'
+export { default as InputComp } from './global/InputComp.vue'
+export { default as ButtonComp } from './global/ButtonComp.vue'
+export { default as LogoComp } from './global/LogoComp.vue'
+export { default as RegisterComp } from './auth/register/RegisterComp.vue'
+export { default as ButtonCompBorded } from './global/ButtonCompBorded.vue'
+export { default as AsideCompProfile } from './global/AsideAdmin/AsideCompProfile.vue'
+export { default as ProfileDataComp } from './auth/profile-responsible/ProfileDataComp.vue'
+export { default as ProfileDataDriver } from './auth/driver-responsible/ProfileDataDriver.vue'
+export { default as CardAdminDriver } from './admin/drivers/CardAdmin.vue'
+export { default as TableDrivers } from './admin/drivers/TableDrivers.vue'
+export { default as TableVehicles } from './admin/vehicles/TableVehicles.vue'
+export { default as CardVehicleAdmin } from './admin/vehicles/CardVehicleAdmin.vue'
+export { default as VehicleRetrieveDataComp } from './admin/vehicles/VehicleRetrieveDataComp.vue'
+export { default as TableResponsible } from './admin/responsibles/TableResponsible.vue'
+export { default as CardResponsibleAdmin } from './admin/responsibles/CardResponsibleAdmin.vue'
+export { default as ResponsibleRetriveDataComp } from './admin/responsibles/ResponsibleRetriveDataComp.vue'
+export { default as TablePassengers } from './admin/passengers/TablePassengers.vue'
+export { default as CardPassengersAdmin } from './admin/passengers/CardPassengersAdmin.vue'
+export { default as PassengerRetrieveDataComp } from './admin/passengers/PassengerRetrieveDataComp.vue'
+export { default as TrackDriverMap } from './admin/drivers/TrackDriverMap.vue'
+export { default as AsideToTrackDriver } from './admin/drivers/AsideToTrackDriver.vue'
+export { default as TrackDriverMapById } from './admin/drivers/TrackDriverMapById.vue'
+export { default as CaptionRouteActive } from './admin/route/daily/CaptionRouteAtive.vue'
+export { default as MapRouteActive } from './admin/route/daily/MapRouteActive.vue'
+export { default as AsideDriverComp } from './global/AsideAdmin/AsideDriverComp.vue'
+export { default as FooterMain } from './global/Footer/FooterMain.vue'
+export { default as DependantsComp } from './auth/profile-responsible/DependantsComp.vue'
+export { default as MyRoutesComp } from './admin/drivers/MyRoutesComp.vue'
+export { default as DetailDependentComp } from './auth/profile-responsible/DetailDependentComp.vue'
+export { default as DriverRetrieveDataComp } from './admin/drivers/DriverRetrieveDataComp.vue'
+export { default as DataResponsible } from './admin/responsibles/DataResponsible.vue'
+export { default as CreateRouteComp } from './admin/route/create/CreateRouteComp.vue'
+export { default as InitRouteComp } from './admin/route/init/InitRouteComp.vue'
+export { default as HeaderMobileDriver } from './global/Header/HeaderMobileDriver.vue'
+export { default as AsideMinorComp } from './global/AsideAdmin/AsideMinorComp.vue'
+export { default as DataMinorComp } from './auth/passenger/minor/DataCompMinor.vue'
+export { default as MainCompMinorPassenger } from './auth/passenger/minor/MainOpenedRouteCompMinorPassenger.vue'
+export { default as HeaderHomeComp } from './homeview/HeaderHomeComp.vue'
+export { default as HeroHomeComp } from './homeview/HeroHomeComp.vue'
+export { default as FeaturesHomeComp } from './homeview/FeaturesHomeComp.vue'
+export { default as HowItWorksSectionComp } from './homeview/HowItWorksSectionComp.vue'
+export { default as UserTypesSectionComp } from './homeview/UserTypesSectionComp.vue'
+export { default as TeamSectionComp } from './homeview/TeamSectionComp.vue'
+export { default as CTASectionComp } from './homeview/CTASectionComp.vue'
+export {default as TableRoutes} from "./admin/route/list/TableRoutes.vue"
+export {default as CardListRoute} from "./admin/route/list/CardListRoute.vue"
+export {default as DashboardMainComp} from './admin/dashboard/DashboardMainComp.vue'
+export {default as DashboardDetailsComp} from './admin/dashboard/DashboardDetailsComp.vue'
+export {default as RouteRetrieveComp} from './admin/route/retrieve/RetrieveRouteComp.vue'
+export { default as MapToTrackMyDependents } from './auth/profile-responsible/MapToTrackMyDependents.vue'
+export { default as AsideToTrackMyDependents } from './auth/profile-responsible/AsideToTrackMyDependents.vue'

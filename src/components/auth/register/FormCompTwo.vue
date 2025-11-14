@@ -58,7 +58,6 @@ watch(data, (newValue) => {
             placeholder="Digite sua data de nascimento"
             v-model="data.data_of_birth"
             :haveSubtext=true
-            style="color: #353DCCE5 !important;"
             padding-props="1.3rem"
         />
         <!-- <InputComp label="Foto" type="file" placeholder="Upload your photo" @change="handleFileChange"

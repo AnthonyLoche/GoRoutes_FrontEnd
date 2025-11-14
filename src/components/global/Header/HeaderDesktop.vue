@@ -1,45 +1,55 @@
 <script setup>
 import { ref, defineProps } from "vue";
 import { useAuthStore } from "@/stores/auth/auth";
+import { useRouter } from "vue-router";
 import Bell from "vue-material-design-icons/Bell.vue";
 import MessageProcessingOutline from "vue-material-design-icons/MessageProcessingOutline.vue";
+import Account from "vue-material-design-icons/Account.vue";
+import Logout from "vue-material-design-icons/Logout.vue";
 
 const showMenu = ref(false);
 const authStore = useAuthStore();
+const router = useRouter();
+
 defineProps({
     profileImage: {
         type: String,
-        //required: true,
         default: "https://vignette.wikia.nocookie.net/monstros-sa/images/3/38/Mike1.png/revision/latest?cb=20130601113702&path-prefix=pt-br"
     },
 });
+
+const goToHome = () => {
+    router.push("/");
+};
 </script>
 
 <template>
     <header>
-        <div class="logo">
-            <img src="../../../assets/images/LogoRemoved.png" alt="">
-            <h1>GoRoutes</h1>
+        <div class="logo" @click="goToHome">
+            <img src="../../../assets/images/LogoRemoved.png" alt="GoRoutes Logo">
+            <h1 style="font-family: 'Homenaje';">GoRoutes</h1>
         </div>
         <div class="nav">
             <div class="itens">
-                <input type="text" placeholder="Search" />
-                <button class="icon-btn">
-                    <MessageProcessingOutline />
-                </button>
                 <button class="icon-btn">
                     <Bell />
                 </button>
 
                 <div class="profile-container" @mouseenter="showMenu = true" @mouseleave="showMenu = false">
-                    <button class="profile-btn" :style="{ backgroundImage: `url(https://vignette.wikia.nocookie.net/monstros-sa/images/3/38/Mike1.png/revision/latest?cb=20130601113702&path-prefix=pt-br)` }"></button>
+                    <button class="profile-btn"
+                        :style="{ backgroundImage: `url(${authStore.state.user.picture_file ? authStore.state.user.picture_file : 'https://vignette.wikia.nocookie.net/monstros-sa/images/3/38/Mike1.png/revision/latest?cb=20130601113702&path-prefix=pt-br'})` }"></button>
 
                     <Transition name="fade">
                         <div v-if="showMenu" class="dropdown-menu">
                             <ul>
-                                <li>Perfil</li>
-                                <li>Configurações</li>
-                                <li @click="authStore.logout">Sair</li>
+                                <router-link :to="`/blank/profile/${authStore.state.type}`">
+                                    <Account />
+                                    Profile
+                                </router-link>
+                                <li @click="authStore.logout" class="logout">
+                                    <Logout />
+                                    Logout
+                                </li>
                             </ul>
                         </div>
                     </Transition>
@@ -62,6 +72,7 @@ header {
 .logo {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 img {
@@ -86,7 +97,8 @@ h1 {
     display: flex;
     gap: 1rem;
     margin-right: 1rem;
-    align-items: center;
+    align-items: end;
+    justify-content: end;
 }
 
 input {
@@ -161,17 +173,46 @@ button:hover {
     padding: 10px;
     cursor: pointer;
     transition: background 0.3s;
+    display: flex;
+    gap: 10px;
+}
+
+.dropdown-menu li.logout {
+    color: red;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    gap: 10px;
+}
+
+a:hover {
+    background: #f3f4f6;
+}
+
+span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .dropdown-menu li:hover {
     background: #f3f4f6;
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
     opacity: 0;
     transform: translateY(-10px);
 }
