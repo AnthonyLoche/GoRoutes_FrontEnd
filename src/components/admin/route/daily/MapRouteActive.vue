@@ -10,6 +10,7 @@ const goRoutesStore = useGoRoutesStore();
 const map = ref(null);
 const routePath = ref([]);
 const markerPositions = ref([]);
+const mapInitialized = ref(false);
 
 // Inicializar mapa
 const initializeMap = () => {
@@ -35,12 +36,14 @@ const initializeMap = () => {
     },
     center: [center.lng, center.lat],
     zoom: 13,
-    pitch: 60, // Vista 3D mais acentuada
+    pitch: 60,
     bearing: 0,
-    antialias: true // Suavização para melhor visualização 3D
+    antialias: true
   });
 
   map.value.on('load', () => {
+    mapInitialized.value = true;
+    
     // Adicionar controles
     map.value.addControl(new maplibregl.NavigationControl({ showCompass: true }));
     map.value.addControl(new maplibregl.ScaleControl());
@@ -116,6 +119,20 @@ const addRouteToMap = () => {
   });
 };
 
+// Atualizar rota no mapa
+const updateMapRoute = () => {
+  if (!map.value || !map.value.getSource('route') || !routePath.value.length) return;
+
+  const coordinates = routePath.value.map(point => [point.lng, point.lat]);
+  map.value.getSource('route').setData({
+    type: 'Feature',
+    geometry: {
+      type: 'LineString',
+      coordinates: coordinates
+    }
+  });
+};
+
 // Adicionar marcadores ao mapa
 const addMarkersToMap = () => {
   if (!markerPositions.value.length || !map.value) return;
@@ -154,6 +171,8 @@ const addMarkersToMap = () => {
 
   const passengerImage = new Image();
   passengerImage.onload = () => {
+    if (!map.value) return;
+    
     map.value.addImage('passenger-icon', passengerImage);
     
     map.value.addLayer({
@@ -180,7 +199,7 @@ const addMarkersToMap = () => {
               <strong style="color: #022840; font-size: 14px;">👤 ${props.passenger}</strong><br />
               <p style="margin: 8px 0; font-size: 12px; color: #666;">${props.address}</p>
               <span style="color: ${props.status === 'NAO_PEGO' ? '#f44336' : '#4CAF50'}; font-size: 12px; font-weight: bold;">
-                Status: ${props.status}
+                Status: ${props.status === 'NAO_PEGO' ? 'Não pego' : props.status === 'PRESENTE' ? 'Presente' : props.status}
               </span>
             </div>
           `)
@@ -207,7 +226,11 @@ const updateNextPassengerMarker = () => {
     return;
   }
 
-  const nextPassenger = routeData.presences.find(p => p.status !== "PRESENTE" && p.status !== "FALTOU");
+  // Encontrar próximo passageiro não pego
+  const nextPassenger = routeData.presences.find(p => 
+    p.status !== "PRESENTE" && p.status !== "FALTOU"
+  );
+  
   if (!nextPassenger) {
     markerPositions.value = [];
     return;
@@ -222,14 +245,14 @@ const updateNextPassengerMarker = () => {
   })) || [];
 
   // Atualizar marcadores no mapa se já estiver carregado
-  if (map.value && map.value.isStyleLoaded()) {
+  if (mapInitialized.value && map.value && map.value.isStyleLoaded()) {
     updateMapMarkers();
   }
 };
 
 // Atualizar marcadores no mapa
 const updateMapMarkers = () => {
-  if (!map.value || !map.value.getSource('passengers')) return;
+  if (!map.value || !mapInitialized.value) return;
 
   const features = markerPositions.value.map((pos, index) => ({
     type: 'Feature',
@@ -245,10 +268,15 @@ const updateMapMarkers = () => {
     }
   }));
 
-  map.value.getSource('passengers').setData({
-    type: 'FeatureCollection',
-    features: features
-  });
+  // Se a fonte já existe, atualizar, senão adicionar
+  if (map.value.getSource('passengers')) {
+    map.value.getSource('passengers').setData({
+      type: 'FeatureCollection',
+      features: features
+    });
+  } else {
+    addMarkersToMap();
+  }
 };
 
 // Centralizar no próximo passageiro
@@ -283,6 +311,37 @@ const focusOnRoute = () => {
   });
 };
 
+// Função para atualizar rota e marcadores
+const updateRouteAndMarkers = async () => {
+  const routeData = goRoutesStore.state.myDailyRouteDriver;
+  if (!routeData) return;
+
+  // Recarregar dados da rota para obter polyline atualizado
+  await goRoutesStore.takeMyDailyRoute();
+  const updatedRouteData = goRoutesStore.state.myDailyRouteDriver;
+
+  // Atualizar polyline
+  if (updatedRouteData?.overview_polyline?.points) {
+    routePath.value = decode(updatedRouteData.overview_polyline.points).map(([lat, lng]) => ({ 
+      lat: parseFloat(lat), 
+      lng: parseFloat(lng) 
+    }));
+  } else if (typeof updatedRouteData?.overview_polyline === "string") {
+    routePath.value = decode(updatedRouteData.overview_polyline).map(([lat, lng]) => ({ 
+      lat: parseFloat(lat), 
+      lng: parseFloat(lng) 
+    }));
+  }
+
+  updateNextPassengerMarker();
+
+  // Atualizar mapa se já estiver carregado
+  if (mapInitialized.value && map.value && map.value.isStyleLoaded()) {
+    updateMapRoute();
+    updateMapMarkers();
+  }
+};
+
 onMounted(async () => {
   await goRoutesStore.takeMyDailyRoute();
   
@@ -310,14 +369,18 @@ onMounted(async () => {
   });
 });
 
-// Watch para atualizações
-watch(() => goRoutesStore.state.myDailyRouteDriver, () => {
-  const routeData = goRoutesStore.state.myDailyRouteDriver;
-  if (!routeData) return;
+// Watch para mudanças nos dados da rota
+watch(() => goRoutesStore.state.myDailyRouteDriver, (newRouteData) => {
+  if (!newRouteData) return;
 
   // Atualizar rota
-  if (routeData.overview_polyline?.points) {
-    routePath.value = decode(routeData.overview_polyline.points).map(([lat, lng]) => ({ 
+  if (newRouteData.overview_polyline?.points) {
+    routePath.value = decode(newRouteData.overview_polyline.points).map(([lat, lng]) => ({ 
+      lat: parseFloat(lat), 
+      lng: parseFloat(lng) 
+    }));
+  } else if (typeof newRouteData.overview_polyline === "string") {
+    routePath.value = decode(newRouteData.overview_polyline).map(([lat, lng]) => ({ 
       lat: parseFloat(lat), 
       lng: parseFloat(lng) 
     }));
@@ -326,20 +389,26 @@ watch(() => goRoutesStore.state.myDailyRouteDriver, () => {
   updateNextPassengerMarker();
 
   // Atualizar mapa se já estiver carregado
-  if (map.value && map.value.isStyleLoaded()) {
-    if (map.value.getSource('route')) {
-      const coordinates = routePath.value.map(point => [point.lng, point.lat]);
-      map.value.getSource('route').setData({
-        type: 'Feature',
-        geometry: {
-          type: 'LineString',
-          coordinates: coordinates
-        }
-      });
-    }
+  if (mapInitialized.value && map.value && map.value.isStyleLoaded()) {
+    updateMapRoute();
     updateMapMarkers();
   }
-});
+}, { deep: true });
+
+// Watch específico para mudanças de status dos passageiros
+watch(() => goRoutesStore.state.myDailyRouteDriver?.presences, (newPresences, oldPresences) => {
+  if (!newPresences || !oldPresences) return;
+  
+  // Verificar se houve mudança de status em algum passageiro
+  const statusChanged = newPresences.some((presence, index) => {
+    return presence.status !== oldPresences[index]?.status;
+  });
+  
+  if (statusChanged) {
+    console.log('Status de passageiro alterado, atualizando rota...');
+    updateRouteAndMarkers();
+  }
+}, { deep: true });
 
 const mapCenter = computed(() => {
   if (routePath.value.length) return routePath.value[0];
@@ -376,6 +445,13 @@ const mapCenter = computed(() => {
         title="Ver rota completa"
       >
         <span class="control-icon">🗺️</span>
+      </button>
+      <button 
+        class="control-btn" 
+        @click="updateRouteAndMarkers"
+        title="Atualizar rota"
+      >
+        <span class="control-icon">🔄</span>
       </button>
     </div>
   </div>
